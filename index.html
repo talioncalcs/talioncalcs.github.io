@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- SEO -->
+  <title>TalionCalcs – Free Financial & Investment Calculators</title>
+  <meta name="description" content="TalionCalcs offers free calculators including SIP, EMI, FD, RD, PPF, NPS, SWP, Home Loan, Car Loan, Personal Loan, CAGR, Inflation and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://talioncalcs.github.io/">
+
+  <!-- FAVICON / TOUCH ICON -->
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #222;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    /* Hero layout updated to include logo */
+    .hero {
+      background: #f8f9fa;
+      padding: 24px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hero .logo {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
+    }
+
+    .hero .hero-text {
+      flex: 1 1 auto;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin: 0 0 8px 0;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 40px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.65;
+      margin-top: 6px;
+    }
+
+    .last-updated {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .calc-card {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 16px;
+      transition: 0.2s;
+      background: #fff;
+    }
+
+    .calc-card:hover {
+      border-color: #0b5ed7;
+    }
+
+    .calc-card a {
+      text-decoration: none;
+      color: #0b5ed7;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .calc-card p {
+      font-size: 14px;
+      color: #444;
+    }
+
+    .ad-slot {
+      margin: 40px 0;
+      padding: 14px;
+      border: 1px dashed #ccc;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      font-size: 13px;
+      color: #555;
+    }
+
+    footer a {
+      color: #0b5ed7;
+      text-decoration: none;
+      margin-right: 12px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .hero { flex-direction: column; align-items: flex-start; }
+      .hero .logo { width:48px; height:48px; flex:0 0 48px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <img src="assets/logo.png" alt="SmartCalcs logo" class="logo" width="64" height="64">
+    <div class="hero-text">
+      <h1>TalionCalcs – Free Financial Calculators</h1>
+      <p>
+        Simple and accurate calculators to plan investments, loans, and savings.
+        Built for clarity, speed, and long-term financial decisions.
+      </p>
+      <div class="last-updated">
+        Last updated: <span id="last-updated"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- INVESTMENT CALCULATORS -->
+  <h2>Investment Calculators</h2>
+  <div class="calculator-grid">
+
+    <div class="calc-card">
+      <a href="sip-calculator.html">SIP Calculator</a>
+      <p>Estimate returns from monthly SIP investments.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="lumpsum-calculator.html">Lumpsum Calculator</a>
+      <p>Calculate future value of one-time investments.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+      <p>Calculate growth using compound interest.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="cagr-calculator.html">CAGR Calculator</a>
+      <p>Measure annual investment growth rate.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="ppf-calculator.html">PPF Calculator</a>
+      <p>Estimate PPF maturity value and interest.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="nps-calculator.html">NPS Calculator</a>
+      <p>Calculate National Pension Scheme returns.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="swp-calculator.html">SWP Calculator</a>
+      <p>Estimate withdrawals and remaining corpus.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="fd-calculator.html">FD Calculator</a>
+      <p>Calculate fixed deposit maturity amount.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="rd-calculator.html">RD Calculator</a>
+      <p>Estimate recurring deposit maturity value.</p>
+    </div>
+
+  </div>
+
+  <!-- LOAN CALCULATORS -->
+  <h2>Loan Calculators</h2>
+  <div class="calculator-grid">
+
+    <div class="calc-card">
+      <a href="emi-calculator.html">EMI Calculator</a>
+      <p>Calculate EMI and total loan repayment.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="home-loan-calculator.html">Home Loan Calculator</a>
+      <p>Estimate home loan EMI and interest.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="car-loan-calculator.html">Car Loan Calculator</a>
+      <p>Calculate car loan EMI and total cost.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="personal-loan-calculator.html">Personal Loan Calculator</a>
+      <p>Estimate EMI for personal loans.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="loan-eligibility-calculator.html">Loan Eligibility Calculator</a>
+      <p>Check how much loan you may qualify for.</p>
+    </div>
+
+  </div>
+
+  <!-- GENERAL CALCULATORS -->
+  <h2>General Calculators</h2>
+  <div class="calculator-grid">
+
+    <div class="calc-card">
+      <a href="percentage-calculator.html">Percentage Calculator</a>
+      <p>Calculate percentage increase or decrease.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="simple-interest-calculator.html">Simple Interest Calculator</a>
+      <p>Calculate interest using simple interest.</p>
+    </div>
+
+    <div class="calc-card">
+      <a href="inflation-calculator.html">Inflation Calculator</a>
+      <p>Understand inflation impact on money.</p>
+    </div>
+
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <!-- DISCLAIMER -->
+  <h2>Important Disclaimer</h2>
+  <p>
+    All calculators are for informational purposes only.
+    Results are indicative and should not be considered financial advice.
+  </p>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      © <span id="copyright-year"></span> SmartCalcs |
+      <a href="about.html">About</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+    </p>
+  </footer>
+
+</div>
+
+<!-- AUTO last-updated (Month Year) and copyright year -->
+<script>
+(function(){
+  try {
+    const now = new Date();
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+    const lastEl = document.getElementById('last-updated');
+    if(lastEl) lastEl.textContent = monthYear;
+    const cy = document.getElementById('copyright-year');
+    if(cy) cy.textContent = now.getFullYear();
+  } catch(e) {
+    // silent fail — not critical
+    console && console.error && console.error(e);
+  }
+})();
+</script>
+
+</body>
+</html>
