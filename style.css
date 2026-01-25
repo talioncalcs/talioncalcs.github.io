@@ -1,0 +1,10 @@
+.site-logo {
+  width: 160px;       /* desktop */
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .site-logo {
+    width: 120px;     /* mobile */
+  }
+}
