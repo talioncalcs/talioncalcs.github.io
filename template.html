@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- UNIQUE PER PAGE -->
+  <title>SIP Calculator – Monthly Investment Returns | TalionCalcs</title>
+  <meta name="description" content="Free SIP Calculator to estimate monthly investment returns, total wealth created, and growth over time. Accurate, simple, and easy to use.">
+
+  <!-- CANONICAL -->
+  <link rel="canonical" href="https://talioncalcs.github.io/sip-calculator.html">
+
+  <!-- FAVICON -->
+  <link rel="icon" href="/favicon.png" type="image/png">
+
+  <!-- SOCIAL PREVIEW -->
+  <meta property="og:title" content="SIP Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate SIP returns instantly with a free and accurate SIP calculator.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/sip-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- GOOGLE ANALYTICS 4 (REPLACE ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { 'anonymize_ip': true });
+
+    // helper for affiliate click tracking and safe outbound opening
+    function trackAffiliateClick(name, url) {
+      try { gtag('event', 'affiliate_click', { 'event_label': name }); } catch(e) {}
+      var win = window.open(url, '_blank', 'noopener,noreferrer');
+      if(!win) location.href = url;
+    }
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .affiliate-box { border:1px solid #e3e3e3; background:#fafafa; padding:14px; margin:18px 0; font-size:14px; }
+    .affiliate-cta-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .cta-button { background:#0b5ed7; color:#fff; border:none; padding:10px 12px; cursor:pointer; border-radius:4px; font-weight:bold; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .affiliate-link { color:#0b5ed7; text-decoration:none; font-weight:600; }
+    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
+    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
+    ul { padding-left:18px; font-size:14px; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    @media (max-width:480px) { .affiliate-cta-row { flex-direction:column; } .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+  </style>
+
+  <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"SIP Calculator","item":"https://talioncalcs.github.io/sip-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"SIP Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/sip-calculator.html",
+    "description":"Estimate SIP returns by entering monthly amount, expected annual return, and duration."
+  }
+  </script>
+
+  <!-- FAQPage schema (matches FAQ section on the page) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Is SIP better than lump sum investment?",
+        "acceptedAnswer":{"@type":"Answer","text":"SIP helps average market entry and reduce timing risk; lump sum can outperform if markets rise steadily. The right choice depends on capital availability and risk tolerance."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can I stop a SIP anytime?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes. Most platforms allow pausing or stopping SIPs without penalties, subject to exit loads and tax rules."}
+      },
+      {
+        "@type":"Question",
+        "name":"Are SIP returns guaranteed?",
+        "acceptedAnswer":{"@type":"Answer","text":"No. SIP returns depend on market performance. This calculator provides estimates based on the return you enter; actual outcomes will vary."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" style="display:flex; align-items:center; gap:8px;">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" width="28" height="28">
+      TalionCalcs
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> › SIP Calculator
+  </div>
+
+  <h1>SIP Calculator – Monthly Investment Returns</h1>
+
+  <!-- Intent bridge (short, under H1, before calculator) -->
+  <p style="font-size:14px;color:#555;">
+    Calculate how your monthly SIP investment can grow over time. Enter the amount, expected return, and duration to see estimated wealth creation.
+  </p>
+
+  <!-- CALCULATOR FIRST (moved above the explanation) -->
+  <div class="calc-box">
+    <label for="monthly">Monthly Investment (₹)</label>
+    <input type="number" id="monthly" aria-label="Monthly SIP amount" placeholder="e.g. 5000">
+
+    <label for="rate">Expected Annual Return (%)</label>
+    <input type="number" id="rate" aria-label="Expected annual return percentage" placeholder="e.g. 12">
+
+    <label for="years">Investment Duration (Years)</label>
+    <input type="number" id="years" aria-label="Investment duration in years" placeholder="e.g. 10">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
+
+    <!-- AFFILIATE BLOCK (keeps only Groww + lead generation) -->
+    <div class="affiliate-box" aria-label="Recommended platforms">
+      <strong>Start investing — trusted platform</strong>
+      <p style="margin:6px 0 0 0;">Prefer platforms with low fees and easy KYC. Choose one to open an account:</p>
+
+      <div class="affiliate-cta-row">
+        <button class="cta-button" onclick="trackAffiliateClick('Groww','https://your-affiliate-link-for-groww')">Open Groww</button>
+      </div>
+
+      <div class="cmp-table" role="table" aria-label="Platform comparison">
+        <table>
+          <thead><tr><th>Platform</th><th>Min SIP</th><th>Charges</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Groww</td>
+              <td>₹100</td>
+              <td>Free</td>
+              <td><a class="affiliate-link" href="https://your-affiliate-link-for-groww" rel="sponsored" target="_blank" onclick="trackAffiliateClick('Groww','https://your-affiliate-link-for-groww')">Open account</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="affiliate-disclosure" style="font-size:12px;color:#666;margin-top:8px;">
+        Affiliate disclosure: some links are affiliate links — we may earn a commission at no extra cost to you.
+      </p>
+
+      <!-- LEAD FORM (Formspree example) -->
+      <div class="lead-form">
+        <h4 style="margin:10px 0 8px 0;">Get this result in your inbox</h4>
+        <form action="https://formspree.io/f/<your-form-id>" method="POST" onsubmit="try{gtag('event','lead_submit',{event_category:'lead'});}catch(e){}">
+          <input type="email" name="email" placeholder="you@example.com" required>
+          <button type="submit" class="cta-button">Send me results</button>
+        </form>
+      </div>
+    </div>
+    <!-- END AFFILIATE BLOCK -->
+
+    <canvas id="growthChart" role="img" aria-label="Investment growth chart"></canvas>
+  </div>
+  <!-- END CALC BOX -->
+
+  <!-- FORMULA SECTION (ADDED) -->
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">SIP Formula</h2>
+    <p>
+      The SIP maturity amount can be calculated using the standard SIP formula below. This gives the future value (FV) of monthly contributions compounded monthly.
+    </p>
+
+    <p><strong>Formula (mathematical):</strong></p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>FV = P × ( ((1 + r)<sup>n</sup> − 1) / r ) × (1 + r)</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+    <ul>
+      <li><strong>P</strong> = Monthly investment amount</li>
+      <li><strong>r</strong> = Monthly rate of return (annual rate ÷ 12 ÷ 100)</li>
+      <li><strong>n</strong> = Total number of months (years × 12)</li>
+      <li><strong>FV</strong> = Estimated maturity amount</li>
+    </ul>
+
+    <p>
+      The calculator on this page applies the monthly compounding iteratively (month-by-month) to provide accurate results for each year. Using the iterative method produces values equivalent to the formula above while avoiding rounding error across months.
+    </p>
+  </section>
+
+  <!-- AD SLOT (kept, paste AdSense after approval) -->
+  <div class="ad-slot">Advertisement</div>
+
+  <!-- EXPLANATION CONTENT (moved below calculator) -->
+  <section class="explanation">
+    <p>
+      This SIP calculator estimates the future value of your monthly investments by applying monthly compounding to each installment. It is designed for practical planning — retirement targets, education funds, or any long-term goal where regular contributions matter. Enter your monthly contribution, expected annual return, and duration to see an estimated maturity amount and the total invested sum.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this calculator when you want to convert a monthly savings target into a long-term corpus, or when you want to compare different monthly amounts and tenures quickly. It’s particularly helpful if you are choosing between starting a SIP versus a lump-sum investment, or when deciding how much to increase monthly savings to reach a target by a certain year.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator converts the entered annual return into a monthly rate (annual ÷ 12 ÷ 100) and compounds each monthly contribution at that monthly rate for the remaining months until maturity. Earlier contributions compound for longer, so duration has a large effect on the final amount. The computation uses the standard SIP maturity approach applied iteratively month-by-month for accuracy.
+    </p>
+
+    <h3>Benefits of SIP investing</h3>
+    <p>
+      SIPs enforce disciplined investing — you invest regularly regardless of market conditions, which helps average your purchase price over time (rupee-cost averaging). SIPs also harness compound interest: small monthly amounts, invested consistently over many years, can grow substantially. They are flexible (you can change amounts and stop/start), low-effort, and suitable for long-term goals.
+    </p>
+
+    <h3>Factors that affect SIP returns</h3>
+    <p>
+      Key factors include the monthly amount, investment duration, and the actual returns achieved by the underlying funds. Market volatility means returns vary year-to-year; higher average returns and longer durations boost the final corpus. Fund selection, expense ratios, and taxes also impact net returns. Use conservative estimates when planning to avoid unrealistic expectations.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Is SIP better than lump sum?</strong> It depends — SIPs help if you want to average into the market and avoid timing risk; lump sum can outperform if markets rise steadily and you have capital available.</p>
+    <p><strong>Can I stop SIP anytime?</strong> Yes — most platforms allow you to pause or stop SIPs without penalties; check fund exit loads and tax implications.</p>
+    <p><strong>Are returns guaranteed?</strong> No — mutual funds are market-linked. This calculator provides estimates based on the return you enter; actual outcomes vary.</p>
+  </section>
+  <!-- END EXPLANATION -->
+
+  <!-- Last updated trust signal (auto-filled by JS) -->
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for investment decisions.</p>
+
+</div>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year"></span> TalionCalcs
+</footer>
+
+<script>
+function calculate() {
+  const P = Number(document.getElementById("monthly").value || 0);
+  const rate = Number(document.getElementById("rate").value || 0) / 100 / 12;
+  const years = Number(document.getElementById("years").value || 0);
+
+  if (P <= 0 || years <= 0 || rate < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    return;
+  }
+
+  let values = [];
+  let months = years * 12;
+  let total = 0;
+
+  for (let i = 1; i <= months; i++) {
+    total = (total + P) * (1 + rate);
+    if (i % 12 === 0) values.push(Math.round(total));
+  }
+
+  document.getElementById("result").innerHTML = "Estimated Value: ₹" + values.at(-1).toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Invested: ₹" + (P * months).toLocaleString("en-IN");
+
+  drawChart(values);
+}
+
+function drawChart(data) {
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0) return;
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 260;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const stepX = data.length > 1
+    ? (canvas.width - padding * 2) / (data.length - 1)
+    : 0;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = canvas.height - padding - (val / max) * (canvas.height - padding * 2);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+}
+</script>
+
+<!-- Affiliate link click listener (extra tracking for plain links) -->
+<script>
+document.addEventListener('click', function(e){
+  const a = e.target.closest('a');
+  if(!a) return;
+  if(a.classList.contains('affiliate-link')) {
+    try { gtag('event','affiliate_click',{event_label: a.href}); } catch(e){}
+  }
+}, true);
+</script>
+
+<!-- AUTO last-updated (Month Year) and copyright year -->
+<script>
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
