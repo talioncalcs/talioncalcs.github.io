@@ -29,13 +29,6 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX', { 'anonymize_ip': true });
-
-    // helper for affiliate click tracking and safe outbound opening
-    function trackAffiliateClick(name, url) {
-      try { gtag('event', 'affiliate_click', { 'event_label': name }); } catch(e) {}
-      var win = window.open(url, '_blank', 'noopener,noreferrer');
-      if(!win) location.href = url;
-    }
   </script>
 
   <style>
@@ -58,19 +51,14 @@
     .result { margin-top:12px; font-size:16px; font-weight:bold; }
     canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
     .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
-    .affiliate-box { border:1px solid #e3e3e3; background:#fafafa; padding:14px; margin:18px 0; font-size:14px; }
-    .affiliate-cta-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .cta-button { background:#0b5ed7; color:#fff; border:none; padding:10px 12px; cursor:pointer; border-radius:4px; font-weight:bold; }
-    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
-    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
-    .affiliate-link { color:#0b5ed7; text-decoration:none; font-weight:600; }
-    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
-    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
-    ul { padding-left:18px; font-size:14px; }
     .note { font-size:13px; color:#555; margin-top:30px; }
     footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
-    @media (max-width:480px) { .affiliate-cta-row { flex-direction:column; } .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
+    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
+    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
   </style>
 
   <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->
@@ -173,44 +161,6 @@
 
     <div class="result" id="result" aria-live="polite"></div>
     <div class="result" id="invested" aria-live="polite"></div>
-
-    <!-- AFFILIATE BLOCK (keeps only Groww + lead generation) -->
-    <div class="affiliate-box" aria-label="Recommended platforms">
-      <strong>Start investing — trusted platform</strong>
-      <p style="margin:6px 0 0 0;">Prefer platforms with low fees and easy KYC. Choose one to open an account:</p>
-
-      <div class="affiliate-cta-row">
-        <button class="cta-button" onclick="trackAffiliateClick('Groww','https://your-affiliate-link-for-groww')">Open Groww</button>
-      </div>
-
-      <div class="cmp-table" role="table" aria-label="Platform comparison">
-        <table>
-          <thead><tr><th>Platform</th><th>Min SIP</th><th>Charges</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td>Groww</td>
-              <td>₹100</td>
-              <td>Free</td>
-              <td><a class="affiliate-link" href="https://your-affiliate-link-for-groww" rel="sponsored" target="_blank" onclick="trackAffiliateClick('Groww','https://your-affiliate-link-for-groww')">Open account</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="affiliate-disclosure" style="font-size:12px;color:#666;margin-top:8px;">
-        Affiliate disclosure: some links are affiliate links — we may earn a commission at no extra cost to you.
-      </p>
-
-      <!-- LEAD FORM (Formspree example) -->
-      <div class="lead-form">
-        <h4 style="margin:10px 0 8px 0;">Get this result in your inbox</h4>
-        <form action="https://formspree.io/f/<your-form-id>" method="POST" onsubmit="try{gtag('event','lead_submit',{event_category:'lead'});}catch(e){}">
-          <input type="email" name="email" placeholder="you@example.com" required>
-          <button type="submit" class="cta-button">Send me results</button>
-        </form>
-      </div>
-    </div>
-    <!-- END AFFILIATE BLOCK -->
 
     <canvas id="growthChart" role="img" aria-label="Investment growth chart"></canvas>
   </div>
@@ -357,17 +307,6 @@ function drawChart(data) {
 
   ctx.stroke();
 }
-</script>
-
-<!-- Affiliate link click listener (extra tracking for plain links) -->
-<script>
-document.addEventListener('click', function(e){
-  const a = e.target.closest('a');
-  if(!a) return;
-  if(a.classList.contains('affiliate-link')) {
-    try { gtag('event','affiliate_click',{event_label: a.href}); } catch(e){}
-  }
-}, true);
 </script>
 
 <!-- AUTO last-updated (Month Year) and copyright year -->
