@@ -11,7 +11,7 @@
 
   <!-- FAVICON / TOUCH ICON -->
   <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,11 +43,13 @@
       gap: 16px;
     }
 
+    /* Logo: keep fixed height, allow width to scale with aspect ratio */
     .hero .logo {
-      display: inline-block;
-      width: 64px;
+      display: block;
       height: 64px;
-      flex: 0 0 64px;
+      width: auto;
+      max-width: 320px;
+      flex: 0 0 auto;
     }
 
     .hero .hero-text {
@@ -133,7 +135,7 @@
     /* Responsive adjustments */
     @media (max-width: 600px) {
       .hero { flex-direction: column; align-items: flex-start; }
-      .hero .logo { width:48px; height:48px; flex:0 0 48px; }
+      .hero .logo { height:48px; max-width:240px; }
     }
   </style>
 </head>
@@ -144,7 +146,8 @@
 
   <!-- HERO -->
   <header class="hero">
-    <img src="assets/logo.png" alt="TalionCalcs logo" class="logo" height="64" style="max-width:320px;">
+    <!-- removed inline height/width attributes: CSS now controls height and preserves aspect ratio -->
+    <img src="assets/logo.png" alt="TalionCalcs logo" class="logo">
     <div class="hero-text">
       <h1>TalionCalcs – Free Financial Calculators</h1>
       <p>
