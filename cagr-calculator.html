@@ -1,1 +1,365 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- UNIQUE PER PAGE -->
+  <title>CAGR Calculator – Compound Annual Growth Rate | TalionCalcs</title>
+  <meta name="description" content="Free CAGR Calculator to calculate compound annual growth rate for investments. Estimate annualized returns between start and end value accurately.">
+
+  <!-- CANONICAL -->
+  <link rel="canonical" href="https://talioncalcs.github.io/cagr-calculator.html">
+
+  <!-- FAVICON -->
+  <link rel="icon" href="/favicon.png" type="image/png">
+
+  <!-- SOCIAL PREVIEW -->
+  <meta property="og:title" content="CAGR Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate compound annual growth rate (CAGR) for your investments instantly.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/cagr-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- GOOGLE ANALYTICS 4 (REPLACE ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    // Replace G-XXXXXXXXXX with your GA4 Measurement ID on every page.
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
+    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
+    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+    /* small helper for noscript */
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"CAGR Calculator","item":"https://talioncalcs.github.io/cagr-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"CAGR Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/cagr-calculator.html",
+    "description":"Calculate compound annual growth rate using starting value, ending value, and duration."
+  }
+  </script>
+
+  <!-- FAQPage schema (matches FAQ section on the page) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"What does CAGR show?",
+        "acceptedAnswer":{"@type":"Answer","text":"CAGR shows the average annual growth rate of an investment assuming profits are reinvested each year."}
+      },
+      {
+        "@type":"Question",
+        "name":"Is CAGR the same as annual return?",
+        "acceptedAnswer":{"@type":"Answer","text":"No. CAGR smooths returns over time, while annual returns can fluctuate year to year."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can CAGR be negative?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes. If the ending value is lower than the starting value, CAGR will be negative."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" width="28" height="28">
+      TalionCalcs
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › CAGR Calculator
+  </div>
+
+  <h1>CAGR Calculator – Compound Annual Growth Rate</h1>
+
+  <!-- Intent bridge (short, under H1, before calculator) -->
+  <p style="font-size:14px;color:#555;">
+    Calculate the compound annual growth rate (CAGR) of an investment between two values over a period of years. Enter the starting value, ending value, and duration to compute the annualized return.
+  </p>
+
+  <!-- CALCULATOR FIRST (moved above the explanation) -->
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">CAGR Calculator Form</h2>
+
+    <label for="start">Starting Value (₹)</label>
+    <input type="number" id="start" min="0" aria-label="Starting investment value" placeholder="e.g. 100000">
+
+    <label for="end">Ending Value (₹)</label>
+    <input type="number" id="end" min="0" aria-label="Ending investment value" placeholder="e.g. 180000">
+
+    <label for="years">Investment Duration (Years)</label>
+    <input type="number" id="years" min="0" aria-label="Investment duration in years" placeholder="e.g. 5">
+
+    <button type="button" onclick="calculate()" aria-label="Calculate CAGR">Calculate CAGR</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+
+    <canvas id="growthChart" role="img" aria-label="Investment growth chart" style="display:none;"></canvas>
+  </div>
+  <!-- END CALC BOX -->
+
+  <!-- FORMULA SECTION (ADDED) -->
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">CAGR Formula</h2>
+    <p>
+      The Compound Annual Growth Rate (CAGR) is the annualized average rate of return of an investment between two points in time. It smooths out volatility and shows the constant rate at which the investment would have grown each year to reach the ending value from the starting value.
+    </p>
+
+    <p><strong>Formula (mathematical):</strong></p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>CAGR = (Ending Value ÷ Starting Value)<sup>1 / n</sup> − 1</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+    <ul>
+      <li><strong>Starting Value</strong> = Value at the beginning of the period</li>
+      <li><strong>Ending Value</strong> = Value at the end of the period</li>
+      <li><strong>n</strong> = Number of years</li>
+      <li><strong>CAGR</strong> = Compound annual growth rate (expressed as a decimal in the formula; multiply by 100 for percent)</li>
+    </ul>
+
+    <p>
+      Use this formula to compare returns across investments with different durations or to convert total returns into an annualized rate.
+    </p>
+  </section>
+
+  <section class="cmp-table">
+    <h2>CAGR vs Absolute Return</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>CAGR</td><td>Smoothed annual growth rate over the period</td></tr>
+      <tr><td>Absolute Return</td><td>Total percentage gain between start and end</td></tr>
+    </table>
+  </section>
+
+  <!-- AD SLOT (kept, paste AdSense after approval) -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <!-- EXPLANATION CONTENT (moved below calculator) -->
+  <section class="explanation">
+    <p>
+      The CAGR calculator converts a total return into an annualized rate. It is especially useful when you want to compare investments of different lengths (for example, a 3-year holding vs a 7-year holding). CAGR hides year-to-year volatility and represents the steady growth rate that would lead from the starting value to the ending value over the specified number of years.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this calculator to compare historical performance, evaluate investment growth, or present a single growth metric for reporting. It is commonly used for mutual funds, stocks, business revenues, or any scenario where an annualized growth rate is helpful.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator divides the ending value by the starting value, takes the nth root (where n is the number of years), and subtracts one to yield the annualized rate. For example, if an investment grows from ₹100,000 to ₹180,000 in 5 years, CAGR = (180000 / 100000)^(1/5) − 1 ≈ 0.1216 → 12.16% per year.
+    </p>
+
+    <h3>Benefits and limitations</h3>
+    <p>
+      CAGR is simple and intuitive for comparisons, but it does not show volatility, drawdowns, or interim cash flows. If there are additional contributions or withdrawals during the period, CAGR does not account for them — use XIRR or time-weighted returns for cash flow-sensitive calculations.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>What does CAGR show?</strong> CAGR shows the average annual growth rate of an investment assuming it grows at a steady rate each year.</p>
+    <p><strong>Is CAGR the same as absolute return?</strong> No — absolute return measures total gain, while CAGR annualizes that gain over the holding period.</p>
+    <p><strong>Can CAGR be negative?</strong> Yes — if the ending value is lower than the starting value, CAGR will be negative, indicating an annualized decline.</p>
+  </section>
+  <!-- END EXPLANATION -->
+
+  <!-- Last updated trust signal (auto-filled by JS) -->
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for investment decisions.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+/* Calculator logic */
+function calculate() {
+  const start = Number(document.getElementById("start").value || 0);
+  const end = Number(document.getElementById("end").value || 0);
+  const years = Number(document.getElementById("years").value || 0);
+
+  if (start <= 0 || end <= 0 || years <= 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    return;
+  }
+
+  const cagr = Math.pow(end / start, 1 / years) - 1;
+  const cagrPct = (cagr * 100);
+  document.getElementById("result").innerHTML = "CAGR: " + cagrPct.toFixed(2) + "% per year";
+}
+
+/* Chart drawing with devicePixelRatio scaling and resize handling (kept from master template) */
+let _lastChartData = null;
+function drawChart(data) {
+  _lastChartData = data ? data.slice() : null;
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  // handle high DPI
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
+
+  // protect against max 0
+  const denom = max === 0 ? 1 : max;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+
+  // optional: draw small circles at points
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+/* Debounced resize redraw */
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) drawChart(_lastChartData);
+    }, 150);
+  });
+})();
+
+/* auto fill last-updated and copyright */
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
