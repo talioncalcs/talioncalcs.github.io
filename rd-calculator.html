@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- UNIQUE PER PAGE -->
   <title>RD Calculator – Recurring Deposit Maturity Amount | TalionCalcs</title>
   <meta name="description" content="Free RD Calculator to estimate recurring deposit maturity value, total investment, and interest earned over time. Supports different compounding frequencies and detailed snapshots.">
-  <link rel="canonical" href="https://talioncalcs.github.io/rd-calculator.html">
-  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
+  <!-- CANONICAL -->
+  <link rel="canonical" href="https://talioncalcs.github.io/rd-calculator.html">
+
+  <!-- FAVICON -->
+  <link rel="icon" href="/favicon.png" type="image/png">
+
+  <!-- SOCIAL PREVIEW -->
   <meta property="og:title" content="RD Calculator – TalionCalcs">
-  <meta property="og:description" content="Calculate RD maturity value instantly with a free and accurate RD calculator supporting compounding frequency.">
+  <meta property="og:description" content="Calculate RD maturity value and interest earned with monthly deposits and compounding frequency.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://talioncalcs.github.io/rd-calculator.html">
   <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
@@ -48,7 +55,6 @@
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
     .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
     .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
-    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
 
@@ -80,7 +86,7 @@
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"All",
     "url":"https://talioncalcs.github.io/rd-calculator.html",
-    "description":"Estimate recurring deposit maturity value by entering monthly deposit, expected annual rate, compounding frequency, and duration."
+    "description":"Calculate recurring deposit maturity value and interest earned using monthly deposit, rate, tenure and compounding frequency."
   }
   </script>
 
@@ -169,28 +175,34 @@
 
   <section aria-labelledby="formula-heading">
     <h2 id="formula-heading">RD Formula</h2>
+
     <p>
-      The RD maturity amount is computed by compounding each monthly installment for the remaining tenure. With compounding frequency selected, each compounding period applies the periodic rate to the accumulated balance.
+      The maturity amount of a recurring deposit is calculated using the standard RD compound interest formula.
     </p>
 
     <p><strong>Formula (mathematical):</strong></p>
+
     <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
-      <strong>Balance updated monthly; periodic compounding applied each (12 ÷ n) months where n is compounding frequency per year.</strong>
+      <strong>
+        M = P × [ ( (1 + r / n)<sup>n × t</sup> − 1 ) / ( (1 + r / n)<sup>1 / n</sup> − 1 ) ]
+      </strong>
     </p>
 
     <p>
       Where:
     </p>
+
     <ul>
       <li><strong>P</strong> = Monthly deposit amount</li>
-      <li><strong>r</strong> = Annual interest rate (decimal)</li>
-      <li><strong>n</strong> = Compounding frequency per year (1, 2, 4, 12)</li>
-      <li><strong>t</strong> = Time in years</li>
-      <li><strong>M</strong> = Estimated maturity amount</li>
+      <li><strong>r</strong> = Annual interest rate (in decimal form, e.g. 7% = 0.07)</li>
+      <li><strong>n</strong> = Number of compounding periods per year</li>
+      <li><strong>t</strong> = Deposit tenure in years</li>
+      <li><strong>M</strong> = Maturity amount at the end of the tenure</li>
     </ul>
 
     <p>
-      The calculator performs an iterative month-by-month computation: each month the deposit is added, and at the end of each compounding period (depending on your chosen frequency) interest for that period is applied to the current balance. This approach matches standard RD/term-deposit calculations while preserving accuracy across months and compounding intervals.
+      This formula assumes equal monthly deposits and periodic compounding as followed by banks and post-office recurring deposit schemes.  
+      To ensure practical accuracy and avoid rounding differences, this calculator applies the formula iteratively by adding each monthly installment and compounding it according to the selected compounding frequency.
     </p>
   </section>
 
@@ -273,30 +285,50 @@ function calculateRD() {
     return;
   }
 
+  const t = years;
   const months = Math.round(years * 12);
-  let balance = 0;
-  const compPeriodMonths = Math.round(12 / n); // months per compounding period (1,6,3,1)
-  let values = [];
 
-  // iterate month-by-month: deposit at start of month, apply compounding at end of each compounding period
-  for (let i = 1; i <= months; i++) {
-    balance += P; // deposit for the month
-    // if end of compounding period, apply periodic interest
-    if (i % compPeriodMonths === 0) {
-      const periodicRate = annualRate / n; // rate per compounding period
-      balance = balance * (1 + periodicRate);
-    }
-    // push yearly snapshot at each 12th month
-    if (i % 12 === 0) {
-      values.push(Math.round(balance));
-    }
+  // Closed-form RD formula as provided:
+  // M = P × [ ( (1 + r / n)^(n × t) − 1 ) / ( (1 + r / n)^(1 / n) − 1 ) ]
+  const base = 1 + annualRate / n;
+  const powTotal = Math.pow(base, n * t);
+  const numerator = powTotal - 1;
+  const denom = Math.pow(base, 1 / n) - 1;
+
+  let maturity;
+  if (Math.abs(denom) < 1e-14) {
+    // fallback when rate is effectively zero (no compounding effect)
+    maturity = P * months;
+  } else {
+    maturity = P * (numerator / denom);
   }
 
-  const finalVal = Math.round(balance);
-  document.getElementById("result").innerHTML = "Maturity Amount: ₹" + finalVal.toLocaleString("en-IN");
-  document.getElementById("invested").innerHTML = "Total Invested: ₹" + (P * months).toLocaleString("en-IN");
+  const roundedM = Math.round(maturity);
+  document.getElementById("result").innerHTML = "Maturity Amount: ₹" + roundedM.toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Invested: ₹" + Math.round(P * months).toLocaleString("en-IN");
 
-  drawChart(values);
+  // build yearly snapshot values for chart using same closed-form formula
+  const yearly = [];
+  const wholeYears = Math.floor(years);
+  for (let y = 1; y <= wholeYears; y++) {
+    const powY = Math.pow(base, n * y);
+    const numY = powY - 1;
+    const denomY = denom;
+    let amtY;
+    if (Math.abs(denomY) < 1e-14) amtY = P * (y * 12);
+    else amtY = P * (numY / denomY);
+    yearly.push(Math.round(amtY));
+  }
+  if (years > wholeYears) {
+    const powT = Math.pow(base, n * t);
+    const numT = powT - 1;
+    let amtT;
+    if (Math.abs(denom) < 1e-14) amtT = P * months;
+    else amtT = P * (numT / denom);
+    yearly.push(Math.round(amtT));
+  }
+
+  drawChart(yearly);
 }
 
 let _lastChartData = null;
