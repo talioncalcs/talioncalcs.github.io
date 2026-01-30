@@ -215,7 +215,7 @@
 
     <h3>How it works (plain explanation)</h3>
     <p>
-      The calculator turns your income into a safe monthly EMI limit, removes existing commitments, and translates the remaining monthly capacity into a loan amount using standard amortization math. Shorter tenures increase eligible loan amount for the same EMI? Actually shorter tenures mean higher EMI for same loan — for a fixed available EMI, longer tenures translate into higher eligible principal because EMI covers more months (but beware higher overall interest).
+      The calculator turns your income into a safe monthly EMI limit, removes existing commitments, and translates the remaining monthly capacity into a loan amount using standard amortization math. Shorter tenures mean larger monthly EMIs for the same principal — for a fixed available EMI, longer tenures allow a larger eligible principal (but increase total interest paid).
     </p>
 
     <h3>Factors that affect eligibility</h3>
@@ -254,16 +254,23 @@
 function calculateEligibility() {
   const income = Number(document.getElementById("income").value || 0);
   const existing = Number(document.getElementById("existing").value || 0);
-  const percent = Number(document.getElementById("percent").value || 50);
-  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
-  const years = Number(document.getElementById("tenure").value || 0);
+  let percent = Number(document.getElementById("percent").value || 50);
+  let annualRateInput = document.getElementById("rate").value;
+  let tenureInput = document.getElementById("tenure").value;
+
+  percent = Number.isFinite(percent) ? percent : 50;
+  if (percent < 0) percent = 0;
+  if (percent > 100) percent = 100;
+
+  const annualRate = Number(annualRateInput || 0) / 100;
+  const years = Math.floor(Number(tenureInput || 0));
 
   const eligibleEmiEl = document.getElementById("eligibleEmi");
   const eligibleLoanEl = document.getElementById("eligibleLoan");
   const monthlyLeftEl = document.getElementById("monthlyLeft");
   const noteEl = document.getElementById("noteArea");
 
-  if (income <= 0 || percent <= 0 || years <= 0 || annualRate < 0) {
+  if (!(income > 0) || !(percent > 0) || !(years > 0) || !(annualRate >= 0)) {
     eligibleEmiEl.innerHTML = "Please enter valid values.";
     eligibleLoanEl.innerHTML = "";
     monthlyLeftEl.innerHTML = "";
@@ -274,26 +281,22 @@ function calculateEligibility() {
     return;
   }
 
-  // Step 1: max EMI allowed based on percent of income
-  const maxEmiAllowed = (income * (percent / 100));
-  // Step 2: available EMI after existing obligations
+  const maxEmiAllowed = income * (percent / 100);
   const availableEmi = Math.max(0, maxEmiAllowed - existing);
 
-  // Convert available EMI to eligible loan for the chosen tenure
   const monthlyRate = annualRate / 12;
   const n = years * 12;
 
   let eligibleLoan = 0;
-  if (monthlyRate === 0) {
+  if (Math.abs(monthlyRate) < 1e-12) {
     eligibleLoan = availableEmi * n;
   } else {
-    const denom = monthlyRate;
     const factor = 1 - Math.pow(1 + monthlyRate, -n);
-    eligibleLoan = availableEmi * (factor / denom);
+    eligibleLoan = availableEmi * (factor / monthlyRate);
   }
 
   eligibleEmiEl.innerHTML = "Max available EMI for new loan: ₹" + Math.round(availableEmi).toLocaleString("en-IN");
-  eligibleLoanEl.innerHTML = "Estimated Eligible Loan (for " + years + " years at " + (annualRate*100).toFixed(2) + "% p.a.): ₹" + Math.round(eligibleLoan).toLocaleString("en-IN");
+  eligibleLoanEl.innerHTML = "Estimated Eligible Loan (for " + years + " years at " + (annualRate * 100).toFixed(2) + "% p.a.): ₹" + Math.round(eligibleLoan).toLocaleString("en-IN");
   monthlyLeftEl.innerHTML = "Max EMI allowed by percent: ₹" + Math.round(maxEmiAllowed).toLocaleString("en-IN") + " • Existing EMIs: ₹" + Math.round(existing).toLocaleString("en-IN");
 
   if (availableEmi <= 0) {
@@ -302,14 +305,13 @@ function calculateEligibility() {
     noteEl.innerHTML = "";
   }
 
-  // Build chart data: eligible loan across multiple tenures (1 to 20 years)
   const tenures = [];
   const loanValues = [];
   const maxTenure = 20;
   for (let y = 1; y <= maxTenure; y++) {
     const m = y * 12;
     let loanForTenure = 0;
-    if (monthlyRate === 0) {
+    if (Math.abs(monthlyRate) < 1e-12) {
       loanForTenure = availableEmi * m;
     } else {
       const fac = 1 - Math.pow(1 + monthlyRate, -m);
@@ -330,7 +332,11 @@ function drawEligChart(tenures, loanValues) {
     if (canvas) canvas.style.display = "none";
     return;
   }
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext && canvas.getContext("2d");
+  if (!ctx) {
+    canvas.style.display = "none";
+    return;
+  }
   canvas.style.display = "block";
 
   const dpr = window.devicePixelRatio || 1;
@@ -350,19 +356,15 @@ function drawEligChart(tenures, loanValues) {
   const stepX = loanValues.length > 1 ? usableWidth / (loanValues.length - 1) : 0;
   const denom = max === 0 ? 1 : max;
 
-  // Axis
-  ctx.beginPath();
-  ctx.strokeStyle = "#ddd";
   ctx.lineWidth = 1;
-  // y-axis
+  ctx.strokeStyle = "#ddd";
+  ctx.beginPath();
   ctx.moveTo(padding, padding);
   ctx.lineTo(padding, cssHeight - padding);
-  // x-axis
   ctx.moveTo(padding, cssHeight - padding);
   ctx.lineTo(cssWidth - padding, cssHeight - padding);
   ctx.stroke();
 
-  // Draw line
   ctx.beginPath();
   ctx.strokeStyle = "#0b5ed7";
   ctx.lineWidth = 2;
@@ -374,7 +376,6 @@ function drawEligChart(tenures, loanValues) {
   });
   ctx.stroke();
 
-  // Points
   ctx.fillStyle = "#0b5ed7";
   loanValues.forEach((val, i) => {
     const x = padding + i * stepX;
@@ -384,24 +385,23 @@ function drawEligChart(tenures, loanValues) {
     ctx.fill();
   });
 
-  // Labels for some ticks on x-axis (every 2 years)
   ctx.fillStyle = "#222";
   ctx.font = "12px Arial";
   tenures.forEach((y, i) => {
-    if (y % 2 === 0 || y === 1 || y === tenures[tenures.length-1]) {
+    if (y % 2 === 0 || y === 1 || y === tenures[tenures.length - 1]) {
       const x = padding + i * stepX;
       ctx.fillText(y + "y", x - 10, cssHeight - padding + 16);
     }
   });
 
-  // Y-axis top label
-  ctx.fillText("Eligible loan (₹)", 8, padding - 8);
+  const yLabelX = 8;
+  const yLabelY = Math.max(12, padding - 6);
+  ctx.fillText("Eligible loan (₹)", yLabelX, yLabelY);
 
-  // Small annotation: last point value
   const lastX = padding + (loanValues.length - 1) * stepX;
   const lastY = cssHeight - padding - (loanValues[loanValues.length - 1] / denom) * usableHeight;
   ctx.fillStyle = "#444";
-  ctx.fillText("₹" + loanValues[loanValues.length - 1].toLocaleString("en-IN"), lastX - 30, Math.max(12, lastY - 8));
+  ctx.fillText("₹" + loanValues[loanValues.length - 1].toLocaleString("en-IN"), Math.max(padding, lastX - 40), Math.max(12, lastY - 8));
 }
 
 (function(){
