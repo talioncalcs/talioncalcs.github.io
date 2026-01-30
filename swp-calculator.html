@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>SWP Calculator – Systematic Withdrawal Plan | TalionCalcs</title>
-  <meta name="description" content="Free SWP Calculator to estimate withdrawals, remaining corpus and longevity of funds under a Systematic Withdrawal Plan. Simulates monthly withdrawals with expected returns.">
+  <meta name="description" content="Free SWP Calculator to estimate remaining corpus, total withdrawals, and investment growth under a Systematic Withdrawal Plan with annual returns.">
   <link rel="canonical" href="https://talioncalcs.github.io/swp-calculator.html">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
 
   <meta property="og:title" content="SWP Calculator – TalionCalcs">
-  <meta property="og:description" content="Plan SWP withdrawals: see how long your corpus lasts, total withdrawn and remaining balance with monthly simulation.">
+  <meta property="og:description" content="Calculate withdrawals and remaining corpus under a Systematic Withdrawal Plan (SWP).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://talioncalcs.github.io/swp-calculator.html">
   <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
@@ -38,16 +38,19 @@
     .breadcrumb a { color: #0b5ed7; text-decoration: none; }
     .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
     label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
-    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    input { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
     button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
     button:hover { background:#084298; }
     .result { margin-top:12px; font-size:16px; font-weight:bold; }
-    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    canvas { margin-top:20px; width:100%; max-height:320px; display:none; border:1px solid #eee; border-radius:6px; }
     .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
     .note { font-size:13px; color:#555; margin-top:30px; }
     footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
-    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .muted { color:#666; font-size:13px; }
+    @media (max-width:480px) { .page { padding:12px; } }
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
 
@@ -79,31 +82,7 @@
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"All",
     "url":"https://talioncalcs.github.io/swp-calculator.html",
-    "description":"Estimate Systematic Withdrawal Plan outcomes: remaining balance, total withdrawn and longevity of corpus with monthly withdrawals."
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"FAQPage",
-    "mainEntity":[
-      {
-        "@type":"Question",
-        "name":"How long will my corpus last with SWP?",
-        "acceptedAnswer":{"@type":"Answer","text":"It depends on the withdrawal amount, expected return and the compounding frequency. This calculator simulates monthly withdrawals to estimate longevity."}
-      },
-      {
-        "@type":"Question",
-        "name":"Can I change withdrawal frequency?",
-        "acceptedAnswer":{"@type":"Answer","text":"Yes — SWP can be set to monthly, quarterly or yearly withdrawals depending on the provider. Use monthly input for precise simulation; convert quarterly/yearly withdrawals into equivalent monthly values for comparison."}
-      },
-      {
-        "@type":"Question",
-        "name":"Are SWP payouts guaranteed?",
-        "acceptedAnswer":{"@type":"Answer","text":"Payouts from a portfolio depend on investment performance. If your SWP is taken from a fixed-income product with guaranteed returns, payouts may be predictable; market-linked portfolios will vary with returns."}
-      }
-    ]
+    "description":"Calculate withdrawals and remaining corpus under a Systematic Withdrawal Plan (SWP)."
   }
   </script>
 
@@ -135,104 +114,116 @@
   <h1>SWP Calculator – Systematic Withdrawal Plan</h1>
 
   <p style="font-size:14px;color:#555;">
-    Estimate how regular withdrawals from a corpus will affect your balance over time. Use this SWP calculator to simulate monthly withdrawals, expected returns, and the remaining corpus after a chosen duration.
+    Estimate how long your investment corpus can last under a Systematic Withdrawal Plan (SWP). Enter your initial investment, expected annual return, withdrawal amount, and tenure to see total withdrawals and remaining balance year-by-year.
   </p>
 
   <div class="calc-box" role="region" aria-labelledby="calc-heading">
     <h2 id="calc-heading" style="display:none;">SWP Calculator Form</h2>
 
-    <label for="corpus">Initial Corpus (₹)</label>
-    <input type="number" id="corpus" min="0" aria-label="Initial corpus amount" placeholder="e.g. 1000000">
+    <label for="corpus">Initial Investment (₹)</label>
+    <input type="number" id="corpus" min="0" aria-label="Initial investment" placeholder="e.g. 1000000">
+
+    <label for="withdraw">Annual Withdrawal Amount (₹)</label>
+    <input type="number" id="withdraw" min="0" aria-label="Annual withdrawal" placeholder="e.g. 120000">
 
     <label for="rate">Expected Annual Return (%)</label>
-    <input type="number" id="rate" min="0" step="0.01" aria-label="Expected annual return percentage" placeholder="e.g. 7">
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Expected annual return" placeholder="e.g. 8">
 
-    <label for="withdrawal">Monthly Withdrawal (₹)</label>
-    <input type="number" id="withdrawal" min="0" aria-label="Monthly withdrawal amount" placeholder="e.g. 15000">
-
-    <label for="years">Duration to Simulate (Years)</label>
-    <input type="number" id="years" min="0" step="0.1" aria-label="Duration in years" placeholder="e.g. 10">
+    <label for="years">Tenure (Years)</label>
+    <input type="number" id="years" min="0" step="1" aria-label="Tenure in years" placeholder="e.g. 20">
 
     <button type="button" onclick="calculateSWP()" aria-label="Calculate SWP">Calculate</button>
 
     <div class="result" id="result" aria-live="polite"></div>
     <div class="result" id="withdrawn" aria-live="polite"></div>
 
-    <canvas id="growthChart" role="img" aria-label="SWP balance chart"></canvas>
+    <canvas id="growthChart" role="img" aria-label="SWP remaining corpus chart"></canvas>
   </div>
 
   <section aria-labelledby="formula-heading">
     <h2 id="formula-heading">SWP Formula</h2>
+
     <p>
-      SWP balances with periodic (monthly) withdrawals follow a linear recurrence that can be expressed in closed form for steady withdrawals and constant periodic return.
+      Systematic withdrawals are most accurately modelled iteratively because each withdrawal reduces the base that earns returns. The usual practical approach is to withdraw first and then compound the remaining balance for the period.
     </p>
 
-    <p><strong>Formula (mathematical):</strong></p>
+    <p><strong>Iterative step (per year):</strong></p>
 
     <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
-      <strong>B<sub>n</sub> = C × (1 + r)<sup>n</sup> − W × ( ( (1 + r)<sup>n</sup> − 1 ) / r )</strong>
-    </p>
-
-    <p>
-      Where:
+      <strong>Balance<sub>n</sub> = ( Balance<sub>n−1</sub> − W ) × (1 + r)</strong>
     </p>
 
     <ul>
-      <li><strong>C</strong> = Initial corpus (starting balance)</li>
-      <li><strong>W</strong> = Periodic withdrawal amount (monthly)</li>
-      <li><strong>r</strong> = Periodic rate (monthly rate = annual rate ÷ 12 ÷ 100)</li>
-      <li><strong>n</strong> = Number of periods (months)</li>
-      <li><strong>B<sub>n</sub></strong> = Remaining balance after n periods</li>
+      <li><strong>Balance<sub>0</sub></strong> = Initial corpus</li>
+      <li><strong>W</strong> = Withdrawal amount in that period (fixed in this calculator)</li>
+      <li><strong>r</strong> = Annual return rate (decimal, e.g. 8% = 0.08)</li>
+      <li><strong>n</strong> = Year number</li>
     </ul>
 
-    <p>
-      If r is effectively zero the formula reduces to <strong>B<sub>n</sub> = C − W × n</strong>. This calculator uses a month-by-month iterative simulation (adding returns, subtracting withdrawals) which is numerically equivalent to the closed-form expression while avoiding small rounding differences for fractional years.
+    <p class="muted">
+      If the withdrawal exceeds the balance at the start of a period, the calculator treats that year as a final partial withdrawal and the corpus becomes zero (no further compounding).
     </p>
   </section>
+
+  <div class="cmp-table">
+    <h2>SWP Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Total Withdrawn</td><td>Sum of all withdrawals taken over the tenure (partial final withdrawal included).</td></tr>
+      <tr><td>Remaining Corpus</td><td>Value left in the investment after all scheduled withdrawals and compounding.</td></tr>
+    </table>
+  </div>
 
   <div class="ad-slot" aria-hidden="true">Advertisement</div>
 
   <section class="explanation">
     <p>
-      This SWP calculator simulates regular withdrawals from an initial corpus while the remaining corpus continues to earn the expected annual return. It models the practical flow: each month the corpus accrues investment return (converted to a monthly rate) and then the withdrawal is made. Use it to plan retirement income, pension supplements, or any scenario where you need predictable periodic cash flows from a lump-sum.
+      An SWP lets you generate regular cash flow from a lump-sum investment while keeping the residual corpus invested. This calculator simulates fixed annual withdrawals and assumes the remaining corpus continues to earn the specified annual return. It provides a year-by-year snapshot and totals so you can see how withdrawals and returns interact over time.
     </p>
 
     <h3>When to use this calculator</h3>
     <p>
-      Use it when you want to know how long a corpus will last at a chosen withdrawal rate, how much you will have left after a set period, or to compare withdrawal amounts that preserve capital versus those that deplete it over time. It’s useful for retirees, investors drawing down portfolios, and financial planning scenarios requiring regular income from capital.
+      Use this tool when you want predictable periodic income from a capital sum — for example, converting savings into retirement income, funding regular expenses from an investment, or testing how long a corpus will last at a particular withdrawal level. It's also helpful when comparing withdrawal strategies (e.g., higher vs lower withdrawals) to understand sustainability.
     </p>
 
     <h3>How it works (plain explanation)</h3>
     <p>
-      The calculator converts the annual expected return into a monthly rate. For every simulated month it first applies the monthly return to the current balance and then subtracts the withdrawal amount. This order mirrors many SWP implementations where growth is credited before the payout. The tool totals withdrawals, tracks remaining balance each year for visualization, and flags if the corpus depletes before the chosen duration.
+      Each period (year) the model first subtracts the withdrawal amount from the corpus. The remaining balance then grows by the expected annual return. Early in the plan, returns can offset part of the withdrawals, making the corpus last longer. If withdrawals are too high relative to returns, the corpus will shrink and may eventually be depleted. The year-by-year iterative method mirrors practical behavior and avoids inaccuracies that arise if you tried to force a closed-form formula onto staggered withdrawals.
     </p>
 
-    <h3>Benefits of a well-planned SWP</h3>
+    <h3>Benefits of SWP</h3>
     <p>
-      An SWP provides predictable periodic income while keeping the corpus invested — potentially allowing your capital to continue earning returns. Compared to withdrawing ad-hoc, SWP can provide discipline and smoother cash flows. Properly sized withdrawals can preserve capital for longer, while larger withdrawals deliver more immediate income but increase the risk of depletion.
+      SWP provides structured and predictable cash flow without forcing you to sell the entire investment at once. For retirees and income-seeking investors, SWP preserves exposure to market returns on the residual corpus while delivering regular funds to cover living costs. Compared with liquidating assets in one lump sum, an SWP can spread market timing risk because the corpus remains invested and benefits from future growth.
+    </p>
+    <p>
+      Additional benefits include potential tax efficiency (depending on local tax rules and how withdrawals are taxed), psychological ease of a fixed income stream, and flexibility — many funds allow you to adjust or stop withdrawals if circumstances change. SWP also makes it easier to plan budgets because you have a known withdrawal amount at scheduled intervals.
     </p>
 
-    <h3>Factors that affect SWP outcomes</h3>
+    <h3>Factors that affect SWP sustainability</h3>
     <p>
-      Key factors include initial corpus size, withdrawal amount, expected average return, and tenure. Higher returns and lower withdrawal rates increase longevity. Inflation, taxes on withdrawals, and unexpected market volatility also affect real purchasing power and sustainability — so use conservative return estimates and revisit assumptions regularly.
+      The primary drivers are the withdrawal amount, the investment’s return rate, and the tenure. A higher withdrawal reduces remaining capital faster; a higher return rate prolongs sustainability. Volatility in returns matters: a string of low or negative return years early in the plan (sequence risk) can drastically shorten the life of the corpus even if the long-term average return looks adequate.
+    </p>
+    <p>
+      Other important considerations include inflation (which erodes purchasing power, potentially forcing higher withdrawals later), fees and expense ratios charged by the investment vehicle (which reduce net returns), and tax on withdrawals or gains (which reduces usable income). When planning, many advisors recommend stress-testing the SWP against several return scenarios (conservative, base, optimistic) and considering a buffer to handle sequence-of-returns risk.
     </p>
 
     <h3>Frequently asked questions</h3>
-    <p><strong>How much can I withdraw monthly?</strong> That depends on your corpus, expected returns, and desired longevity. Use conservative return assumptions to avoid depleting capital too quickly.</p>
-    <p><strong>What if the corpus depletes early?</strong> If the simulated balance hits zero before your planned duration, you will not receive further withdrawals unless you reduce withdrawal amounts or add fresh capital.</p>
-    <p><strong>Should I use expected returns or guaranteed returns?</strong> For market-linked portfolios use expected returns (conservative). For guaranteed products use the product’s guaranteed rate. This tool accepts an expected annual return you choose and simulates accordingly.</p>
+    <p><strong>Can SWP run out of money?</strong> Yes. If total withdrawals over time exceed returns plus initial corpus, the portfolio will deplete. This happens faster with large withdrawals, low returns, or negative return years early in the plan.</p>
+    <p><strong>Is SWP return guaranteed?</strong> No — returns depend on the underlying investments (equity funds, debt funds, etc.). If you use a guaranteed instrument (rare), the behavior differs; this calculator assumes variable-market-style returns applied at a fixed expected rate each year.</p>
+    <p><strong>Can I change the withdrawal amount?</strong> Practically, many funds allow you to change SWP amounts; however this calculator assumes a fixed withdrawal for simplicity. Re-running the calculator with different amounts shows the effect immediately.</p>
+    <p><strong>Should I use monthly withdrawals instead?</strong> Monthly withdrawals smooth cash flow and slightly reduce sequence risk by distributing the withdrawal across a year. This calculator uses annual steps for clarity; for monthly modeling a monthly-iterative version would be more accurate.</p>
   </section>
 
   <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
 
   <h2>Related Calculators</h2>
   <ul>
-    <li><a href="fd-calculator.html">FD Calculator</a></li>
     <li><a href="sip-calculator.html">SIP Calculator</a></li>
     <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="retirement-calculator.html">Retirement Calculator</a></li>
   </ul>
 
-  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for income planning and withdrawal strategies.</p>
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial or tax advice. Consider consulting a certified financial planner for decisions affecting your finances.</p>
 
 </main>
 
@@ -246,12 +237,13 @@
 
 <script>
 function calculateSWP() {
-  const C = Number(document.getElementById("corpus").value || 0);
-  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
-  const W = Number(document.getElementById("withdrawal").value || 0);
+  const corpus = Number(document.getElementById("corpus").value || 0);
+  const withdraw = Number(document.getElementById("withdraw").value || 0);
+  const rate = Number(document.getElementById("rate").value || 0) / 100;
   const years = Number(document.getElementById("years").value || 0);
 
-  if (C <= 0 || years <= 0 || annualRate < 0 || W < 0) {
+  // validation
+  if (corpus <= 0 || withdraw < 0 || years <= 0 || rate < 0) {
     document.getElementById("result").innerHTML = "Please enter valid values.";
     document.getElementById("withdrawn").innerHTML = "";
     _lastChartData = null;
@@ -260,66 +252,58 @@ function calculateSWP() {
     return;
   }
 
-  const r = annualRate / 12; // monthly rate (decimal)
-  const months = Math.round(years * 12);
-
-  let balance = C;
+  let balance = corpus;
   let totalWithdrawn = 0;
   const yearly = [];
-  let depletedAtMonth = null;
+  const labels = [];
 
-  for (let m = 1; m <= months; m++) {
-    // apply monthly return
-    balance = balance * (1 + r);
-    // withdraw (if balance insufficient, withdraw what's left)
-    const actualWithdrawal = Math.min(W, balance);
-    balance = balance - actualWithdrawal;
-    totalWithdrawn += actualWithdrawal;
+  for (let y = 1; y <= years; y++) {
+    // If corpus already zero, stop recording further years
+    if (balance <= 0) break;
 
-    if (balance <= 0.000001 && depletedAtMonth === null) {
-      depletedAtMonth = m;
+    // Withdraw at start of period
+    if (withdraw >= balance) {
+      // partial final withdrawal: take whatever is left
+      totalWithdrawn += balance;
       balance = 0;
-    }
-
-    // snapshot at each 12th month (yearly)
-    if (m % 12 === 0 || m === months) {
-      yearly.push(Math.round(balance));
-    }
-
-    if (depletedAtMonth !== null) {
-      // once depleted, remaining months yield zero balance and zero further withdrawal
-      // break early to avoid unnecessary computation
+      yearly.push(0);
+      labels.push("Year " + y);
       break;
+    } else {
+      balance -= withdraw;
+      totalWithdrawn += withdraw;
     }
+
+    // Then apply annual return on remaining balance
+    balance = balance * (1 + rate);
+
+    yearly.push(Math.round(balance));
+    labels.push("Year " + y);
   }
 
-  // If simulation ended early due to depletion, pad yearly array to reflect zeros for remaining years
-  const expectedYears = Math.ceil(months / 12);
-  while (yearly.length < expectedYears) yearly.push(0);
+  document.getElementById("result").innerHTML =
+    "Remaining Corpus: ₹" + Math.round(balance).toLocaleString("en-IN");
+  document.getElementById("withdrawn").innerHTML =
+    "Total Withdrawn: ₹" + Math.round(totalWithdrawn).toLocaleString("en-IN");
 
-  const fmt = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
-
-  document.getElementById("result").innerHTML = "Remaining Balance: ₹" + Math.round(balance).toLocaleString("en-IN");
-  document.getElementById("withdrawn").innerHTML = "Total Withdrawn: ₹" + Math.round(totalWithdrawn).toLocaleString("en-IN") +
-    (depletedAtMonth ? " &nbsp; | &nbsp; Corpus depleted after " + depletedAtMonth + " month(s)." : "");
-
-  drawChart(yearly);
+  drawChart(yearly, labels);
 }
 
 let _lastChartData = null;
-function drawChart(data) {
+function drawChart(data, labels = []) {
   _lastChartData = data ? data.slice() : null;
   const canvas = document.getElementById("growthChart");
   if (!data || data.length === 0 || !canvas) {
     if (canvas) canvas.style.display = "none";
     return;
   }
+
   const ctx = canvas.getContext("2d");
   canvas.style.display = "block";
 
   const dpr = window.devicePixelRatio || 1;
   const cssWidth = canvas.offsetWidth;
-  const cssHeight = 260;
+  const cssHeight = 320;
   canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
   canvas.height = Math.floor(cssHeight * dpr);
   canvas.style.height = cssHeight + "px";
@@ -328,32 +312,48 @@ function drawChart(data) {
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
   const max = Math.max(...data);
-  const padding = 30;
+  const padding = 40;
   const usableWidth = cssWidth - padding * 2;
   const usableHeight = cssHeight - padding * 2;
   const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
   const denom = max === 0 ? 1 : max;
 
+  // axes
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding + 12, cssHeight - padding);
+  ctx.stroke();
+
+  // line
   ctx.beginPath();
   ctx.strokeStyle = "#0b5ed7";
   ctx.lineWidth = 2;
-
   data.forEach((val, i) => {
     const x = padding + i * stepX;
     const y = cssHeight - padding - (val / denom) * usableHeight;
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   });
-
   ctx.stroke();
 
+  // points and labels
   ctx.fillStyle = "#0b5ed7";
+  ctx.font = "12px Arial";
+  ctx.textAlign = "center";
   data.forEach((val, i) => {
     const x = padding + i * stepX;
     const y = cssHeight - padding - (val / denom) * usableHeight;
     ctx.beginPath();
-    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
     ctx.fill();
+    // small numeric label
+    const label = "₹" + (val >= 1000 ? (Math.round(val / 100) / 10).toLocaleString("en-IN") + "k" : val.toLocaleString("en-IN"));
+    ctx.fillStyle = "#333";
+    ctx.fillText(label, x, y - 10);
+    ctx.fillStyle = "#0b5ed7";
   });
 }
 
