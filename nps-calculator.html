@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NPS Calculator – National Pension Scheme Returns | TalionCalcs</title>
+  <meta name="description" content="Free NPS Calculator to estimate National Pension Scheme maturity amount, total investment, and corpus growth based on contributions, expected return, and tenure.">
+  <link rel="canonical" href="https://talioncalcs.github.io/nps-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="NPS Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate NPS maturity value, total invested amount, and projected retirement corpus with contributions and expected returns.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/nps-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"NPS Calculator","item":"https://talioncalcs.github.io/nps-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"NPS Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/nps-calculator.html",
+    "description":"Calculate National Pension Scheme (NPS) corpus using contributions, expected return and tenure."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How is NPS maturity estimated?",
+        "acceptedAnswer":{"@type":"Answer","text":"NPS maturity is estimated by compounding contributions at an expected annual return over the investment tenure. Actual results depend on market performance."}
+      },
+      {
+        "@type":"Question",
+        "name":"Are NPS returns guaranteed?",
+        "acceptedAnswer":{"@type":"Answer","text":"No. NPS returns are market-linked and not guaranteed. They depend on fund allocation and market movement."}
+      },
+      {
+        "@type":"Question",
+        "name":"Does the calculator handle monthly contributions?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes — choose contribution frequency (monthly or annual) and the calculator will compound appropriately."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › NPS Calculator
+  </div>
+
+  <h1>NPS Calculator – National Pension Scheme Returns</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate how your contributions to the National Pension Scheme (NPS) can grow over time. Enter your contribution amount, choose contribution frequency, expected annual return and tenure to project the retirement corpus and total invested.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">NPS Calculator Form</h2>
+
+    <label for="contrib">Contribution Amount (₹)</label>
+    <input type="number" id="contrib" min="0" aria-label="NPS contribution amount" placeholder="e.g. 50000">
+
+    <label for="freq">Contribution Frequency</label>
+    <select id="freq" aria-label="Contribution frequency">
+      <option value="annual" selected>Annual</option>
+      <option value="monthly">Monthly</option>
+    </select>
+
+    <label for="rate">Expected Annual Return (%)</label>
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Expected annual return" placeholder="e.g. 10">
+
+    <label for="years">Investment Tenure (Years)</label>
+    <input type="number" id="years" min="0" step="1" aria-label="NPS investment tenure" placeholder="e.g. 30">
+
+    <button type="button" onclick="calculateNPS()" aria-label="Calculate NPS">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
+
+    <canvas id="growthChart" role="img" aria-label="NPS growth chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">NPS Formula</h2>
+
+    <p>
+      The future value (corpus) for regular contributions can be derived from the future value of an annuity. This calculator supports both annual and monthly contributions and uses an iterative compounding approach for accurate, step-by-step accumulation.
+    </p>
+
+    <p><strong>Formula (annuity/future value reference):</strong></p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>M = P × [ ( (1 + r)<sup>t</sup> − 1 ) / r ]</strong> (for annual contributions)  
+      <br>
+      <strong>or iteratively for monthly contributions using r/12 per month.</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+
+    <ul>
+      <li><strong>P</strong> = Contribution per period (monthly or annual)</li>
+      <li><strong>r</strong> = Annual return in decimal (e.g. 10% = 0.10)</li>
+      <li><strong>t</strong> = Tenure in years</li>
+      <li><strong>M</strong> = Estimated corpus at the end of tenure</li>
+    </ul>
+
+    <p>
+      Because NPS contributions can be monthly or annual, this tool compounds month-by-month for monthly contributions and year-by-year for annual contributions to avoid rounding differences and to provide realistic snapshots.
+    </p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>NPS Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Total Invested</td><td>Sum of all contributions over the tenure</td></tr>
+      <tr><td>Estimated Corpus</td><td>Projected NPS value at the end of tenure</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      This NPS calculator provides a practical projection of your retirement corpus under the National Pension Scheme by compounding your contributions at an expected annual return. It is intended to help with retirement planning by showing how contribution size, frequency and tenure affect the final corpus.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this when planning long-term retirement savings under NPS, to compare how contribution frequency or amount alters the final corpus, or to evaluate how much you need to contribute to reach a retirement goal.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      For monthly contributions the calculator converts the annual return to a monthly rate and iterates month-by-month: each month the contribution is added then monthly interest is applied. For annual contributions it iterates year-by-year. Earlier contributions compound for longer, which is why tenure has an outsized impact on final corpus.
+    </p>
+
+    <h3>Benefits of NPS investing</h3>
+    <p>
+      NPS offers tax benefits, low management costs, and access to diversified asset classes. It is a long-term retirement vehicle that encourages disciplined saving and can build a substantial corpus over decades when contributions are consistent.
+    </p>
+
+    <h3>Factors that affect NPS returns</h3>
+    <p>
+      Key drivers are contribution amount, contribution frequency, expected return (which depends on asset allocation and market performance), and tenure. Because NPS is market-linked, actual returns will vary — use conservative estimates for planning.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Is annuity purchase mandatory?</strong> A portion of the NPS corpus typically must be used to buy an annuity at retirement as per regulations; this calculator shows the total corpus before annuity purchase.</p>
+    <p><strong>Can I change contribution frequency?</strong> NPS generally allows flexible contributions; confirm specifics with your provider.</p>
+    <p><strong>Are returns guaranteed?</strong> No — NPS returns are market-linked and not guaranteed.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="ppf-calculator.html">PPF Calculator</a></li>
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for retirement planning decisions.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function calculateNPS() {
+  const contrib = Number(document.getElementById("contrib").value || 0);
+  const freq = document.getElementById("freq").value || 'annual';
+  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
+  const years = Number(document.getElementById("years").value || 0);
+
+  if (contrib <= 0 || years <= 0 || annualRate < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    _lastChartData = null;
+    const canvas = document.getElementById("growthChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const yearly = [];
+  let total = 0;
+  let invested = 0;
+
+  if (freq === 'annual') {
+    for (let y = 1; y <= years; y++) {
+      total = (total + contrib) * (1 + annualRate);
+      invested += contrib;
+      yearly.push(Math.round(total));
+    }
+  } else {
+    // monthly contributions
+    const monthly = contrib;
+    const months = Math.round(years * 12);
+    const monthlyRate = Math.pow(1 + annualRate, 1/12) - 1; // monthly equivalent
+    let monthCount = 0;
+    for (let m = 1; m <= months; m++) {
+      total = (total + monthly) * (1 + monthlyRate);
+      invested += monthly;
+      monthCount++;
+      // push snapshot at each year end
+      if (monthCount % 12 === 0) yearly.push(Math.round(total));
+    }
+    // if years is fractional such that months % 12 !== 0, we've already added all months and final snapshot included
+    if (years < 1 && months > 0 && yearly.length === 0) {
+      yearly.push(Math.round(total));
+    }
+  }
+
+  const corpus = Math.round(total);
+  document.getElementById("result").innerHTML = "Estimated Corpus: ₹" + corpus.toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Invested: ₹" + Math.round(invested).toLocaleString("en-IN");
+
+  drawChart(yearly);
+}
+
+let _lastChartData = null;
+function drawChart(data) {
+  _lastChartData = data ? data.slice() : null;
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
+  const denom = max === 0 ? 1 : max;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) drawChart(_lastChartData);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
