@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PPF Calculator – Public Provident Fund Maturity | TalionCalcs</title>
+  <meta name="description" content="Free PPF Calculator to estimate Public Provident Fund maturity amount, total investment, and interest earned. Uses annual compounding and yearly deposits for accurate projections.">
+  <link rel="canonical" href="https://talioncalcs.github.io/ppf-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+  <meta property="og:title" content="PPF Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate PPF maturity value and interest earned with yearly contributions and annual compounding.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/ppf-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"PPF Calculator","item":"https://talioncalcs.github.io/ppf-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"PPF Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/ppf-calculator.html",
+    "description":"Calculate Public Provident Fund (PPF) maturity using annual deposits, annual interest rate, and tenure."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How is PPF maturity calculated?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF maturity is calculated using annual compounding on the accumulated balance. Regular yearly deposits grow with interest applied annually for the chosen tenure."}
+      },
+      {
+        "@type":"Question",
+        "name":"What is the typical compounding frequency for PPF?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF interest is credited annually; this calculator uses annual compounding which matches PPF rules."}
+      },
+      {
+        "@type":"Question",
+        "name":"Are PPF returns guaranteed?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF returns are backed by the government and the rate is declared by the government periodically. Past rates do not guarantee future changes."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › PPF Calculator
+  </div>
+
+  <h1>PPF Calculator – Public Provident Fund Maturity</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate how your annual contributions to a Public Provident Fund (PPF) will grow over the PPF tenure. Enter the yearly deposit, expected annual interest rate, and duration to see the projected maturity amount and total invested.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">PPF Calculator Form</h2>
+
+    <label for="annual">Annual Deposit (₹)</label>
+    <input type="number" id="annual" min="0" aria-label="Annual PPF deposit" placeholder="e.g. 150000">
+
+    <label for="rate">Annual Interest Rate (%)</label>
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 7.1">
+
+    <label for="years">Tenure (Years)</label>
+    <input type="number" id="years" min="0" step="1" aria-label="PPF tenure in years" placeholder="e.g. 15">
+
+    <button type="button" onclick="calculatePPF()" aria-label="Calculate PPF">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
+
+    <canvas id="growthChart" role="img" aria-label="PPF growth chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">PPF Formula</h2>
+
+    <p>
+      The PPF maturity for regular yearly deposits with annual compounding can be represented using the annuity-due style formula if deposits are considered at the start of each year. Practically, this calculator applies annual compounding iteratively to each yearly deposit for accuracy.
+    </p>
+
+    <p><strong>Formula (mathematical, annuity due):</strong></p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>M = P × [ ( (1 + r)<sup>t</sup> − 1 ) / r ] × (1 + r)</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+
+    <ul>
+      <li><strong>P</strong> = Annual deposit amount</li>
+      <li><strong>r</strong> = Annual interest rate (decimal, e.g. 7% = 0.07)</li>
+      <li><strong>t</strong> = Tenure in years</li>
+      <li><strong>M</strong> = Estimated maturity amount</li>
+    </ul>
+
+    <p>
+      This calculator uses an iterative year-by-year method (deposit + annual interest) to match PPF’s annual crediting and avoid rounding discrepancies.
+    </p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>PPF Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Total Invested</td><td>Sum of all annual deposits over the tenure</td></tr>
+      <tr><td>Maturity Amount</td><td>Total value at maturity including compounded interest</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      This PPF calculator projects the future value of annual deposits in a Public Provident Fund by compounding the accumulated balance once per year at the specified rate. It is suitable for planning long-term tax-efficient savings, retirement top-ups, or secure fixed-return investments using the government-backed PPF scheme. Enter your annual contribution, current PPF rate, and the number of years to estimate maturity and interest earned.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this calculator when you plan to contribute a fixed amount annually to a PPF account and want to estimate how that discipline grows into a retirement corpus or long-term savings target. It helps compare tenors and rates, and to decide whether to increase annual deposits to meet a target maturity amount.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The tool treats each yearly contribution as being added to the account and then the full balance grows by the annual interest rate at year end. Earlier deposits compound for more years than later ones, so the tenure strongly affects the final corpus. By iterating year-by-year, the calculator mirrors the way PPF interest is credited and avoids approximation errors from closed-form expressions for staggered deposits.
+    </p>
+
+    <h3>Benefits of PPF investing</h3>
+    <p>
+      PPF offers tax-free interest and tax benefits on contributions under applicable laws (e.g., Section 80C in India). It is government-backed, provides guaranteed returns (as per declared rates), and suits conservative savers looking for long-term capital preservation with modest growth. Regular yearly contributions also encourage disciplined savings behavior.
+    </p>
+
+    <h3>Factors that affect PPF returns</h3>
+    <p>
+      The main drivers are the annual deposit amount, the declared PPF interest rate, and the tenure. Since PPF interest rates are reviewed periodically by the government, future rates may change; use conservative estimates when planning. Premature withdrawals, loans against PPF, and tax rules also influence net outcomes.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>How often is PPF interest credited?</strong> PPF interest is credited annually at the end of the financial year; this calculator uses annual compounding to match that behavior.</p>
+    <p><strong>Can I deposit monthly into PPF?</strong> PPF accepts deposits throughout the year but it is common to consider annual totals for projection; this calculator models equal yearly deposits. For non-uniform deposits, use an iterative manual approach or adapt deposit amounts per year.</p>
+    <p><strong>Are returns guaranteed?</strong> PPF returns are government-backed and the rate announced periodically; while currently guaranteed for the tenor, future rate changes can affect new contributions and projections.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+    <li><a href="rd-calculator.html">RD Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for investment decisions.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function calculatePPF() {
+  const P = Number(document.getElementById("annual").value || 0);
+  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
+  const years = Number(document.getElementById("years").value || 0);
+
+  if (P <= 0 || years <= 0 || annualRate < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    _lastChartData = null;
+    const canvas = document.getElementById("growthChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  let total = 0;
+  const yearly = [];
+
+  for (let y = 1; y <= years; y++) {
+    // deposit at start of year and apply annual compounding for that year
+    total = (total + P) * (1 + annualRate);
+    yearly.push(Math.round(total));
+  }
+
+  const roundedM = Math.round(total);
+  const invested = Math.round(P * years);
+
+  document.getElementById("result").innerHTML = "Maturity Amount: ₹" + roundedM.toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Invested: ₹" + invested.toLocaleString("en-IN");
+
+  drawChart(yearly);
+}
+
+let _lastChartData = null;
+function drawChart(data) {
+  _lastChartData = data ? data.slice() : null;
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
+  const denom = max === 0 ? 1 : max;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) drawChart(_lastChartData);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
