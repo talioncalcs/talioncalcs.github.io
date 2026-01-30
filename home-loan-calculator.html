@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Loan Calculator – EMI, Total Payment & Interest | TalionCalcs</title>
+  <meta name="description" content="Free Home Loan Calculator to compute monthly EMI, total payment and total interest for a loan. Supports principal, annual interest rate and tenure inputs.">
+  <link rel="canonical" href="https://talioncalcs.github.io/home-loan-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+  <meta property="og:title" content="Home Loan Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate home loan EMI instantly with a free and accurate home loan calculator.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/home-loan-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Home Loan Calculator","item":"https://talioncalcs.github.io/home-loan-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Home Loan Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/home-loan-calculator.html",
+    "description":"Calculate monthly EMI, total payment and total interest for a home loan using principal, rate and tenure."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How is EMI calculated?",
+        "acceptedAnswer":{"@type":"Answer","text":"EMI is calculated using the standard annuity formula: EMI = P × r × (1 + r)^n / ((1 + r)^n − 1), where r is monthly rate and n is number of months."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can I prepay home loan?",
+        "acceptedAnswer":{"@type":"Answer","text":"Most lenders allow prepayment or part-prepayment; check your loan agreement for any prepayment charges and the effect on tenure or EMI."}
+      },
+      {
+        "@type":"Question",
+        "name":"Is home loan interest tax deductible?",
+        "acceptedAnswer":{"@type":"Answer","text":"In many jurisdictions, home loan interest may be tax-deductible subject to local tax laws and conditions. Consult a tax advisor for specific guidance."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Home Loan Calculator
+  </div>
+
+  <h1>Home Loan Calculator – EMI, Total Payment & Interest</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Calculate your monthly EMI, total payment and total interest for a home loan. Enter the loan amount, expected annual interest rate, and tenure to estimate your monthly obligation and total cost.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Home Loan Calculator Form</h2>
+
+    <label for="principal">Loan Amount (₹)</label>
+    <input type="number" id="principal" min="0" aria-label="Loan principal amount" placeholder="e.g. 5000000">
+
+    <label for="annualRate">Annual Interest Rate (%)</label>
+    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate percentage" placeholder="e.g. 7.5">
+
+    <label for="loanTenure">Loan Tenure (Years)</label>
+    <input type="number" id="loanTenure" min="0" step="0.1" aria-label="Loan tenure in years" placeholder="e.g. 20">
+
+    <button type="button" onclick="calculateLoan()" aria-label="Calculate Home Loan">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
+
+    <canvas id="growthChart" role="img" aria-label="Outstanding principal chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">EMI Formula</h2>
+    <p>
+      Monthly EMI for a loan is calculated using the annuity (amortization) formula which converts the loan into equal monthly payments that include principal and interest.
+    </p>
+
+    <p><strong>Formula (mathematical):</strong></p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>EMI = P × r × (1 + r)<sup>n</sup> / ((1 + r)<sup>n</sup> − 1)</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+    <ul>
+      <li><strong>P</strong> = Loan principal amount</li>
+      <li><strong>r</strong> = Monthly interest rate (annual rate ÷ 12 ÷ 100)</li>
+      <li><strong>n</strong> = Total number of monthly payments (tenure in years × 12)</li>
+      <li><strong>EMI</strong> = Equated Monthly Installment</li>
+    </ul>
+
+    <p>
+      The calculator computes the EMI using the formula above and then derives total payment (EMI × n) and total interest (total payment − P). It can also produce an amortization-style yearly snapshot showing outstanding principal at the end of each year.
+    </p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>Loan Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Monthly EMI</td><td>The fixed monthly payment (principal + interest)</td></tr>
+      <tr><td>Total Payment</td><td>Total of all EMIs paid over the loan tenure</td></tr>
+      <tr><td>Total Interest</td><td>Amount of interest paid over the loan tenure</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      This home loan calculator helps you estimate the monthly EMI, the total amount you'll pay over the loan tenure, and the total interest cost. Use it for quick planning when comparing home loan offers or deciding the loan tenure you can afford.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use it before applying for a home loan to evaluate different interest rates and tenures, or to plan monthly budgets. Comparing EMIs across tenures and rates helps you decide on a sustainable repayment schedule.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator converts the entered annual interest rate into a monthly rate and applies the annuity formula to compute a fixed monthly EMI. Each EMI covers the monthly interest on the outstanding principal and a principal repayment portion. Over time the interest portion falls and the principal portion rises. The tool can also simulate month-by-month amortization internally to produce yearly outstanding principal snapshots for visualization.
+    </p>
+
+    <h3>Benefits of using this calculator</h3>
+    <p>
+      Quickly compare loan options and understand the long-term cost of borrowing. It helps you choose between higher EMIs with shorter tenures (lower total interest) and lower EMIs with longer tenures (higher total interest). Use conservative interest assumptions and consult lenders for exact quotes.
+    </p>
+
+    <h3>Factors that affect EMI & total cost</h3>
+    <p>
+      Key factors are loan amount, interest rate, and tenure. A small change in rate or tenure can significantly alter total interest. Prepayments and part-prepayments reduce outstanding principal and total interest but check lender rules for prepayment charges.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>How is EMI different from interest rate?</strong> EMI is the monthly payment amount; the interest rate determines how much of each EMI is interest versus principal.</p>
+    <p><strong>Can I reduce tenure by paying more?</strong> Yes — making part-prepayments or increasing EMI reduces tenure and total interest; verify prepayment rules with your lender.</p>
+    <p><strong>What happens if I miss an EMI?</strong> Missing EMI may attract penalties and affect credit history; contact your lender immediately to discuss options.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor or lender for exact loan terms and decisions.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function calculateLoan() {
+  const P = Number(document.getElementById("principal").value || 0);
+  const annual = Number(document.getElementById("annualRate").value || 0);
+  const years = Number(document.getElementById("loanTenure").value || 0);
+
+  if (P <= 0 || years <= 0 || annual < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    _lastChartData = null;
+    const canvas = document.getElementById("growthChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const r = annual / 100 / 12; // monthly rate
+  const n = Math.round(years * 12); // total months
+
+  let emi;
+  if (Math.abs(r) < 1e-14) {
+    emi = P / n;
+  } else {
+    const pow = Math.pow(1 + r, n);
+    emi = P * r * pow / (pow - 1);
+  }
+
+  const totalPayment = emi * n;
+  const totalInterest = totalPayment - P;
+
+  const fmt = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
+
+  document.getElementById("result").innerHTML = "Monthly EMI: ₹" + Math.round(emi).toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Payment: ₹" + Math.round(totalPayment).toLocaleString("en-IN") + " &nbsp; | &nbsp; Total Interest: ₹" + Math.round(totalInterest).toLocaleString("en-IN");
+
+  // build yearly outstanding principal snapshot using amortization
+  const values = [];
+  let balance = P;
+  for (let i = 1; i <= n; i++) {
+    const interestForMonth = balance * r;
+    const principalRepayment = emi - interestForMonth;
+    balance -= principalRepayment;
+    if (i % 12 === 0) {
+      values.push(Math.max(0, Math.round(balance)));
+    }
+  }
+  // include final balance if years not whole? n is already integer months; yearly snapshots are at each 12th month
+  if (values.length === 0 && n > 0) {
+    values.push(Math.round(balance));
+  }
+
+  drawChart(values);
+}
+
+let _lastChartData = null;
+function drawChart(data) {
+  _lastChartData = data ? data.slice() : null;
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
+  const denom = max === 0 ? 1 : max;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) drawChart(_lastChartData);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
