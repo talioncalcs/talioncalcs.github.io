@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inflation Calculator – Future Price & Purchasing Power | TalionCalcs</title>
+  <meta name="description" content="Free Inflation Calculator to estimate future price of an item and loss of purchasing power given an annual inflation rate. Shows year-by-year projection and charts.">
+  <link rel="canonical" href="https://talioncalcs.github.io/inflation-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Inflation Calculator – TalionCalcs">
+  <meta property="og:description" content="Estimate future prices and purchasing power loss using expected annual inflation and time horizon.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/inflation-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:300px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Inflation Calculator","item":"https://talioncalcs.github.io/inflation-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Inflation Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/inflation-calculator.html",
+    "description":"Estimate future price and loss of purchasing power using expected annual inflation and time horizon."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How do I calculate future price using inflation?",
+        "acceptedAnswer":{"@type":"Answer","text":"Future price = current price × (1 + inflation_rate)^years. This calculator uses that standard formula."}
+      },
+      {
+        "@type":"Question",
+        "name":"What is purchasing power?",
+        "acceptedAnswer":{"@type":"Answer","text":"Purchasing power is how much a given amount of money can buy. With inflation, purchasing power of a fixed sum declines over time."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Inflation Calculator
+  </div>
+
+  <h1>Inflation Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate the future price of an item and the reduction in purchasing power given an expected annual inflation rate over a chosen number of years.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Inflation Calculator Form</h2>
+
+    <label for="price">Current Price (₹)</label>
+    <input type="number" id="price" min="0" step="any" aria-label="Current price" placeholder="e.g. 1000">
+
+    <label for="inflationRate">Expected Annual Inflation Rate (%)</label>
+    <input type="number" id="inflationRate" min="0" step="any" aria-label="Annual inflation rate" placeholder="e.g. 6.5" value="6.5">
+
+    <label for="inflationYears">Years</label>
+    <input type="number" id="inflationYears" min="0" step="any" aria-label="Years" placeholder="e.g. 5" value="5">
+
+    <button type="button" onclick="calculateInflation()" aria-label="Calculate Inflation">Calculate</button>
+
+    <div class="result" id="futurePrice" aria-live="polite"></div>
+    <div class="subresult" id="ppLoss" aria-live="polite"></div>
+    <div class="subresult" id="yearlyRows" aria-live="polite"></div>
+
+    <canvas id="inflationChart" role="img" aria-label="Inflation projection chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">How calculation works</h2>
+
+    <p>
+      We use the standard exponential inflation formula to project prices forward:
+    </p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Future Price = Current Price × (1 + r)<sup>t</sup></strong>
+    </p>
+
+    <p>Where <strong>r</strong> is the annual inflation rate (decimal) and <strong>t</strong> is the number of years.</p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Future Price</td><td>Estimated price after the chosen number of years</td></tr>
+      <tr><td>Purchasing Power Loss</td><td>Percentage decline in what current money can buy</td></tr>
+      <tr><td>Yearly Breakdown</td><td>Price at each year (useful to see trajectory)</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      This tool helps you understand how inflation erodes value and how much prices may increase over time. Use conservative inflation estimates for long-term planning, and remember actual inflation varies year-to-year.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use it to project future costs (education, house, travel), to adjust savings/investment goals for inflation, or to compare nominal vs real returns.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator compounds the price by the inflation rate each year. A 6% inflation rate means prices grow roughly 6% per year; over many years this compounds significantly.
+    </p>
+
+    <h3>Factors that affect results</h3>
+    <p>
+      The key inputs are the initial price, the assumed annual inflation rate, and the time horizon. If inflation fluctuates or is higher/lower than assumed, projections will change.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Can I model different inflation rates per year?</strong> This calculator uses a constant rate. For year-by-year varying rates, adjust inputs manually or use a custom projection tool.</p>
+    <p><strong>Does this consider currency changes or real returns?</strong> No — it projects nominal price growth only. For real returns, compare investment return minus inflation.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="compound-interest-calculator.html">Compound Interest Calculator</a></li>
+    <li><a href="inflation-adjusted-salary.html">Inflation-adjusted Salary Calculator</a></li>
+    <li><a href="retirement-calculator.html">Retirement Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Use conservative estimates and consult a professional for planning.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function fmt(n) {
+  if (!isFinite(n)) return "—";
+  if (Math.abs(n) >= 100000) return Math.round(n).toLocaleString("en-IN");
+  return Number.isInteger(n) ? n.toLocaleString("en-IN") : n.toLocaleString("en-IN", {maximumFractionDigits:2});
+}
+
+function calculateInflation() {
+  const price = Number(document.getElementById("price").value || 0);
+  const ratePct = Number(document.getElementById("inflationRate").value || 0);
+  const years = Number(document.getElementById("inflationYears").value || 0);
+
+  const futureEl = document.getElementById("futurePrice");
+  const ppEl = document.getElementById("ppLoss");
+  const rowsEl = document.getElementById("yearlyRows");
+
+  if (price <= 0 || years < 0 || ratePct < 0 || !isFinite(price) || !isFinite(ratePct) || !isFinite(years)) {
+    futureEl.innerHTML = "Please enter valid values.";
+    ppEl.innerHTML = "";
+    rowsEl.innerHTML = "";
+    _lastInflationChart = null;
+    const cv = document.getElementById("inflationChart");
+    if (cv) cv.style.display = "none";
+    return;
+  }
+
+  const r = ratePct / 100;
+  const future = price * Math.pow(1 + r, years);
+  const ppLossPercent = ((future / price) - 1) * 100; // same as rate compounded, included for clarity
+
+  futureEl.innerHTML = "Estimated future price after " + years + (years === 1 ? " year" : " years") + ": ₹" + fmt(future);
+  ppEl.innerHTML = "Price increase vs today: " + ppLossPercent.toFixed(2) + "% • Purch. power of ₹" + fmt(price) + " will be equivalent to ₹" + fmt(price / Math.pow(1 + r, years)) + " in today's terms when buying the future-priced item.";
+
+  // Year-by-year breakdown
+  const maxYears = Math.max(1, Math.ceil(years));
+  const rows = [];
+  for (let y = 1; y <= maxYears; y++) {
+    const t = Math.min(y, years);
+    const amt = price * Math.pow(1 + r, t);
+    rows.push({ year: t, amt: amt });
+  }
+
+  let breakdownHtml = "";
+  if (rows.length > 0) {
+    breakdownHtml += "Yearly prices: ";
+    breakdownHtml += rows.map(obj => (obj.year % 1 === 0 ? "Year " + obj.year : obj.year.toFixed(1)) + ": ₹" + fmt(obj.amt)).join(" • ");
+  }
+  rowsEl.innerHTML = breakdownHtml;
+
+  drawInflationChart(price, r, years);
+}
+
+let _lastInflationChart = null;
+function drawInflationChart(price, r, years) {
+  _lastInflationChart = { price, r, years };
+  const canvas = document.getElementById("inflationChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext && canvas.getContext("2d");
+  if (!ctx) { canvas.style.display = "none"; return; }
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 300;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,cssWidth,cssHeight);
+
+  const padding = 40;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+
+  const steps = Math.max(1, Math.ceil(Math.min(50, years)));
+  const points = [];
+  const stepCount = steps;
+  for (let i = 0; i <= stepCount; i++) {
+    const t = (i / stepCount) * years;
+    const amt = price * Math.pow(1 + r, t);
+    points.push({ t: t, amt: amt });
+  }
+
+  const maxAmt = Math.max(...points.map(p => p.amt));
+  const stepX = points.length > 1 ? usableWidth / (points.length - 1) : 0;
+  const denom = maxAmt === 0 ? 1 : maxAmt;
+
+  // Axis
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  ctx.moveTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding, cssHeight - padding);
+  ctx.stroke();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+  points.forEach((pt, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (pt.amt / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Points & labels (sparse)
+  ctx.fillStyle = "#0b5ed7";
+  ctx.font = "12px Arial";
+  const labelStep = Math.max(1, Math.ceil(points.length / 8));
+  points.forEach((pt, i) => {
+    if (i % labelStep !== 0 && i !== points.length - 1) return;
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (pt.amt / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#222";
+    const label = "₹" + Math.round(pt.amt).toLocaleString("en-IN");
+    ctx.fillText(label, x - 30, y - 8);
+    ctx.fillStyle = "#0b5ed7";
+  });
+
+  ctx.fillStyle = "#444";
+  ctx.fillText("Years", cssWidth - padding - 30, cssHeight - padding + 20);
+  ctx.fillText("Price (₹)", 8, padding - 12);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastInflationChart) drawInflationChart(_lastInflationChart.price, _lastInflationChart.r, _lastInflationChart.years);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
