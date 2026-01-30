@@ -2,18 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <!-- UNIQUE PER PAGE -->
   <title>SIP Calculator – Monthly Investment Returns | TalionCalcs</title>
   <meta name="description" content="Free SIP Calculator to estimate monthly investment returns, total wealth created, and growth over time. Accurate, simple, and easy to use.">
-
-  <!-- CANONICAL -->
   <link rel="canonical" href="https://talioncalcs.github.io/sip-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
-  <!-- FAVICON -->
-  <link rel="icon" href="/favicon.png" type="image/png">
-
-  <!-- SOCIAL PREVIEW -->
   <meta property="og:title" content="SIP Calculator – TalionCalcs">
   <meta property="og:description" content="Calculate SIP returns instantly with a free and accurate SIP calculator.">
   <meta property="og:type" content="website">
@@ -22,7 +15,6 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- GOOGLE ANALYTICS 4 (REPLACE ID) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -54,16 +46,10 @@
     .note { font-size:13px; color:#555; margin-top:30px; }
     footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
-    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
-    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
-    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
-    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
     @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
-    /* small helper for noscript */
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
 
-  <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -96,7 +82,6 @@
   }
   </script>
 
-  <!-- FAQPage schema (matches FAQ section on the page) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -148,12 +133,10 @@
 
   <h1>SIP Calculator – Monthly Investment Returns</h1>
 
-  <!-- Intent bridge (short, under H1, before calculator) -->
   <p style="font-size:14px;color:#555;">
     Calculate how your monthly SIP investment can grow over time. Enter the amount, expected return, and duration to see estimated wealth creation.
   </p>
 
-  <!-- CALCULATOR FIRST (moved above the explanation) -->
   <div class="calc-box" role="region" aria-labelledby="calc-heading">
     <h2 id="calc-heading" style="display:none;">SIP Calculator Form</h2>
 
@@ -173,9 +156,7 @@
 
     <canvas id="growthChart" role="img" aria-label="Investment growth chart"></canvas>
   </div>
-  <!-- END CALC BOX -->
 
-  <!-- FORMULA SECTION (ADDED) -->
   <section aria-labelledby="formula-heading">
     <h2 id="formula-heading">SIP Formula</h2>
     <p>
@@ -202,10 +183,8 @@
     </p>
   </section>
 
-  <!-- AD SLOT (kept, paste AdSense after approval) -->
   <div class="ad-slot" aria-hidden="true">Advertisement</div>
 
-  <!-- EXPLANATION CONTENT (moved below calculator) -->
   <section class="explanation">
     <p>
       This SIP calculator estimates the future value of your monthly investments by applying monthly compounding to each installment. It is designed for practical planning — retirement targets, education funds, or any long-term goal where regular contributions matter. Enter your monthly contribution, expected annual return, and duration to see an estimated maturity amount and the total invested sum.
@@ -236,9 +215,7 @@
     <p><strong>Can I stop SIP anytime?</strong> Yes — most platforms allow you to pause or stop SIPs without penalties; check fund exit loads and tax implications.</p>
     <p><strong>Are returns guaranteed?</strong> No — mutual funds are market-linked. This calculator provides estimates based on the return you enter; actual outcomes vary.</p>
   </section>
-  <!-- END EXPLANATION -->
 
-  <!-- Last updated trust signal (auto-filled by JS) -->
   <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
 
   <h2>Related Calculators</h2>
@@ -261,7 +238,6 @@
 </footer>
 
 <script>
-/* Calculator logic */
 function calculate() {
   const P = Number(document.getElementById("monthly").value || 0);
   const rate = Number(document.getElementById("rate").value || 0) / 100 / 12;
@@ -292,7 +268,6 @@ function calculate() {
   drawChart(values);
 }
 
-/* Chart drawing with devicePixelRatio scaling and resize handling */
 let _lastChartData = null;
 function drawChart(data) {
   _lastChartData = data ? data.slice() : null;
@@ -304,7 +279,6 @@ function drawChart(data) {
   const ctx = canvas.getContext("2d");
   canvas.style.display = "block";
 
-  // handle high DPI
   const dpr = window.devicePixelRatio || 1;
   const cssWidth = canvas.offsetWidth;
   const cssHeight = 260;
@@ -320,8 +294,6 @@ function drawChart(data) {
   const usableWidth = cssWidth - padding * 2;
   const usableHeight = cssHeight - padding * 2;
   const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
-
-  // protect against max 0
   const denom = max === 0 ? 1 : max;
 
   ctx.beginPath();
@@ -337,7 +309,6 @@ function drawChart(data) {
 
   ctx.stroke();
 
-  // optional: draw small circles at points
   ctx.fillStyle = "#0b5ed7";
   data.forEach((val, i) => {
     const x = padding + i * stepX;
@@ -348,7 +319,6 @@ function drawChart(data) {
   });
 }
 
-/* Debounced resize redraw */
 (function(){
   let resizeTimer = null;
   window.addEventListener('resize', function(){
@@ -359,7 +329,6 @@ function drawChart(data) {
   });
 })();
 
-/* auto fill last-updated and copyright */
 (function(){
   const now = new Date();
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
