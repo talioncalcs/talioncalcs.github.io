@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Interest Calculator – Interest, Total & Interest Earned | TalionCalcs</title>
+  <meta name="description" content="Free Simple Interest Calculator to estimate interest earned and total payable for a loan or deposit. Uses the standard simple interest formula for clear projections.">
+  <link rel="canonical" href="https://talioncalcs.github.io/simple-interest-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Simple Interest Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate simple interest, total amount payable/receivable and yearly breakdown using the simple interest formula.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/simple-interest-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Simple Interest Calculator","item":"https://talioncalcs.github.io/simple-interest-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Simple Interest Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/simple-interest-calculator.html",
+    "description":"Calculate simple interest, interest earned, and total amount using principal, annual rate and time (years)."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"What is simple interest?",
+        "acceptedAnswer":{"@type":"Answer","text":"Simple interest is calculated on the original principal only and does not compound; interest = P × r × t / 100."}
+      },
+      {
+        "@type":"Question",
+        "name":"When should I use simple interest?",
+        "acceptedAnswer":{"@type":"Answer","text":"Use simple interest for short-term loans, some fixed deposits or scenarios where interest is not compounded."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Simple Interest Calculator
+  </div>
+
+  <h1>Simple Interest Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate simple interest and the total amount payable or receivable using principal, annual interest rate and time (years). This calculator uses the standard simple interest formula for transparent results.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Simple Interest Form</h2>
+
+    <label for="principal">Principal (₹)</label>
+    <input type="number" id="principal" min="0" step="any" aria-label="Principal amount" placeholder="e.g. 100000">
+
+    <label for="rate">Annual Interest Rate (%)</label>
+    <input type="number" id="rate" min="0" step="any" aria-label="Annual interest rate" placeholder="e.g. 7.5">
+
+    <label for="time">Time (Years)</label>
+    <input type="number" id="time" min="0" step="any" aria-label="Time in years" placeholder="e.g. 3">
+
+    <button type="button" onclick="calculateSimpleInterest()" aria-label="Calculate Simple Interest">Calculate</button>
+
+    <div class="result" id="interest" aria-live="polite"></div>
+    <div class="subresult" id="totalAmount" aria-live="polite"></div>
+    <div class="subresult" id="yearlyBreakdown" aria-live="polite"></div>
+
+    <canvas id="siChart" role="img" aria-label="Simple interest chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">Simple Interest Formula</h2>
+
+    <p>
+      Simple interest is calculated using the formula below. Interest is charged only on the original principal.
+    </p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Interest = P × r × t / 100</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+
+    <ul>
+      <li><strong>P</strong> = Principal amount</li>
+      <li><strong>r</strong> = Annual interest rate (percentage, e.g. 7.5)</li>
+      <li><strong>t</strong> = Time in years</li>
+      <li><strong>Total</strong> = Principal + Interest</li>
+    </ul>
+
+    <p>
+      This calculator also shows a simple year-by-year linear breakdown (interest per year is constant with simple interest).
+    </p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Interest Earned</td><td>Total simple interest over the period</td></tr>
+      <tr><td>Total Amount</td><td>Principal plus interest (amount payable/receivable)</td></tr>
+      <tr><td>Yearly Breakdown</td><td>Principal + interest accumulated each year (linear)</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      Use this tool for loans or deposits where interest is not compounded. Examples: short-term personal loans with simple interest, or some institutional agreements where simple interest is specified. Enter principal, annual rate and time to see interest, total amount and yearly values.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use it when you need a transparent, non-compounded interest estimate — for quick loan comparisons, simple deposit plans, or when contract terms specify simple interest rather than compound interest.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator multiplies the principal by the yearly rate and the number of years, dividing by 100 to get total interest. Because interest is not reinvested, each year accrues the same absolute interest amount, producing a straight-line increase in total value.
+    </p>
+
+    <h3>Factors that affect results</h3>
+    <p>
+      The main factors: principal, annual interest rate, and time. If interest compounds in your real product, use a compound interest calculator instead — compound interest will generally produce higher totals for the same nominal rate and time.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Is simple interest the same as APR?</strong> Not necessarily. APR can include fees and be compounded — confirm the exact definition when comparing offers.</p>
+    <p><strong>What if time is fractional (months)?</strong> You can enter time in years as a fraction (e.g., 6 months = 0.5 years). The formula applies directly.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="compound-interest-calculator.html">Compound Interest Calculator</a></li>
+    <li><a href="loan-eligibility-calculator.html">Loan Eligibility Calculator</a></li>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Verify figures with your lender or bank for contractual calculations.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function fmt(n) {
+  if (!isFinite(n)) return "—";
+  if (Math.abs(n) >= 100000) return Math.round(n).toLocaleString("en-IN");
+  return Number.isInteger(n) ? n.toLocaleString("en-IN") : n.toLocaleString("en-IN", {maximumFractionDigits:4});
+}
+
+function calculateSimpleInterest() {
+  const P = Number(document.getElementById("principal").value || 0);
+  const rate = Number(document.getElementById("rate").value || 0);
+  const years = Number(document.getElementById("time").value || 0);
+
+  const interestEl = document.getElementById("interest");
+  const totalEl = document.getElementById("totalAmount");
+  const breakdownEl = document.getElementById("yearlyBreakdown");
+
+  if (P <= 0 || years <= 0 || rate < 0 || !isFinite(P) || !isFinite(rate) || !isFinite(years)) {
+    interestEl.innerHTML = "Please enter valid values.";
+    totalEl.innerHTML = "";
+    breakdownEl.innerHTML = "";
+    _lastSIChart = null;
+    const canvas = document.getElementById("siChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const interestTotal = (P * rate * years) / 100;
+  const total = P + interestTotal;
+
+  interestEl.innerHTML = "Interest Earned: ₹" + fmt(interestTotal);
+  totalEl.innerHTML = "Total Amount (Principal + Interest): ₹" + fmt(total);
+
+  const yearly = [];
+  for (let y = 1; y <= Math.max(1, Math.ceil(years)); y++) {
+    const t = Math.min(y, years);
+    const interestSoFar = (P * rate * t) / 100;
+    yearly.push({ year: t, value: Math.round(P + interestSoFar) });
+  }
+
+  let breakdownHtml = "";
+  if (yearly.length > 0) {
+    breakdownHtml += "Yearly (approx): ";
+    breakdownHtml += yearly.map(obj => "Year " + obj.year + ": ₹" + obj.value.toLocaleString("en-IN")).join(" • ");
+  }
+  breakdownEl.innerHTML = breakdownHtml;
+
+  drawSIChart(P, rate, years);
+}
+
+let _lastSIChart = null;
+function drawSIChart(P, rate, years) {
+  _lastSIChart = { P: P, rate: rate, years: years };
+  const canvas = document.getElementById("siChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext && canvas.getContext("2d");
+  if (!ctx) { canvas.style.display = "none"; return; }
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,cssWidth,cssHeight);
+
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+
+  const steps = Math.min(50, Math.max(1, Math.ceil(years)));
+  const points = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * years;
+    const amt = P + (P * rate * t) / 100;
+    points.push({ t: t, amt: amt });
+  }
+
+  const maxAmt = Math.max(...points.map(p => p.amt));
+  const stepX = points.length > 1 ? usableWidth / (points.length - 1) : 0;
+  const denom = maxAmt === 0 ? 1 : maxAmt;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+  points.forEach((pt, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (pt.amt / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  ctx.fillStyle = "#0b5ed7";
+  points.forEach((pt, i) => {
+    if (i % Math.ceil(points.length / 8) !== 0) return;
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (pt.amt / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#222";
+    ctx.font = "12px Arial";
+    ctx.fillText("₹" + Math.round(pt.amt).toLocaleString("en-IN"), x - 24, y - 8);
+    ctx.fillStyle = "#0b5ed7";
+  });
+
+  ctx.fillStyle = "#444";
+  ctx.font = "12px Arial";
+  ctx.fillText("Years", cssWidth - padding - 30, cssHeight - padding + 16);
+  ctx.fillText("Amount (₹)", 8, padding - 8);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastSIChart) drawSIChart(_lastSIChart.P, _lastSIChart.rate, _lastSIChart.years);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
