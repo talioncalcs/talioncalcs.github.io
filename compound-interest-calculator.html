@@ -1,0 +1,399 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  
+  <!-- UNIQUE PER PAGE -->  
+  <title>Compound Interest Calculator – Growth & Interest | TalionCalcs</title>  
+  <meta name="description" content="Free Compound Interest Calculator to compute final amount and interest earned. Supports different compounding frequencies and shows yearly growth.">  
+  
+  <!-- CANONICAL -->  
+  <link rel="canonical" href="https://talioncalcs.github.io/compound-interest-calculator.html">  
+  
+  <!-- FAVICON -->  
+  <link rel="icon" href="/favicon.png" type="image/png">  
+  
+  <!-- SOCIAL PREVIEW -->  
+  <meta property="og:title" content="Compound Interest Calculator – TalionCalcs">  
+  <meta property="og:description" content="Calculate compound interest and final amount with different compounding frequencies.">  
+  <meta property="og:type" content="website">  
+  <meta property="og:url" content="https://talioncalcs.github.io/compound-interest-calculator.html">  
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  
+  <!-- GOOGLE ANALYTICS 4 (REPLACE ID) -->  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>  
+  <script>  
+    // Replace G-XXXXXXXXXX with your GA4 Measurement ID on every page.  
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());  
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });  
+  </script>  
+  
+  <style>  
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }  
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }  
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }  
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }  
+    .page { max-width: 760px; margin: auto; padding: 18px; }  
+    h1 { font-size: 24px; margin-bottom: 8px; }  
+    h2 { font-size: 18px; margin-top: 30px; }  
+    h3 { font-size: 16px; margin-top: 20px; }  
+    p { font-size: 15px; line-height: 1.6; }  
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }  
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }  
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }  
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }  
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }  
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }  
+    button:hover { background:#084298; }  
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }  
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }  
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }  
+    .note { font-size:13px; color:#555; margin-top:30px; }  
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }  
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }  
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }  
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }  
+    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }  
+    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }  
+    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }  
+    /* small helper for noscript */  
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }  
+  </style>  
+  
+  <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->  
+  <script type="application/ld+json">  
+  {  
+    "@context":"https://schema.org",  
+    "@type":"WebSite",  
+    "name":"TalionCalcs",  
+    "url":"https://talioncalcs.github.io/"  
+  }  
+  </script>  
+  
+  <script type="application/ld+json">  
+  {  
+    "@context":"https://schema.org",  
+    "@type":"BreadcrumbList",  
+    "itemListElement":[  
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },  
+      { "@type":"ListItem","position":2,"name":"Compound Interest Calculator","item":"https://talioncalcs.github.io/compound-interest-calculator.html" }  
+    ]  
+  }  
+  </script>  
+  
+  <script type="application/ld+json">  
+  {  
+    "@context":"https://schema.org",  
+    "@type":"SoftwareApplication",  
+    "name":"Compound Interest Calculator",  
+    "applicationCategory":"FinanceApplication",  
+    "operatingSystem":"All",  
+    "url":"https://talioncalcs.github.io/compound-interest-calculator.html",  
+    "description":"Calculate compound interest and final amount using principal, rate, compounding frequency and duration."  
+  }  
+  </script>  
+  
+  <!-- FAQPage schema (matches FAQ section on the page) -->  
+  <script type="application/ld+json">  
+  {  
+    "@context":"https://schema.org",  
+    "@type":"FAQPage",  
+    "mainEntity":[  
+      {  
+        "@type":"Question",  
+        "name":"What is compound interest?",  
+        "acceptedAnswer":{"@type":"Answer","text":"Compound interest is interest computed on both the initial principal and the accumulated interest from prior periods."}  
+      },  
+      {  
+        "@type":"Question",  
+        "name":"How often should interest be compounded?",  
+        "acceptedAnswer":{"@type":"Answer","text":"Compounding frequency (annually, semi-annually, quarterly, monthly, daily) affects the final amount; more frequent compounding yields higher final value, all else equal."}  
+      },  
+      {  
+        "@type":"Question",  
+        "name":"Does compound interest account for additional deposits?",  
+        "acceptedAnswer":{"@type":"Answer","text":"The basic compound interest formula assumes no additional deposits. For regular deposits use future value of series formulas or a savings/SIP calculator."}  
+      }  
+    ]  
+  }  
+  </script>  
+  
+</head>  
+  
+<body>  
+  
+<noscript>  
+  <div class="nojs">  
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.  
+  </div>  
+</noscript>  
+  
+<div class="site-header">  
+  <div class="inner">  
+    <a href="index.html" aria-label="TalionCalcs home">  
+      <img src="assets/logo.png" alt="TalionCalcs Logo" width="28" height="28">  
+      TalionCalcs  
+    </a>  
+    <a href="index.html">Home</a>  
+  </div>  
+</div>  
+  
+<main class="page" id="main-content">  
+  
+  <div class="breadcrumb" aria-label="Breadcrumb">  
+    <a href="index.html">Home</a> › Compound Interest Calculator  
+  </div>  
+  
+  <h1>Compound Interest Calculator – Growth & Interest</h1>  
+  
+  <!-- Intent bridge (short, under H1, before calculator) -->  
+  <p style="font-size:14px;color:#555;">  
+    Calculate final amount and interest earned using compound interest. Select compounding frequency and duration to see how your principal grows.  
+  </p>  
+  
+  <!-- CALCULATOR FIRST (moved above the explanation) -->  
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">  
+    <h2 id="calc-heading" style="display:none;">Compound Interest Calculator Form</h2>  
+  
+    <label for="principal">Principal Amount (₹)</label>  
+    <input type="number" id="principal" min="0" aria-label="Principal amount" placeholder="e.g. 100000">  
+  
+    <label for="annualRate">Annual Interest Rate (%)</label>  
+    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate percentage" placeholder="e.g. 7.5">  
+  
+    <label for="freq">Compounding Frequency</label>  
+    <select id="freq" aria-label="Compounding frequency">  
+      <option value="1">Annually</option>  
+      <option value="2">Semi-annually</option>  
+      <option value="4">Quarterly</option>  
+      <option value="12" selected>Monthly</option>  
+      <option value="365">Daily</option>  
+    </select>  
+  
+    <label for="years">Duration (Years)</label>  
+    <input type="number" id="years" min="0" step="0.1" aria-label="Duration in years" placeholder="e.g. 5">  
+  
+    <button type="button" onclick="calculate()" aria-label="Calculate Compound Interest">Calculate</button>  
+  
+    <div class="result" id="result" aria-live="polite"></div>  
+    <div class="result" id="invested" aria-live="polite"></div>  
+  
+    <canvas id="growthChart" role="img" aria-label="Growth chart"></canvas>  
+  </div>  
+  <!-- END CALC BOX -->  
+  
+  <!-- FORMULA SECTION (ADDED) -->  
+  <section aria-labelledby="formula-heading">  
+    <h2 id="formula-heading">Compound Interest Formula</h2>  
+    <p>  
+      Compound interest calculates how principal grows when interest is reinvested each compounding period. The standard formula gives the accumulated amount after t years.  
+    </p>  
+  
+    <p><strong>Formula (mathematical):</strong></p>  
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">  
+      <strong>A = P × (1 + r / n)<sup>n × t</sup></strong>  
+    </p>  
+  
+    <p>  
+      Where:  
+    </p>  
+    <ul>  
+      <li><strong>P</strong> = Principal (initial amount)</li>  
+      <li><strong>r</strong> = Annual nominal interest rate (as a decimal)</li>  
+      <li><strong>n</strong> = Number of compounding periods per year</li>  
+      <li><strong>t</strong> = Time in years</li>  
+      <li><strong>A</strong> = Accumulated amount after t years</li>  
+    </ul>  
+  
+    <p>  
+      Interest earned = A − P. Use this formula to compare how different compounding frequencies and rates affect growth.  
+    </p>  
+  </section>  
+  
+  <section class="cmp-table">  
+    <h2>Compounding Frequency Effect</h2>  
+    <table>  
+      <tr><th>Frequency</th><th>Example</th></tr>  
+      <tr><td>Annually</td><td>Interest added once per year</td></tr>  
+      <tr><td>Monthly</td><td>Interest added each month — yields higher final amount than annual for same nominal rate</td></tr>  
+    </table>  
+  </section>  
+  
+  <!-- AD SLOT (kept, paste AdSense after approval) -->  
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>  
+  
+  <!-- EXPLANATION CONTENT (moved below calculator) -->  
+  <section class="explanation">  
+    <p>  
+      This compound interest calculator computes the accumulated amount when interest is compounded at a chosen frequency. It is useful for bank deposits, bonds, savings, or any investment where interest is periodically reinvested. Enter your principal, annual rate, compounding frequency, and duration to see the final amount and interest earned.  
+    </p>  
+  
+    <h3>When to use this calculator</h3>  
+    <p>  
+      Use it to estimate returns on fixed deposits, recurring bank products, or to model how savings grow over time under compound interest assumptions. It is helpful when comparing different banks or instruments with the same nominal rate but different compounding frequencies.  
+    </p>  
+  
+    <h3>How it works (plain explanation)</h3>  
+    <p>  
+      The calculator converts the annual percentage into a decimal monthly/daily rate depending on chosen frequency and applies it repeatedly across the total number of compounding periods (n × t). More frequent compounding means interest is calculated on previously earned interest more often, increasing the final amount slightly compared to less frequent compounding.  
+    </p>  
+  
+    <h3>Benefits & limitations</h3>  
+    <p>  
+      Compound interest demonstrates the power of reinvestment — small differences in rate or compounding frequency can matter over long durations. However, this basic model assumes a constant nominal rate and no additional deposits or withdrawals. For scenarios with periodic contributions or varying rates use a future-value-of-series or XIRR-style calculations.  
+    </p>  
+  
+    <h3>Frequently asked questions</h3>  
+    <p><strong>What is compound interest?</strong> Interest on both principal and accumulated interest over previous periods.</p>  
+    <p><strong>How often should interest be compounded?</strong> More frequent compounding (monthly/daily) yields a slightly higher amount than annual compounding for the same nominal rate.</p>  
+    <p><strong>Does it include additional deposits?</strong> No — this calculator assumes a single initial deposit. For recurring deposits use a SIP/savings calculator.</p>  
+  </section>  
+  <!-- END EXPLANATION -->  
+  
+  <!-- Last updated trust signal (auto-filled by JS) -->  
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>  
+  
+  <h2>Related Calculators</h2>  
+  <ul>  
+    <li><a href="fd-calculator.html">FD Calculator</a></li>  
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>  
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>  
+  </ul>  
+  
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified advisor for investment decisions.</p>  
+  
+</main>  
+  
+<footer>  
+  <a href="/privacy.html">Privacy</a> |  
+  <a href="/disclaimer.html">Disclaimer</a> |  
+  <a href="/terms.html">Terms</a> |  
+  <a href="/contact.html">Contact</a><br>  
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs  
+</footer>  
+  
+<script>  
+/* Calculator logic */  
+function calculate() {  
+  const P = Number(document.getElementById("principal").value || 0);  
+  const annual = Number(document.getElementById("annualRate").value || 0);  
+  const n = Number(document.getElementById("freq").value || 12);  
+  const years = Number(document.getElementById("years").value || 0);  
+  
+  if (P <= 0 || years <= 0 || annual < 0 || n <= 0) {  
+    document.getElementById("result").innerHTML = "Please enter valid values.";  
+    document.getElementById("invested").innerHTML = "";  
+    _lastChartData = null;  
+    const canvas = document.getElementById("growthChart");  
+    if (canvas) canvas.style.display = "none";  
+    return;  
+  }  
+  
+  const r = annual / 100;  
+  const periods = n * years;  
+  const base = 1 + r / n;  
+  const A = P * Math.pow(base, periods);  
+  const interest = A - P;  
+  
+  const roundedA = Math.round(A);  
+  const roundedInterest = Math.round(interest);  
+  
+  document.getElementById("result").innerHTML = "Final Amount: ₹" + roundedA.toLocaleString("en-IN");  
+  document.getElementById("invested").innerHTML = "Interest Earned: ₹" + roundedInterest.toLocaleString("en-IN");  
+  
+  // build yearly snapshot values for chart (amount at each whole year)  
+  const yearly = [];  
+  for (let y = 1; y <= Math.ceil(years); y++) {  
+    const t = Math.min(y, years); // cap final partial year if years not integer  
+    const amt = P * Math.pow(base, n * t);  
+    yearly.push(Math.round(amt));  
+  }  
+  
+  drawChart(yearly);  
+}  
+  
+/* Chart drawing with devicePixelRatio scaling and resize handling */  
+let _lastChartData = null;  
+function drawChart(data) {  
+  _lastChartData = data ? data.slice() : null;  
+  const canvas = document.getElementById("growthChart");  
+  if (!data || data.length === 0 || !canvas) {  
+    if (canvas) canvas.style.display = "none";  
+    return;  
+  }  
+  const ctx = canvas.getContext("2d");  
+  canvas.style.display = "block";  
+  
+  // handle high DPI  
+  const dpr = window.devicePixelRatio || 1;  
+  const cssWidth = canvas.offsetWidth;  
+  const cssHeight = 260;  
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));  
+  canvas.height = Math.floor(cssHeight * dpr);  
+  canvas.style.height = cssHeight + "px";  
+  
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);  
+  ctx.clearRect(0, 0, cssWidth, cssHeight);  
+  
+  const max = Math.max(...data);  
+  const padding = 30;  
+  const usableWidth = cssWidth - padding * 2;  
+  const usableHeight = cssHeight - padding * 2;  
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;  
+  
+  // protect against max 0  
+  const denom = max === 0 ? 1 : max;  
+  
+  ctx.beginPath();  
+  ctx.strokeStyle = "#0b5ed7";  
+  ctx.lineWidth = 2;  
+  
+  data.forEach((val, i) => {  
+    const x = padding + i * stepX;  
+    const y = cssHeight - padding - (val / denom) * usableHeight;  
+    if (i === 0) ctx.moveTo(x, y);  
+    else ctx.lineTo(x, y);  
+  });  
+  
+  ctx.stroke();  
+  
+  // optional: draw small circles at points  
+  ctx.fillStyle = "#0b5ed7";  
+  data.forEach((val, i) => {  
+    const x = padding + i * stepX;  
+    const y = cssHeight - padding - (val / denom) * usableHeight;  
+    ctx.beginPath();  
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);  
+    ctx.fill();  
+  });  
+}  
+  
+/* Debounced resize redraw */  
+(function(){  
+  let resizeTimer = null;  
+  window.addEventListener('resize', function(){  
+    if (resizeTimer) clearTimeout(resizeTimer);  
+    resizeTimer = setTimeout(function(){  
+      if (_lastChartData) drawChart(_lastChartData);  
+    }, 150);  
+  });  
+})();  
+  
+/* auto fill last-updated and copyright */  
+(function(){  
+  const now = new Date();  
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];  
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();  
+  const lastEl = document.getElementById('last-updated');  
+  if(lastEl) lastEl.textContent = monthYear;  
+  const cy = document.getElementById('copyright-year');  
+  if(cy) cy.textContent = now.getFullYear();  
+})();  
+</script>  
+  
+</body>  
+</html>
