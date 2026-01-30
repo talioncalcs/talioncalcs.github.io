@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- UNIQUE PER PAGE -->
+  <title>Car Loan Calculator – EMI & Total Interest | TalionCalcs</title>
+  <meta name="description" content="Free Car Loan Calculator to compute monthly EMI, total payment and total interest for auto loans. Enter loan amount, interest rate and tenure to get instant results.">
+
+  <!-- CANONICAL -->
+  <link rel="canonical" href="https://talioncalcs.github.io/car-loan-calculator.html">
+
+  <!-- FAVICON -->
+  <link rel="icon" href="/favicon.png" type="image/png">
+
+  <!-- SOCIAL PREVIEW -->
+  <meta property="og:title" content="Car Loan Calculator – TalionCalcs">
+  <meta property="og:description" content="Calculate your car loan EMI, total interest and total payment instantly with this free car loan calculator.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/car-loan-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- GOOGLE ANALYTICS 4 (REPLACE ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    // Replace G-XXXXXXXXXX with your GA4 Measurement ID on every page.
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .lead-form { margin-top:12px; border-top:1px solid #eee; padding-top:12px; }
+    .lead-form input[type="email"] { padding:8px; width:60%; max-width:320px; margin-right:8px; }
+    @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
+    /* small helper for noscript */
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <!-- Structured data: WebSite + Breadcrumb + SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Car Loan Calculator","item":"https://talioncalcs.github.io/car-loan-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Car Loan Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/car-loan-calculator.html",
+    "description":"Compute EMI, total interest and total payment for car loans using loan amount, annual rate and tenure."
+  }
+  </script>
+
+  <!-- FAQPage schema (matches FAQ section on the page) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How is EMI calculated?",
+        "acceptedAnswer":{"@type":"Answer","text":"EMI is calculated using the standard annuity formula: EMI = [P × r × (1 + r)^n] / [(1 + r)^n − 1], where r is monthly rate and n is number of months."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can I prepay my car loan?",
+        "acceptedAnswer":{"@type":"Answer","text":"Most lenders allow prepayment but charges and rules vary. Prepaying reduces principal and total interest; check your loan agreement."}
+      },
+      {
+        "@type":"Question",
+        "name":"Does loan tenure affect EMI and interest?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes. Longer tenure reduces EMI but increases total interest; shorter tenure increases EMI but lowers total interest paid."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" width="28" height="28">
+      TalionCalcs
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Car Loan Calculator
+  </div>
+
+  <h1>Car Loan Calculator – EMI & Total Interest</h1>
+
+  <!-- Intent bridge (short, under H1, before calculator) -->
+  <p style="font-size:14px;color:#555;">
+    Calculate monthly EMI, total interest and total payment for your car loan. Enter loan amount, annual interest rate and tenure to get instant results.
+  </p>
+
+  <!-- CALCULATOR FIRST (moved above the explanation) -->
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Car Loan Calculator Form</h2>
+
+    <label for="loanAmount">Loan Amount (₹)</label>
+    <input type="number" id="loanAmount" min="0" aria-label="Loan amount" placeholder="e.g. 800000">
+
+    <label for="annualRate">Annual Interest Rate (%)</label>
+    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate percentage" placeholder="e.g. 9.5">
+
+    <label for="tenureYears">Loan Tenure (Years)</label>
+    <input type="number" id="tenureYears" min="0" aria-label="Loan tenure in years" placeholder="e.g. 5">
+
+    <button type="button" onclick="calculateCarLoan()" aria-label="Calculate Car Loan">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
+
+    <canvas id="growthChart" role="img" aria-label="Amortization chart"></canvas>
+  </div>
+  <!-- END CALC BOX -->
+
+  <!-- FORMULA SECTION (ADDED) -->
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">Car Loan Formula (EMI)</h2>
+    <p>
+      EMI (Equated Monthly Installment) for a fixed-rate loan is computed using the annuity formula below.
+    </p>
+
+    <p><strong>Formula (mathematical):</strong></p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>EMI = [P × r × (1 + r)<sup>n</sup>] ÷ [(1 + r)<sup>n</sup> − 1]</strong>
+    </p>
+
+    <p>
+      Where:
+    </p>
+    <ul>
+      <li><strong>P</strong> = Loan principal amount</li>
+      <li><strong>r</strong> = Monthly interest rate (annual rate ÷ 12 ÷ 100)</li>
+      <li><strong>n</strong> = Total number of monthly installments (years × 12)</li>
+    </ul>
+
+    <p>
+      Total Payment = EMI × n<br>
+      Total Interest = Total Payment − P
+    </p>
+  </section>
+
+  <section class="cmp-table">
+    <h2>EMI vs Total Interest</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>EMI</td><td>Fixed monthly payment you must pay each month</td></tr>
+      <tr><td>Total Interest</td><td>Cumulative interest paid over the loan tenure</td></tr>
+    </table>
+  </section>
+
+  <!-- AD SLOT (kept, paste AdSense after approval) -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <!-- EXPLANATION CONTENT (moved below calculator) -->
+  <section class="explanation">
+    <p>
+      This car loan calculator computes your monthly EMI using the standard annuity formula and also provides the total amount you'll pay over the loan tenure and the total interest component. It helps you compare different interest rates and tenures to choose the right repayment plan for your budget.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this calculator before taking a car loan to estimate affordability, monthly budget impact, and interest costs. It is helpful when comparing loan offers, checking the effect of a slightly lower rate, or testing the impact of a shorter or longer tenure.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator converts the annual interest rate to a monthly rate and calculates the EMI so that the borrower pays the same amount every month. Early in the loan, a larger portion of the EMI goes toward interest; later, more goes toward principal. Shorter tenures increase EMI but reduce total interest; longer tenures lower EMI but increase total interest.
+    </p>
+
+    <h3>Factors that affect car loan cost</h3>
+    <p>
+      Factors include the principal (loan amount), the interest rate, loan tenure, processing fees, and any prepayment or foreclosure charges. Negotiating a lower interest rate or making a larger down payment reduces the loan principal and lowers total interest.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>How is EMI calculated?</strong> EMI is calculated using the annuity formula shown above which spreads principal and interest across months.</p>
+    <p><strong>Can I prepay my car loan?</strong> Most lenders allow prepayment but check for charges and terms. Prepayment reduces interest and can shorten tenure or lower EMI.</p>
+    <p><strong>Does loan tenure affect EMI and interest?</strong> Yes — longer tenure reduces monthly EMI but increases total interest; shorter tenure raises EMI but reduces total interest paid.</p>
+  </section>
+  <!-- END EXPLANATION -->
+
+  <!-- Last updated trust signal (auto-filled by JS) -->
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified lender or financial advisor for loan decisions.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+/* Car loan calculator logic */
+function calculateCarLoan() {
+  const P = Number(document.getElementById("loanAmount").value || 0);
+  const annual = Number(document.getElementById("annualRate").value || 0);
+  const years = Number(document.getElementById("tenureYears").value || 0);
+
+  if (P <= 0 || years <= 0 || annual < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    _lastChartData = null;
+    const canvas = document.getElementById("growthChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const r = annual / 100 / 12; // monthly rate
+  const n = years * 12; // total months
+
+  // handle zero interest separately (avoid division by zero)
+  let emi;
+  if (r === 0) {
+    emi = P / n;
+  } else {
+    const factor = Math.pow(1 + r, n);
+    emi = (P * r * factor) / (factor - 1);
+  }
+
+  const totalPayment = emi * n;
+  const totalInterest = totalPayment - P;
+
+  // Format numbers for display
+  const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+  document.getElementById("result").innerHTML = "Monthly EMI: " + formatter.format(Math.round(emi));
+  document.getElementById("invested").innerHTML = "Total Payment: " + formatter.format(Math.round(totalPayment)) + " — Total Interest: " + formatter.format(Math.round(totalInterest));
+
+  // create annual cumulative payment values for chart (EMI paid each year)
+  const cumPaid = [];
+  for (let y = 1; y <= years; y++) {
+    cumPaid.push(Math.round(emi * 12 * y));
+  }
+
+  drawChart(cumPaid);
+}
+
+/* Chart drawing with devicePixelRatio scaling and resize handling (kept from master template) */
+let _lastChartData = null;
+function drawChart(data) {
+  _lastChartData = data ? data.slice() : null;
+  const canvas = document.getElementById("growthChart");
+  if (!data || data.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  // handle high DPI
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...data);
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = data.length > 1 ? usableWidth / (data.length - 1) : 0;
+
+  // protect against max 0
+  const denom = max === 0 ? 1 : max;
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+
+  // optional: draw small circles at points
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+/* Debounced resize redraw */
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) drawChart(_lastChartData);
+    }, 150);
+  });
+})();
+
+/* auto fill last-updated and copyright */
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
