@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Eligibility Calculator – How Much You Can Borrow | TalionCalcs</title>
+  <meta name="description" content="Free loan eligibility calculator to estimate how much loan you can borrow based on monthly income, existing EMIs, desired tenure and interest rate.">
+  <link rel="canonical" href="https://talioncalcs.github.io/loan-eligibility-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Loan Eligibility Calculator – TalionCalcs">
+  <meta property="og:description" content="Estimate your loan eligibility (how much you can borrow) using income, existing EMIs, tenure and rates.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/loan-eligibility-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:300px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Loan Eligibility Calculator","item":"https://talioncalcs.github.io/loan-eligibility-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Loan Eligibility Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/loan-eligibility-calculator.html",
+    "description":"Estimate loan eligibility based on monthly income, existing EMIs, tenure and interest rate."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How do banks check loan eligibility?",
+        "acceptedAnswer":{"@type":"Answer","text":"Lenders typically use your monthly income, existing obligations (EMIs), credit history, age and tenure to calculate maximum eligible EMI and convert that to an eligible loan amount."}
+      },
+      {
+        "@type":"Question",
+        "name":"What is the typical EMI-to-income ratio used?",
+        "acceptedAnswer":{"@type":"Answer","text":"Many lenders consider up to 40–60% of net monthly income as available for EMIs depending on profile; this calculator lets you choose the percent to model different lender rules."}
+      },
+      {
+        "@type":"Question",
+        "name":"Does this calculator guarantee loan approval?",
+        "acceptedAnswer":{"@type":"Answer","text":"No. This calculator provides an estimate. Final eligibility depends on lender-specific credit checks and documentation."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Loan Eligibility Calculator
+  </div>
+
+  <h1>Loan Eligibility Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate how much loan you can borrow (approx.) based on your monthly income, existing EMIs, desired tenure and interest rate. Use the optional maximum EMI percentage to model different lender rules.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Loan Eligibility Form</h2>
+
+    <label for="income">Monthly Net Income (₹)</label>
+    <input type="number" id="income" min="0" aria-label="Monthly net income" placeholder="e.g. 60000">
+
+    <label for="existing">Existing EMIs (Monthly) (₹)</label>
+    <input type="number" id="existing" min="0" aria-label="Existing monthly EMIs" placeholder="e.g. 8000">
+
+    <label for="percent">Max EMI as % of Income</label>
+    <input type="number" id="percent" min="0" max="100" step="1" aria-label="Maximum EMI percent of income" placeholder="e.g. 50" value="50">
+
+    <label for="rate">Expected Annual Interest Rate (%)</label>
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 11" value="11">
+
+    <label for="tenure">Desired Tenure (Years)</label>
+    <input type="number" id="tenure" min="0" step="1" aria-label="Loan tenure in years" placeholder="e.g. 5" value="5">
+
+    <button type="button" onclick="calculateEligibility()" aria-label="Calculate Eligibility">Calculate Eligibility</button>
+
+    <div class="result" id="eligibleEmi" aria-live="polite"></div>
+    <div class="subresult" id="eligibleLoan" aria-live="polite"></div>
+    <div class="subresult" id="monthlyLeft" aria-live="polite"></div>
+    <div class="subresult" id="noteArea" aria-live="polite"></div>
+
+    <canvas id="eligChart" role="img" aria-label="Eligible loan by tenure chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">How eligibility is calculated</h2>
+
+    <p>
+      This calculator models lender behaviour in two steps:
+    </p>
+    <ol>
+      <li>Determine the <strong>maximum monthly EMI</strong> the lender may allow: <em>maxEMI = monthlyIncome × (percent / 100)</em>.</li>
+      <li>Subtract existing EMIs to find <strong>available EMI</strong>: <em>availableEMI = maxEMI − existingEMIs</em>. If availableEMI ≤ 0, eligibility is zero.</li>
+    </ol>
+
+    <p>
+      The available EMI is then converted into an eligible loan amount using the standard loan formula (reducing balance):
+    </p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Loan = EMI × [ (1 − (1 + r)<sup>−n</sup>) / r ]</strong>
+    </p>
+
+    <p>Where <strong>r</strong> is monthly rate (annual ÷ 12 ÷ 100) and <strong>n</strong> is number of months (years × 12).</p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>Eligibility Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Max EMI Allowed</td><td>Max EMI based on chosen percent of income</td></tr>
+      <tr><td>Available EMI</td><td>EMI left after paying existing obligations — usable for a new loan</td></tr>
+      <tr><td>Eligible Loan</td><td>Approx. loan principal you can borrow for given tenure & rate</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      This tool provides an approximation of how lenders typically compute eligibility. Different banks and NBFCs use varying policies (different maximum EMI ratios, add-on factors for co-applicants, credit score checks). Use this calculator to get a realistic starting point and then check with your preferred lender for exact eligibility.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use it when planning a new loan, comparing tenures or estimating whether your income supports the desired loan amount. It's helpful before approaching lenders so you have a sense of expected borrowing capacity.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator turns your income into a safe monthly EMI limit, removes existing commitments, and translates the remaining monthly capacity into a loan amount using standard amortization math. Shorter tenures increase eligible loan amount for the same EMI? Actually shorter tenures mean higher EMI for same loan — for a fixed available EMI, longer tenures translate into higher eligible principal because EMI covers more months (but beware higher overall interest).
+    </p>
+
+    <h3>Factors that affect eligibility</h3>
+    <p>
+      Major factors: monthly income, existing EMIs, chosen maximum EMI-to-income ratio, interest rate and tenure. Your credit score, employment stability, age and lender-specific policies also affect final approval.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>What percent should I choose for max EMI?</strong> Conservative lenders use 40–50% of net income; many allow up to 50–60% for salaried borrowers with good credit. Use 50% as a realistic default and adjust to model specific lenders.</p>
+    <p><strong>Can co-applicants increase eligibility?</strong> Yes — combined income can increase max EMI and therefore eligible loan, subject to lender rules and combined obligations.</p>
+    <p><strong>Is this guaranteed approval?</strong> No — this is an estimate. Lenders will verify documents, run credit checks and apply their own scoring and rules before approving.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="personal-loan-calculator.html">Personal Loan EMI Calculator</a></li>
+    <li><a href="home-loan-calculator.html">Home Loan Calculator</a></li>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial advice. Actual loan eligibility is determined by the lender after due diligence.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function calculateEligibility() {
+  const income = Number(document.getElementById("income").value || 0);
+  const existing = Number(document.getElementById("existing").value || 0);
+  const percent = Number(document.getElementById("percent").value || 50);
+  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
+  const years = Number(document.getElementById("tenure").value || 0);
+
+  const eligibleEmiEl = document.getElementById("eligibleEmi");
+  const eligibleLoanEl = document.getElementById("eligibleLoan");
+  const monthlyLeftEl = document.getElementById("monthlyLeft");
+  const noteEl = document.getElementById("noteArea");
+
+  if (income <= 0 || percent <= 0 || years <= 0 || annualRate < 0) {
+    eligibleEmiEl.innerHTML = "Please enter valid values.";
+    eligibleLoanEl.innerHTML = "";
+    monthlyLeftEl.innerHTML = "";
+    noteEl.innerHTML = "";
+    _lastEligChart = null;
+    const canvas = document.getElementById("eligChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  // Step 1: max EMI allowed based on percent of income
+  const maxEmiAllowed = (income * (percent / 100));
+  // Step 2: available EMI after existing obligations
+  const availableEmi = Math.max(0, maxEmiAllowed - existing);
+
+  // Convert available EMI to eligible loan for the chosen tenure
+  const monthlyRate = annualRate / 12;
+  const n = years * 12;
+
+  let eligibleLoan = 0;
+  if (monthlyRate === 0) {
+    eligibleLoan = availableEmi * n;
+  } else {
+    const denom = monthlyRate;
+    const factor = 1 - Math.pow(1 + monthlyRate, -n);
+    eligibleLoan = availableEmi * (factor / denom);
+  }
+
+  eligibleEmiEl.innerHTML = "Max available EMI for new loan: ₹" + Math.round(availableEmi).toLocaleString("en-IN");
+  eligibleLoanEl.innerHTML = "Estimated Eligible Loan (for " + years + " years at " + (annualRate*100).toFixed(2) + "% p.a.): ₹" + Math.round(eligibleLoan).toLocaleString("en-IN");
+  monthlyLeftEl.innerHTML = "Max EMI allowed by percent: ₹" + Math.round(maxEmiAllowed).toLocaleString("en-IN") + " • Existing EMIs: ₹" + Math.round(existing).toLocaleString("en-IN");
+
+  if (availableEmi <= 0) {
+    noteEl.innerHTML = "Note: Your existing EMIs already consume the selected maximum EMI percentage of your income. Increase income or reduce existing EMIs to become eligible.";
+  } else {
+    noteEl.innerHTML = "";
+  }
+
+  // Build chart data: eligible loan across multiple tenures (1 to 20 years)
+  const tenures = [];
+  const loanValues = [];
+  const maxTenure = 20;
+  for (let y = 1; y <= maxTenure; y++) {
+    const m = y * 12;
+    let loanForTenure = 0;
+    if (monthlyRate === 0) {
+      loanForTenure = availableEmi * m;
+    } else {
+      const fac = 1 - Math.pow(1 + monthlyRate, -m);
+      loanForTenure = availableEmi * (fac / monthlyRate);
+    }
+    tenures.push(y);
+    loanValues.push(Math.round(loanForTenure));
+  }
+
+  drawEligChart(tenures, loanValues);
+}
+
+let _lastEligChart = null;
+function drawEligChart(tenures, loanValues) {
+  _lastEligChart = { tenures: tenures.slice(), loanValues: loanValues.slice() };
+  const canvas = document.getElementById("eligChart");
+  if (!tenures || tenures.length === 0 || !canvas) {
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 300;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const max = Math.max(...loanValues);
+  const padding = 40;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = loanValues.length > 1 ? usableWidth / (loanValues.length - 1) : 0;
+  const denom = max === 0 ? 1 : max;
+
+  // Axis
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  // y-axis
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  // x-axis
+  ctx.moveTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding, cssHeight - padding);
+  ctx.stroke();
+
+  // Draw line
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+  loanValues.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Points
+  ctx.fillStyle = "#0b5ed7";
+  loanValues.forEach((val, i) => {
+    const x = padding + i * stepX;
+    const y = cssHeight - padding - (val / denom) * usableHeight;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Labels for some ticks on x-axis (every 2 years)
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  tenures.forEach((y, i) => {
+    if (y % 2 === 0 || y === 1 || y === tenures[tenures.length-1]) {
+      const x = padding + i * stepX;
+      ctx.fillText(y + "y", x - 10, cssHeight - padding + 16);
+    }
+  });
+
+  // Y-axis top label
+  ctx.fillText("Eligible loan (₹)", 8, padding - 8);
+
+  // Small annotation: last point value
+  const lastX = padding + (loanValues.length - 1) * stepX;
+  const lastY = cssHeight - padding - (loanValues[loanValues.length - 1] / denom) * usableHeight;
+  ctx.fillStyle = "#444";
+  ctx.fillText("₹" + loanValues[loanValues.length - 1].toLocaleString("en-IN"), lastX - 30, Math.max(12, lastY - 8));
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastEligChart) drawEligChart(_lastEligChart.tenures, _lastEligChart.loanValues);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
