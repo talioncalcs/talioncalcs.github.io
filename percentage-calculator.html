@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Percentage Calculator – Percent, Change & Conversions | TalionCalcs</title>
+  <meta name="description" content="Free percentage calculator to compute X% of Y, find what percent one number is of another, percentage change, and increase/decrease by percentage. Practical and easy to use.">
+  <link rel="canonical" href="https://talioncalcs.github.io/percentage-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Percentage Calculator – TalionCalcs">
+  <meta property="og:description" content="Quickly compute percentages: X% of Y, percentage change, find percent, increase/decrease by percentage.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/percentage-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .explain { margin-top:8px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    @media (max-width:480px) { .page { padding: 12px; } }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Percentage Calculator","item":"https://talioncalcs.github.io/percentage-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Percentage Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/percentage-calculator.html",
+    "description":"Tools to compute percentages: percent of a number, find percent, percentage change, increase/decrease by percent."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How do I calculate X% of Y?",
+        "acceptedAnswer":{"@type":"Answer","text":"Multiply Y by X/100. Example: 12% of 500 = 500 × 0.12 = 60."}
+      },
+      {
+        "@type":"Question",
+        "name":"How to compute percentage change between two values?",
+        "acceptedAnswer":{"@type":"Answer","text":"Percentage change = (new − old) ÷ old × 100. Use the calculator's percentage change tool for quick results."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Percentage Calculator
+  </div>
+
+  <h1>Percentage Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Quick calculators for common percentage tasks: compute X% of Y, find what percent A is of B, percentage change between two values, and increase or decrease a value by a percentage.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Percentage Tools</h2>
+
+    <label for="percentOf_x">1) Calculate <em>X% of Y</em> — Enter percentage (X)</label>
+    <input type="number" id="percentOf_x" step="any" aria-label="Percentage X" placeholder="e.g. 12">
+
+    <label for="percentOf_y">and number (Y)</label>
+    <input type="number" id="percentOf_y" step="any" aria-label="Number Y" placeholder="e.g. 500">
+
+    <button type="button" onclick="calcPercentOf()" aria-label="Calculate X percent of Y">Calculate X% of Y</button>
+    <div class="result" id="resultPercentOf" aria-live="polite"></div>
+    <div class="explain" id="explainPercentOf"></div>
+
+    <hr style="margin-top:16px;border:none;border-top:1px solid #eee;">
+
+    <label for="findPercent_a">2) Find what percent A is of B — Enter A</label>
+    <input type="number" id="findPercent_a" step="any" aria-label="Part A" placeholder="e.g. 60">
+
+    <label for="findPercent_b">and B</label>
+    <input type="number" id="findPercent_b" step="any" aria-label="Whole B" placeholder="e.g. 500">
+
+    <button type="button" onclick="calcFindPercent()" aria-label="Calculate percent that A is of B">Calculate Percent</button>
+    <div class="result" id="resultFindPercent" aria-live="polite"></div>
+    <div class="explain" id="explainFindPercent"></div>
+
+    <hr style="margin-top:16px;border:none;border-top:1px solid #eee;">
+
+    <label for="change_old">3) Percentage change — Old value</label>
+    <input type="number" id="change_old" step="any" aria-label="Old value" placeholder="e.g. 420">
+
+    <label for="change_new">New value</label>
+    <input type="number" id="change_new" step="any" aria-label="New value" placeholder="e.g. 500">
+
+    <button type="button" onclick="calcPercentChange()" aria-label="Calculate percentage change">Calculate % Change</button>
+    <div class="result" id="resultPercentChange" aria-live="polite"></div>
+    <div class="explain" id="explainPercentChange"></div>
+
+    <hr style="margin-top:16px;border:none;border-top:1px solid #eee;">
+
+    <label for="adj_value">4) Increase / Decrease a value by % — Enter value</label>
+    <input type="number" id="adj_value" step="any" aria-label="Base value" placeholder="e.g. 1000">
+
+    <label for="adj_percent">Percentage to apply (+ for increase, − for decrease)</label>
+    <input type="number" id="adj_percent" step="any" aria-label="Adjustment percent" placeholder="e.g. 12 or -5">
+
+    <button type="button" onclick="calcAdjustValue()" aria-label="Adjust value by percentage">Apply Percentage</button>
+    <div class="result" id="resultAdjust" aria-live="polite"></div>
+    <div class="explain" id="explainAdjust"></div>
+
+    <canvas id="pctChart" role="img" aria-label="Percentage visual chart"></canvas>
+  </div>
+
+  <section aria-labelledby="formula-heading">
+    <h2 id="formula-heading">Formulas used</h2>
+
+    <p><strong>1) X% of Y</strong><br>
+      <code style="font-family:monospace;">Result = Y × (X / 100)</code>
+    </p>
+
+    <p><strong>2) Find percent</strong><br>
+      <code style="font-family:monospace;">Percent = (A / B) × 100</code>
+    </p>
+
+    <p><strong>3) Percentage change</strong><br>
+      <code style="font-family:monospace;">% Change = ((New − Old) / Old) × 100</code></p>
+
+    <p><strong>4) Increase / Decrease</strong><br>
+      <code style="font-family:monospace;">Adjusted = Base × (1 + P/100)</code> where P is positive (increase) or negative (decrease).
+    </p>
+  </section>
+
+  <div class="cmp-table">
+    <h2>Quick Reference</h2>
+    <table>
+      <tr><th>Operation</th><th>When to use</th></tr>
+      <tr><td>X% of Y</td><td>Compute tax, discount, commission, portion of a total</td></tr>
+      <tr><td>Find percent</td><td>Determine share of total (e.g., test score percent)</td></tr>
+      <tr><td>Percentage change</td><td>Measure increase or decrease between two values (growth, inflation)</td></tr>
+      <tr><td>Increase/Decrease</td><td>Apply discount, markup, tax or adjustment</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <p>
+      These percentage tools are practical for shopping discounts, taxes, grade calculations, financial growth rates, and quick conversions used in daily life and business. Enter values, press the relevant button, and get immediate results with a short plain-language explanation.
+    </p>
+
+    <h3>When to use this calculator</h3>
+    <p>
+      Use it when you need to calculate discounts, taxes, profit margins, rate-of-change between values, or to convert ratios to percentages quickly. It's also handy for school/homework and quick finance checks.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator uses the standard percentage arithmetic shown above. For change calculations we display the direction (increase or decrease) and the percentage magnitude. For adjustments we show the new value and the absolute difference.
+    </p>
+
+    <h3>Factors to watch</h3>
+    <p>
+      Watch for zero or near-zero denominators (e.g., computing percentage change from 0 is undefined). Use absolute values where appropriate, and be explicit whether percentages relate to whole or part to avoid ambiguity.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>What if I want a percentage of a percentage?</strong> Multiply progressively: (Y × (X/100)) × (Z/100) or compute combined percent directly.</p>
+    <p><strong>Is percent change symmetrical?</strong> No — a 50% increase followed by a 50% decrease does not return you to the original value.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul>
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for simple arithmetic and educational purposes only. Verify results for critical financial decisions or consult a professional where needed.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function fmt(n) {
+  if (!isFinite(n)) return "—";
+  if (Math.abs(n) >= 100000) return Math.round(n).toLocaleString("en-IN");
+  return Number.isInteger(n) ? n.toLocaleString("en-IN") : n.toLocaleString("en-IN", {maximumFractionDigits:4});
+}
+
+function calcPercentOf() {
+  const x = Number(document.getElementById("percentOf_x").value || 0);
+  const y = Number(document.getElementById("percentOf_y").value || 0);
+  const out = document.getElementById("resultPercentOf");
+  const explain = document.getElementById("explainPercentOf");
+  if (!isFinite(x) || !isFinite(y)) { out.innerHTML = "Please enter valid numbers."; explain.innerHTML=""; return; }
+  const res = y * (x / 100);
+  out.innerHTML = x + "% of " + fmt(y) + " = ₹" + fmt(res);
+  explain.innerHTML = "Formula: " + fmt(y) + " × (" + x + "/100) = " + fmt(res) + ".";
+  drawPctChart(y, res);
+}
+
+function calcFindPercent() {
+  const a = Number(document.getElementById("findPercent_a").value || 0);
+  const b = Number(document.getElementById("findPercent_b").value || 0);
+  const out = document.getElementById("resultFindPercent");
+  const explain = document.getElementById("explainFindPercent");
+  if (!isFinite(a) || !isFinite(b) || b === 0) { out.innerHTML = "Please enter valid numbers (B must not be 0)."; explain.innerHTML=""; return; }
+  const pct = (a / b) * 100;
+  out.innerHTML = fmt(a) + " is " + pct.toLocaleString("en-IN", {maximumFractionDigits:4}) + "% of " + fmt(b);
+  explain.innerHTML = "Formula: (" + fmt(a) + " ÷ " + fmt(b) + ") × 100 = " + pct.toFixed(4) + "%.";
+  drawPctChart(b, a);
+}
+
+function calcPercentChange() {
+  const oldV = Number(document.getElementById("change_old").value || 0);
+  const newV = Number(document.getElementById("change_new").value || 0);
+  const out = document.getElementById("resultPercentChange");
+  const explain = document.getElementById("explainPercentChange");
+  if (!isFinite(oldV) || !isFinite(newV) || oldV === 0) { out.innerHTML = "Please enter valid numbers (old value must not be 0)."; explain.innerHTML=""; return; }
+  const change = newV - oldV;
+  const pct = (change / oldV) * 100;
+  const direction = change > 0 ? "increase" : (change < 0 ? "decrease" : "no change");
+  out.innerHTML = "Change: " + (change >= 0 ? "▲ " : "▼ ") + "₹" + fmt(Math.abs(change)) + " (" + Math.abs(pct).toFixed(4) + "%, " + direction + ")";
+  explain.innerHTML = "Formula: (New − Old) ÷ Old × 100 = (" + fmt(newV) + " − " + fmt(oldV) + ") ÷ " + fmt(oldV) + " × 100 = " + pct.toFixed(4) + "%.";
+  drawPctChart(oldV, newV);
+}
+
+function calcAdjustValue() {
+  const base = Number(document.getElementById("adj_value").value || 0);
+  const p = Number(document.getElementById("adj_percent").value || 0);
+  const out = document.getElementById("resultAdjust");
+  const explain = document.getElementById("explainAdjust");
+  if (!isFinite(base) || !isFinite(p)) { out.innerHTML = "Please enter valid numbers."; explain.innerHTML=""; return; }
+  const adjusted = base * (1 + p / 100);
+  const diff = adjusted - base;
+  const sign = p >= 0 ? "increased" : "decreased";
+  out.innerHTML = fmt(base) + (p >=0 ? " increased by " : " decreased by ") + Math.abs(p) + "% → ₹" + fmt(adjusted);
+  explain.innerHTML = "Adjusted = " + fmt(base) + " × (1 + " + p + "/100) = " + fmt(adjusted) + ". Change = ₹" + fmt(diff) + ".";
+  drawPctChart(base, adjusted);
+}
+
+let _lastPctChart = null;
+function drawPctChart(a, b) {
+  _lastPctChart = { a: a, b: b };
+  const canvas = document.getElementById("pctChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext && canvas.getContext("2d");
+  if (!ctx) { canvas.style.display = "none"; return; }
+  canvas.style.display = "block";
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 260;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,cssWidth,cssHeight);
+
+  const padding = 30;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const maxVal = Math.max(a, b, 1);
+  const barW = usableWidth / 3;
+  const gap = barW / 2;
+  const x1 = padding + gap;
+  const x2 = padding + gap + barW + gap;
+
+  const h1 = (a / maxVal) * usableHeight;
+  const h2 = (b / maxVal) * usableHeight;
+
+  ctx.fillStyle = "#e6f0ff";
+  ctx.fillRect(x1, cssHeight - padding - h1, barW, h1);
+  ctx.fillStyle = "#0b5ed7";
+  ctx.fillRect(x2, cssHeight - padding - h2, barW, h2);
+
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("A: " + fmt(a), x1, cssHeight - padding - h1 - 8);
+  ctx.fillText("B: " + fmt(b), x2, cssHeight - padding - h2 - 8);
+
+  ctx.fillStyle = "#444";
+  ctx.fillText("A", x1 + barW/2 - 6, cssHeight - padding + 18);
+  ctx.fillText("B", x2 + barW/2 - 6, cssHeight - padding + 18);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastPctChart) drawPctChart(_lastPctChart.a, _lastPctChart.b);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
