@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>RD Calculator – Recurring Deposit Maturity Amount | TalionCalcs</title>
-  <meta name="description" content="Free RD Calculator to estimate recurring deposit maturity value, total investment, and interest earned over time. Accurate, simple, and easy to use.">
+  <meta name="description" content="Free RD Calculator to estimate recurring deposit maturity value, total investment, and interest earned over time. Supports different compounding frequencies and detailed snapshots.">
   <link rel="canonical" href="https://talioncalcs.github.io/rd-calculator.html">
   <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
   <meta property="og:title" content="RD Calculator – TalionCalcs">
-  <meta property="og:description" content="Calculate recurring deposit maturity amount instantly with a free and accurate RD calculator.">
+  <meta property="og:description" content="Calculate RD maturity value instantly with a free and accurate RD calculator supporting compounding frequency.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://talioncalcs.github.io/rd-calculator.html">
   <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
@@ -37,7 +37,7 @@
     .breadcrumb a { color: #0b5ed7; text-decoration: none; }
     .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
     label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
-    input { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
     button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
     button:hover { background:#084298; }
     .result { margin-top:12px; font-size:16px; font-weight:bold; }
@@ -46,6 +46,8 @@
     .note { font-size:13px; color:#555; margin-top:30px; }
     footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
     @media (max-width:480px) { .lead-form input[type="email"] { width:100%; margin-bottom:8px; } }
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
@@ -78,7 +80,7 @@
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"All",
     "url":"https://talioncalcs.github.io/rd-calculator.html",
-    "description":"Estimate recurring deposit maturity value by entering monthly deposit, interest rate, and tenure."
+    "description":"Estimate recurring deposit maturity value by entering monthly deposit, expected annual rate, compounding frequency, and duration."
   }
   </script>
 
@@ -89,18 +91,18 @@
     "mainEntity":[
       {
         "@type":"Question",
-        "name":"What is a recurring deposit?",
-        "acceptedAnswer":{"@type":"Answer","text":"A recurring deposit (RD) is a fixed-income investment where you deposit a fixed amount every month and earn interest at a predetermined rate over a fixed tenure."}
+        "name":"What is RD maturity amount?",
+        "acceptedAnswer":{"@type":"Answer","text":"RD maturity amount is the total value you receive at the end of the RD tenure, including all monthly deposits and interest earned."}
       },
       {
         "@type":"Question",
-        "name":"How is RD interest calculated?",
-        "acceptedAnswer":{"@type":"Answer","text":"RD interest is usually compounded quarterly. Each monthly installment earns interest for a different duration until maturity."}
+        "name":"Does compounding frequency affect RD returns?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes. More frequent compounding leads to slightly higher maturity amounts for the same interest rate and tenure."}
       },
       {
         "@type":"Question",
         "name":"Are RD returns guaranteed?",
-        "acceptedAnswer":{"@type":"Answer","text":"Yes. RD returns are guaranteed by the bank or post office, provided you hold the deposit until maturity."}
+        "acceptedAnswer":{"@type":"Answer","text":"Bank recurring deposits usually offer guaranteed interest rates for the chosen tenure, subject to bank terms and tax rules."}
       }
     ]
   }
@@ -134,7 +136,7 @@
   <h1>RD Calculator – Recurring Deposit Maturity Amount</h1>
 
   <p style="font-size:14px;color:#555;">
-    Calculate the maturity value of your recurring deposit. Enter the monthly deposit, interest rate, and duration to estimate total returns and interest earned.
+    Calculate how your monthly recurring deposit can grow over time. Enter the monthly deposit, expected annual rate, compounding frequency, and duration to see estimated maturity and total invested.
   </p>
 
   <div class="calc-box" role="region" aria-labelledby="calc-heading">
@@ -144,12 +146,20 @@
     <input type="number" id="monthly" min="0" aria-label="Monthly RD deposit" placeholder="e.g. 3000">
 
     <label for="rate">Annual Interest Rate (%)</label>
-    <input type="number" id="rate" min="0" aria-label="Annual RD interest rate" placeholder="e.g. 6.5">
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Annual RD interest rate" placeholder="e.g. 6.5">
+
+    <label for="freq">Compounding Frequency</label>
+    <select id="freq" aria-label="Compounding frequency">
+      <option value="1">Annually</option>
+      <option value="2">Semi-annually</option>
+      <option value="4">Quarterly</option>
+      <option value="12" selected>Monthly</option>
+    </select>
 
     <label for="years">Deposit Duration (Years)</label>
-    <input type="number" id="years" min="0" aria-label="RD duration in years" placeholder="e.g. 5">
+    <input type="number" id="years" min="0" step="0.1" aria-label="RD duration in years" placeholder="e.g. 5">
 
-    <button type="button" onclick="calculate()" aria-label="Calculate RD">Calculate</button>
+    <button type="button" onclick="calculateRD()" aria-label="Calculate RD">Calculate</button>
 
     <div class="result" id="result" aria-live="polite"></div>
     <div class="result" id="invested" aria-live="polite"></div>
@@ -160,12 +170,12 @@
   <section aria-labelledby="formula-heading">
     <h2 id="formula-heading">RD Formula</h2>
     <p>
-      The maturity value of a recurring deposit is calculated by compounding each monthly installment at the applicable interest rate until maturity.
+      The RD maturity amount is computed by compounding each monthly installment for the remaining tenure. With compounding frequency selected, each compounding period applies the periodic rate to the accumulated balance.
     </p>
 
     <p><strong>Formula (mathematical):</strong></p>
     <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
-      <strong>M = P × n + P × ( n(n + 1) / 2 ) × ( r / 100 ) × ( 1 / 12 )</strong>
+      <strong>Balance updated monthly; periodic compounding applied each (12 ÷ n) months where n is compounding frequency per year.</strong>
     </p>
 
     <p>
@@ -173,47 +183,57 @@
     </p>
     <ul>
       <li><strong>P</strong> = Monthly deposit amount</li>
-      <li><strong>r</strong> = Annual interest rate</li>
-      <li><strong>n</strong> = Total number of months</li>
-      <li><strong>M</strong> = Estimated maturity value</li>
+      <li><strong>r</strong> = Annual interest rate (decimal)</li>
+      <li><strong>n</strong> = Compounding frequency per year (1, 2, 4, 12)</li>
+      <li><strong>t</strong> = Time in years</li>
+      <li><strong>M</strong> = Estimated maturity amount</li>
     </ul>
 
     <p>
-      This calculator uses a month-by-month compounding approach aligned with standard bank RD calculations, ensuring accurate estimation of maturity value and interest earned.
+      The calculator performs an iterative month-by-month computation: each month the deposit is added, and at the end of each compounding period (depending on your chosen frequency) interest for that period is applied to the current balance. This approach matches standard RD/term-deposit calculations while preserving accuracy across months and compounding intervals.
     </p>
   </section>
+
+  <div class="cmp-table">
+    <h2>RD Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Total Invested</td><td>Sum of all monthly deposits over the tenure</td></tr>
+      <tr><td>Maturity Amount</td><td>Total value you receive at maturity including interest</td></tr>
+    </table>
+  </div>
 
   <div class="ad-slot" aria-hidden="true">Advertisement</div>
 
   <section class="explanation">
     <p>
-      This RD calculator estimates the maturity amount of your recurring deposit by applying interest to each monthly installment for its remaining tenure. It is useful for conservative investors seeking predictable and guaranteed returns over a fixed period.
+      This RD calculator estimates the future value of your monthly deposits by adding each monthly instalment and applying periodic compounding based on the frequency you select. It is tailored for conservative planning — short- to medium-term goals where guaranteed returns are required and regular monthly contributions are easier to manage than lump sums. Enter your monthly deposit, expected annual rate, compounding frequency, and duration to see an estimated maturity value and the total invested sum.
     </p>
 
     <h3>When to use this calculator</h3>
     <p>
-      Use this calculator when planning fixed monthly savings through a bank or post office RD. It helps you understand how much your regular deposits will grow and how much interest you will earn by maturity.
+      Use this calculator when you want to convert a disciplined monthly savings plan into a target corpus, or when you want to compare how different compounding frequencies (monthly, quarterly, semi-annual or annual) change the final value. It’s particularly useful if you are choosing between an RD and other fixed-income products, or when deciding the tenor required to meet a specified maturity amount.
     </p>
 
     <h3>How it works (plain explanation)</h3>
     <p>
-      Each monthly deposit earns interest for a different length of time. Earlier deposits earn interest for longer periods, while later ones earn for fewer months. The calculator adds up the interest earned on all installments to estimate the final maturity value.
+      The calculator first converts the annual interest rate into a periodic rate determined by your chosen compounding frequency. It then processes each monthly deposit: the deposit is added to the balance, and at the end of each compounding interval the periodic interest is applied to the full balance. Earlier deposits compound for longer, so duration significantly affects the final maturity amount. This month-by-month iterative method reduces rounding differences that could occur when using closed-form formulae for staggered monthly deposits.
     </p>
 
     <h3>Benefits of recurring deposits</h3>
     <p>
-      Recurring deposits encourage disciplined savings, offer guaranteed returns, and are suitable for short- to medium-term goals. They are low-risk, predictable, and easy to manage.
+      Recurring deposits enforce disciplined saving—by contributing small amounts regularly you build a habit of saving and avoid the need for a large lump sum. RDs typically offer guaranteed returns backed by banks or post offices, are straightforward to understand, and suit investors with low risk appetite who prefer predictable outcomes. They’re also flexible in tenor and deposit amount, and often allow premature withdrawals (with potential penalties) when needed.
     </p>
 
     <h3>Factors that affect RD returns</h3>
     <p>
-      The monthly deposit amount, interest rate, and tenure directly affect RD maturity value. Rates vary by institution and tenure, and premature withdrawals may reduce returns.
+      The key drivers of RD growth are the monthly deposit amount, the nominal annual interest rate, the compounding frequency, and the tenure. More frequent compounding (for the same nominal rate) will yield a slightly higher maturity amount. Additionally, taxes on interest and any premature withdrawal penalties reduce the net returns you receive; always check the financial institution’s terms before opening an RD.
     </p>
 
     <h3>Frequently asked questions</h3>
-    <p><strong>What is an RD?</strong> A recurring deposit is a monthly savings scheme with fixed returns.</p>
-    <p><strong>Is RD interest taxable?</strong> Yes — RD interest is taxable as per your income tax slab.</p>
-    <p><strong>Is RD safe?</strong> Bank and post office RDs are considered low-risk and secure.</p>
+    <p><strong>What is RD better for?</strong> RDs are ideal for regular savers who prefer steady, guaranteed returns and cannot invest large sums as a lump sum.</p>
+    <p><strong>Is compounding frequency important?</strong> Yes — monthly compounding will produce a marginally higher maturity amount than annual compounding at the same nominal rate because interest is applied more frequently.</p>
+    <p><strong>Are RD returns guaranteed?</strong> Bank and post office RDs usually provide guaranteed interest for the chosen tenure; however tax and premature withdrawal rules may change your net outcome.</p>
   </section>
 
   <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
@@ -238,12 +258,13 @@
 </footer>
 
 <script>
-function calculate() {
+function calculateRD() {
   const P = Number(document.getElementById("monthly").value || 0);
-  const rate = Number(document.getElementById("rate").value || 0) / 100;
+  const annualRate = Number(document.getElementById("rate").value || 0) / 100;
+  const n = Number(document.getElementById("freq").value || 12);
   const years = Number(document.getElementById("years").value || 0);
 
-  if (P <= 0 || years <= 0 || rate < 0) {
+  if (P <= 0 || years <= 0 || annualRate < 0 || n <= 0) {
     document.getElementById("result").innerHTML = "Please enter valid values.";
     document.getElementById("invested").innerHTML = "";
     _lastChartData = null;
@@ -252,19 +273,28 @@ function calculate() {
     return;
   }
 
-  const months = years * 12;
-  let total = 0;
+  const months = Math.round(years * 12);
+  let balance = 0;
+  const compPeriodMonths = Math.round(12 / n); // months per compounding period (1,6,3,1)
   let values = [];
 
+  // iterate month-by-month: deposit at start of month, apply compounding at end of each compounding period
   for (let i = 1; i <= months; i++) {
-    total += P;
-    const interest = total * rate / 12;
-    total += interest;
-    if (i % 12 === 0) values.push(Math.round(total));
+    balance += P; // deposit for the month
+    // if end of compounding period, apply periodic interest
+    if (i % compPeriodMonths === 0) {
+      const periodicRate = annualRate / n; // rate per compounding period
+      balance = balance * (1 + periodicRate);
+    }
+    // push yearly snapshot at each 12th month
+    if (i % 12 === 0) {
+      values.push(Math.round(balance));
+    }
   }
 
-  document.getElementById("result").innerHTML = "Maturity Value: ₹" + Math.round(total).toLocaleString("en-IN");
-  document.getElementById("invested").innerHTML = "Total Deposited: ₹" + (P * months).toLocaleString("en-IN");
+  const finalVal = Math.round(balance);
+  document.getElementById("result").innerHTML = "Maturity Amount: ₹" + finalVal.toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Total Invested: ₹" + (P * months).toLocaleString("en-IN");
 
   drawChart(values);
 }
