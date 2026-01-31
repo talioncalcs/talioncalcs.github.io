@@ -51,8 +51,7 @@
     .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
     .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
     .small { font-size:13px; color:#666; }
-    .steps p { margin:8px 0; }
-    .steps p strong { display:inline-block; width:78px; }
+    .steps { margin-top:8px; }
     pre.formula { font-family:monospace; background:#f8f9fa; padding:10px; border:1px solid #ddd; overflow:auto; }
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
@@ -153,15 +152,15 @@
     <label for="existing">Existing EMIs (Monthly) (₹)</label>
     <input type="number" id="existing" min="0" aria-label="Existing monthly EMIs" placeholder="e.g. 8000">
 
-    <!-- Three parameters have default values: percent, rate and tenure -->
+    <!-- Removed visible default values: now show only placeholders -->
     <label for="percent">Max EMI as % of Income</label>
-    <input type="number" id="percent" min="0" max="100" step="1" aria-label="Maximum EMI percent of income" placeholder="e.g. 50" value="50">
+    <input type="number" id="percent" min="0" max="100" step="1" aria-label="Maximum EMI percent of income" placeholder="e.g. 50">
 
     <label for="rate">Expected Annual Interest Rate (%)</label>
-    <input type="number" id="rate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 11" value="11">
+    <input type="number" id="rate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 11">
 
     <label for="tenure">Desired Tenure (Years)</label>
-    <input type="number" id="tenure" min="0" step="1" aria-label="Loan tenure in years" placeholder="e.g. 5" value="5">
+    <input type="number" id="tenure" min="0" step="1" aria-label="Loan tenure in years" placeholder="e.g. 5">
 
     <button type="button" onclick="calculateEligibility()" aria-label="Calculate Eligibility">Calculate Eligibility</button>
 
@@ -176,19 +175,19 @@
   <section aria-labelledby="formula-heading">
     <h2 id="formula-heading">How eligibility is calculated</h2>
 
+    <!-- Simplified and cleaned steps -->
     <div class="steps">
-      <p><strong>Step 1.</strong> Determine the <strong>maximum monthly EMI</strong> a lender might allow based on your chosen percentage of income:<br>
-      <code>maxEMI = monthlyIncome × (percent / 100)</code></p>
-
-      <p><strong>Step 2.</strong> Subtract existing EMIs to find the <strong>available EMI</strong> for a new loan:<br>
-      <code>availableEMI = maxEMI − existingEMIs</code> — if this value is ≤ 0, estimated eligibility will be zero.</p>
+      <ol>
+        <li>Compute the maximum EMI allowed: <code>maxEMI = monthlyIncome × (percent / 100)</code></li>
+        <li>Find the EMI available for a new loan after existing obligations: <code>availableEMI = maxEMI − existingEMIs</code> (if ≤ 0, eligibility is zero)</li>
+      </ol>
     </div>
 
-    <p>The available EMI is then converted into an eligible loan amount using the standard loan (amortization) formula:</p>
+    <p>The available EMI is converted into an eligible loan amount using the standard amortization formula:</p>
 
     <pre class="formula"><strong>Loan = EMI × [ (1 − (1 + r)<sup>−n</sup>) / r ]</strong></pre>
 
-    <p>Where <strong>r</strong> is the <em>monthly</em> rate (i.e. <code>r = (annual rate %)/12/100</code>) and <strong>n</strong> is the number of months (years × 12).</p>
+    <p>Where <strong>r</strong> is monthly rate (<code>annual % / 12 / 100</code>) and <strong>n</strong> is total months (years × 12).</p>
   </section>
 
   <div class="cmp-table">
@@ -261,7 +260,7 @@ function formatINR(n) {
 function calculateEligibility() {
   const income = Number(document.getElementById("income").value || 0);
   const existing = Number(document.getElementById("existing").value || 0);
-  const percent = Number(document.getElementById("percent").value || 50);
+  const percent = Number(document.getElementById("percent").value || 0);
   const annualRatePct = Number(document.getElementById("rate").value || 0);
   const years = Number(document.getElementById("tenure").value || 0);
 
