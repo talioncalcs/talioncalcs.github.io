@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Income Tax Calculator – Take Home Salary | TalionCalcs</title>
-  <meta name="description" content="Free Income Tax Calculator to estimate income tax payable and take-home salary based on annual income, deductions, and tax slabs.">
+  <title>Income Tax Calculator – India Tax Payable | TalionCalcs</title>
+  <meta name="description" content="Free Income Tax Calculator for India — estimate annual tax payable under the Old and New tax regimes. Enter gross income, deductions and age to see taxable income, tax payable and effective rate.">
   <link rel="canonical" href="https://talioncalcs.github.io/income-tax-calculator.html">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
 
   <meta property="og:title" content="Income Tax Calculator – TalionCalcs">
-  <meta property="og:description" content="Calculate income tax, deductions, and take-home salary using a simple income tax calculator.">
+  <meta property="og:description" content="Estimate your income tax (India) under old and new regimes. Supports age-based basic exemption and deductions.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://talioncalcs.github.io/income-tax-calculator.html">
   <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
@@ -38,29 +38,17 @@
     .breadcrumb a { color: #0b5ed7; text-decoration: none; }
     .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
     label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
-    input[type="number"], input[type="text"], select, textarea {
-      width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box;
-    }
-    .inline { display:flex; gap:12px; }
-    .inline > * { flex:1; min-width:0; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
     button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
     button:hover { background:#084298; }
     .result { margin-top:12px; font-size:16px; font-weight:bold; }
-    .subresult { margin-top:6px; font-size:14px; color:#444; }
-    canvas { margin-top:20px; width:100%; max-height:300px; display:none; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
     .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
     .note { font-size:13px; color:#555; margin-top:30px; }
     footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
     footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
     .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
     .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
-    .small { font-size:13px; color:#666; }
-    .slab-editor { margin-top:10px; font-size:13px; }
-    .slab-editor textarea { height:90px; font-family:monospace; }
-    .muted { color:#666; font-size:13px; }
-    .row { display:flex; gap:12px; }
-    .row > div { flex:1; }
-    .checkbox { display:inline-flex; align-items:center; gap:8px; margin-top:8px; }
     noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
 
@@ -76,21 +64,50 @@
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"PPF Calculator","item":"https://talioncalcs.github.io/ppf-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"PPF Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/ppf-calculator.html",
+    "description":"Calculate Public Provident Fund (PPF) maturity using annual deposits, annual interest rate, and tenure."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
     "@type":"FAQPage",
     "mainEntity":[
       {
         "@type":"Question",
-        "name":"Does this calculator use official tax slabs?",
-        "acceptedAnswer":{"@type":"Answer","text":"This calculator includes editable example slabs. Tax laws and slabs change; edit the slab table to match the current year's rates before relying on results."}
+        "name":"How is PPF maturity calculated?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF maturity is calculated using annual compounding on the accumulated balance. Regular yearly deposits grow with interest applied annually for the chosen tenure."}
       },
       {
         "@type":"Question",
-        "name":"Should I use old or new tax regime?",
-        "acceptedAnswer":{"@type":"Answer","text":"Choice depends on your deductions and income. Try both regimes here to compare estimated tax outcomes."}
+        "name":"What is the typical compounding frequency for PPF?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF interest is credited annually; this calculator uses annual compounding which matches PPF rules."}
+      },
+      {
+        "@type":"Question",
+        "name":"Are PPF returns guaranteed?",
+        "acceptedAnswer":{"@type":"Answer","text":"PPF returns are backed by the government and the rate is declared by the government periodically. Past rates do not guarantee future changes."}
       }
     ]
   }
   </script>
+
 </head>
 
 <body>
@@ -116,125 +133,128 @@
     <a href="index.html">Home</a> › Income Tax Calculator
   </div>
 
-  <h1>Income Tax Calculator – Take Home Salary</h1>
+  <h1>Income Tax Calculator – India</h1>
 
   <p style="font-size:14px;color:#555;">
-    Estimate annual income tax payable and approximate take-home income. This tool lets you enter gross annual income, common deductions, and choose a tax regime. It includes editable example tax slabs so you can match the current fiscal year's rules.
+    Estimate your annual income tax payable in India under the Old or New tax regimes. Enter your gross annual income, total deductions you claim, select your age group and regime to compute taxable income, tax payable and effective tax rate. This tool provides a quick estimate and does not include cess, surcharge or special-case incomes.
   </p>
 
   <div class="calc-box" role="region" aria-labelledby="calc-heading">
-    <h2 id="calc-heading" style="display:none;">Income Tax Form</h2>
+    <h2 id="calc-heading" style="display:none;">Income Tax Calculator Form</h2>
 
     <label for="gross">Gross Annual Income (₹)</label>
-    <input type="number" id="gross" min="0" placeholder="e.g. 1200000">
+    <input type="number" id="gross" min="0" aria-label="Gross annual income" placeholder="e.g. 1200000">
 
-    <div class="row">
-      <div>
-        <label for="standardDed">Standard Deduction (₹)</label>
-        <input type="number" id="standardDed" min="0" value="50000">
-      </div>
-      <div>
-        <label for="ded80c">Deductions (Section 80C) (₹)</label>
-        <input type="number" id="ded80c" min="0" value="0">
-      </div>
-    </div>
+    <label for="deductions">Total Deductions & Exemptions (₹)</label>
+    <input type="number" id="deductions" min="0" aria-label="Total deductions" placeholder="e.g. 150000">
 
-    <div class="row">
-      <div>
-        <label for="otherDeds">Other Deductions (₹)</label>
-        <input type="number" id="otherDeds" min="0" value="0" placeholder="e.g. 30000 (80D, donations etc.)">
-      </div>
-      <div>
-        <label for="profTax">Professional / Other Monthly Taxes (₹)</label>
-        <input type="number" id="profTax" min="0" value="0" placeholder="monthly professional tax">
-      </div>
-    </div>
+    <label for="age">Age (years)</label>
+    <input type="number" id="age" min="0" step="1" aria-label="Age in years" placeholder="e.g. 35">
 
     <label for="regime">Tax Regime</label>
-    <select id="regime" aria-label="Tax Regime">
-      <option value="old">Old Regime (with deductions)</option>
-      <option value="new">New Regime (optional deductions — edit slabs accordingly)</option>
+    <select id="regime" aria-label="Select tax regime">
+      <option value="new">New Tax Regime (optional slabs)</option>
+      <option value="old">Old Tax Regime (with deductions & exemptions)</option>
     </select>
 
-    <div style="margin-top:12px;">
-      <label class="muted">Notes:</label>
-      <p class="muted">Default slabs below are example/default values. Tax laws and slab amounts change periodically — edit slab values to match the fiscal year you need before calculating.</p>
-    </div>
+    <button type="button" onclick="calculateTax()" aria-label="Calculate tax">Calculate</button>
 
-    <div class="slab-editor">
-      <label for="slabsOld"><strong>Old Regime Slabs (JSON array - ascending):</strong></label>
-      <textarea id="slabsOld" aria-label="Old regime slabs (JSON)">
-// Example: array of { "upto":amount, "rate":percent } where "upto" is cumulative upper bound.
-// Default example (INR): up to 250000 @0%, up to 500000 @5%, up to 1000000 @20%, above @30%
-[{"upto":250000,"rate":0},{"upto":500000,"rate":5},{"upto":1000000,"rate":20},{"upto":null,"rate":30}]
-      </textarea>
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="result" id="invested" aria-live="polite"></div>
 
-      <label for="slabsNew" style="margin-top:8px;"><strong>New Regime Slabs (JSON array - ascending):</strong></label>
-      <textarea id="slabsNew" aria-label="New regime slabs (JSON)">
-// Example new-regime style (illustrative). Edit to current year's rates if required.
-[{"upto":300000,"rate":0},{"upto":600000,"rate":5},{"upto":900000,"rate":10},{"upto":1200000,"rate":15},{"upto":1500000,"rate":20},{"upto":null,"rate":30}]
-      </textarea>
-      <div class="muted">Edit the JSON if your fiscal year has different slab thresholds or rates. Use null for "above" (no upper bound).</div>
-    </div>
-
-    <div class="checkbox">
-      <input type="checkbox" id="applyRebate" checked>
-      <label for="applyRebate">Apply rebate / reliefs automatically where applicable (e.g., basic rebates)</label>
-    </div>
-
-    <button type="button" onclick="calculateTax()" aria-label="Calculate Income Tax">Calculate Tax</button>
-
-    <div class="result" id="taxResult" aria-live="polite"></div>
-    <div class="subresult" id="taxBreakdown" aria-live="polite"></div>
-
-    <canvas id="taxChart" role="img" aria-label="Tax vs take-home chart"></canvas>
+    <canvas id="growthChart" role="img" aria-label="Tax progress chart"></canvas>
   </div>
 
   <section aria-labelledby="formula-heading">
-    <h2 id="formula-heading">How the calculator works</h2>
+    <h2 id="formula-heading">Income Tax Formula & Slabs (used by this calculator)</h2>
 
     <p>
-      1) Taxable income is calculated as: <em>Taxable = Gross income − (Standard deduction + allowed deductions you enter)</em>.<br>
-      2) The calculator applies the selected slab table to the taxable income to compute tax for each slab segment, sums slab taxes, then adds statutory cess (default 4%). If you enable rebate, the calculator reduces tax if taxable income falls under the rebate threshold — but make sure slab values and rebate rules match the fiscal year you are modelling.
+      This calculator computes <strong>Taxable Income</strong> as:
     </p>
 
-    <p class="muted"><strong>Important:</strong> This tool provides an estimate only. Tax laws, slab thresholds, rebates and cess rates change — always confirm with the current official notifications or a tax professional before making decisions.</p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Taxable Income = max(0, Gross Annual Income − Total Deductions)</strong>
+    </p>
+
+    <p>
+      After obtaining taxable income, the calculator applies slab-wise rates depending on the selected regime and age. The slab calculation is performed by summing tax per slab portion:
+    </p>
+
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Tax = Σ (portion_in_slab × slab_rate)</strong>
+    </p>
+
+    <p><strong>Slabs implemented (summary):</strong></p>
+
+    <p style="background:#f8f9fa;padding:10px;border:1px solid #ddd;font-family:monospace;">
+      <strong>New Regime (sample slabs used)</strong><br>
+      0 — 4,00,000 : 0%<br>
+      4,00,001 — 8,00,000 : 5%<br>
+      8,00,001 — 12,00,000 : 10%<br>
+      12,00,001 — 16,00,000 : 15%<br>
+      16,00,001 — 20,00,000 : 20%<br>
+      20,00,001 — 24,00,000 : 25%<br>
+      Above 24,00,000 : 30%
+    </p>
+
+    <p style="background:#f8f9fa;padding:10px;border:1px solid #ddd;font-family:monospace;">
+      <strong>Old Regime (standard slabs for individuals & senior adjustments)</strong><br>
+      Default (below 60 years): 0 — 2,50,000 : 0% ; 2,50,001 — 5,00,000 : 5% ; 5,00,001 — 10,00,000 : 20% ; Above 10,00,000 : 30%<br>
+      Senior (60–80): basic exemption considered up to 3,00,000 (0% slab) ; Super-senior (&gt;80): basic exemption considered up to 5,00,000 (0% slab)
+    </p>
+
+    <p>
+      <em>Notes:</em> This calculator applies slab rates to the taxable income entered and does not add cess (e.g., health & education cess) or surcharge. Rebate rules, special incomes (capital gains, professional income with special rates), and tax credits are not modelled here. Use the results as an estimate and consult official sources or a tax professional for precise liability.
+    </p>
   </section>
 
   <div class="cmp-table">
-    <h2>Calculator Snapshot</h2>
+    <h2>Tax Snapshot</h2>
     <table>
       <tr><th>Metric</th><th>What it Shows</th></tr>
-      <tr><td>Taxable Income</td><td>Income after standard deduction and entered deductions</td></tr>
-      <tr><td>Tax Payable</td><td>Tax computed using the selected slab table, plus cess</td></tr>
-      <tr><td>Take Home (Approx.)</td><td>Gross income minus annual tax and annualised professional tax</td></tr>
+      <tr><td>Taxable Income</td><td>Gross income minus declared deductions (as entered)</td></tr>
+      <tr><td>Tax Payable</td><td>Estimated tax computed using selected regime slabs (excludes cess/surcharge)</td></tr>
     </table>
   </div>
 
   <div class="ad-slot" aria-hidden="true">Advertisement</div>
 
   <section class="explanation">
-    <h3>When to use this calculator</h3>
-    <p>Use it to get a quick estimate of annual tax and approximate monthly take-home after tax. Helpful while negotiating salary, planning investments to use deductions, or comparing old vs new tax regime outcomes.</p>
+    <p>
+      This Income Tax Calculator gives a quick estimate of tax payable under the New and Old regimes commonly used in India. Enter your gross annual income and any deductions or exemptions you expect to claim (for the old regime). Choose the applicable regime and your age group to account for age-based basic exemption limits in the old regime. The calculator performs slab-wise computation and returns taxable income, estimated tax payable and an effective tax rate.
+    </p>
 
-    <h3>How to ensure accuracy</h3>
-    <p>Before relying on the numbers, update the slab JSON to match the official slabs for the fiscal year you're modelling, set correct deduction values, and confirm rebate/relief rules. This calculator intentionally leaves slab editing open so you can keep it current without code changes.</p>
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this tool for a quick comparison between the New and Old tax regimes, to understand how much tax you may owe for a given gross income and deduction amount. It helps with basic planning and comparing the effect of increasing deductions or switching regimes.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator subtracts declared deductions from gross income to compute taxable income. It then applies the slab-wise tax rates appropriate to the selected regime. For each slab, only the portion of income that falls into that slab is taxed at that slab's rate; these taxes are summed to produce the tax payable displayed. This mirrors how Indian income tax slabs are applied in practice.
+    </p>
+
+    <h3>Limitations and what this does not include</h3>
+    <p>
+      This estimate does not include cess (health & education cess), surcharge, special tax treatments (capital gains, business income with presumptive schemes), or exact rebate and credit calculations. It also assumes the user has aggregated and entered all deductions correctly. For official liability and filing, always refer to Income Tax Department guidance and a qualified tax adviser.
+    </p>
 
     <h3>Frequently asked questions</h3>
-    <p><strong>Should I trust the default slabs?</strong> Default slabs are illustrative. Update them to the current fiscal year's official slabs for precise results.</p>
-    <p><strong>Does this include other components like HRA or exemptions?</strong> This is a simplified estimator. HRA and some exemptions are complex (require rent, city, receipts). You can model them by adding their net effect as an "Other Deductions" value.</p>
+    <p><strong>Which regime should I choose?</strong> That depends on your deductions and exemptions. The New regime offers lower slab rates but limits deductions; the Old regime allows many exemptions (like 80C) which may reduce taxable income if you claim them. Compare both using this calculator.</p>
+    <p><strong>Does this calculator include cess and surcharge?</strong> No — the calculation excludes cess and surcharge and is intended as a quick estimate. Add cess (typically a percentage on tax) and surcharge separately if applicable.</p>
+    <p><strong>Are the slab rates always the same?</strong> Slab rates and thresholds are set by the annual Union Budget and may change. Use conservative planning and consult official announcements for the latest rates.</p>
   </section>
 
-  <p class="note"><strong>Last updated:</strong> <span id="last-updated"></span></p>
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
 
   <h2>Related Calculators</h2>
   <ul>
-    <li><a href="ppf-calculator.html">PPF Calculator</a></li>
-    <li><a href="personal-loan-calculator.html">Personal Loan Calculator</a></li>
-    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+    <li><a href="fd-calculator.html">FD Calculator</a></li>
+    <li><a href="rd-calculator.html">RD Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
   </ul>
 
-  <p class="note"><strong>Disclaimer:</strong> This is an educational calculator and not financial or tax advice. Confirm with official sources or a tax professional.</p>
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial or tax advice. Always consult a qualified tax professional or the Income Tax Department for definitive guidance.</p>
 
 </main>
 
@@ -243,191 +263,239 @@
   <a href="/disclaimer.html">Disclaimer</a> |
   <a href="/terms.html">Terms</a> |
   <a href="/contact.html">Contact</a><br>
-  © <span id="copyright-year"></span> TalionCalcs
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
 </footer>
 
 <script>
-// Utility: parse slab JSON safely
-function parseSlabs(text) {
-  try {
-    const arr = JSON.parse(text);
-    if (!Array.isArray(arr)) throw new Error('Slabs must be an array');
-    // normalize: ensure each entry {upto: number|null, rate: number}
-    return arr.map(s => {
-      return {
-        upto: s.upto === null ? null : Number(s.upto),
-        rate: Number(s.rate) / 100
-      };
-    });
-  } catch (e) {
-    return null;
-  }
-}
+function calculateTax() {
+  const gross = Number(document.getElementById("gross").value || 0);
+  const deductions = Number(document.getElementById("deductions").value || 0);
+  const age = Number(document.getElementById("age").value || 0);
+  const regime = document.getElementById("regime").value;
 
-// Compute tax given taxable income and slabs (array of {upto, rate})
-function computeTaxFromSlabs(taxable, slabs) {
-  let remaining = taxable;
-  let prevCap = 0;
-  let tax = 0;
-  for (let i = 0; i < slabs.length; i++) {
-    const cap = slabs[i].upto;
-    const rate = slabs[i].rate;
-    if (cap === null) {
-      // unlimited slab
-      const seg = Math.max(0, remaining);
-      tax += seg * rate;
-      remaining = 0;
-      break;
-    } else {
-      const segCap = Math.max(0, cap - prevCap);
-      const seg = Math.max(0, Math.min(segCap, remaining));
-      tax += seg * rate;
-      remaining -= seg;
-      prevCap = cap;
+  if (gross <= 0 || deductions < 0 || age < 0) {
+    document.getElementById("result").innerHTML = "Please enter valid values.";
+    document.getElementById("invested").innerHTML = "";
+    _lastChartData = null;
+    const canvas = document.getElementById("growthChart");
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  // Compute taxable income
+  const taxableIncome = Math.max(0, gross - deductions);
+
+  // Define slab helper
+  function taxFromSlabs(taxable, slabs) {
+    let remaining = taxable;
+    let tax = 0;
+    let lower = 0;
+    for (let i = 0; i < slabs.length; i++) {
+      const slab = slabs[i];
+      const upper = slab.upto;
+      const rate = slab.rate;
+      const portion = Math.max(0, Math.min(remaining, upper - lower));
+      tax += portion * rate;
+      remaining = Math.max(0, remaining - portion);
+      lower = upper;
       if (remaining <= 0) break;
     }
+    // if any remaining beyond last upper
+    if (remaining > 0 && slabs.length > 0) {
+      const lastRate = slabs[slabs.length - 1].rate;
+      tax += remaining * lastRate;
+    }
+    return tax;
   }
-  return Math.max(0, tax);
+
+  // Slabs definitions (numbers in absolute rupees)
+  const newRegimeSlabs = [
+    { upto: 400000, rate: 0 },
+    { upto: 800000, rate: 0.05 },
+    { upto: 1200000, rate: 0.10 },
+    { upto: 1600000, rate: 0.15 },
+    { upto: 2000000, rate: 0.20 },
+    { upto: 2400000, rate: 0.25 },
+    // Above 2400000 taxed at 30% (handled by remainder using last rate below)
+    { upto: Infinity, rate: 0.30 }
+  ];
+
+  // Old regime slabs adjusted for age basic exemption
+  let oldSlabs = [];
+  if (age >= 80) {
+    // Super senior: basic exemption up to 5,00,000
+    oldSlabs = [
+      { upto: 500000, rate: 0 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else if (age >= 60) {
+    // Senior: basic exemption up to 3,00,000
+    oldSlabs = [
+      { upto: 300000, rate: 0 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else {
+    // Below 60
+    oldSlabs = [
+      { upto: 250000, rate: 0 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  }
+
+  // Select regime
+  let tax = 0;
+  if (regime === "new") {
+    tax = taxFromSlabs(taxableIncome, newRegimeSlabs);
+  } else {
+    tax = taxFromSlabs(taxableIncome, oldSlabs);
+  }
+
+  // Round and display (this estimate does not include cess/surcharge/rebates)
+  const roundedTax = Math.round(tax);
+  const effectiveRate = taxableIncome > 0 ? (roundedTax / taxableIncome) * 100 : 0;
+
+  document.getElementById("result").innerHTML = "Estimated Tax Payable: ₹" + roundedTax.toLocaleString("en-IN");
+  document.getElementById("invested").innerHTML = "Taxable Income: ₹" + taxableIncome.toLocaleString("en-IN") + " • Effective Rate: " + effectiveRate.toFixed(2) + "%";
+
+  drawChartForTax(taxableIncome, regime);
 }
 
-function formatINR(x) {
-  return '₹' + Number(Math.round(x)).toLocaleString('en-IN');
-}
-
-let _lastTaxChart = null;
-
-function calculateTax() {
-  const gross = Number(document.getElementById('gross').value || 0);
-  const standardDed = Number(document.getElementById('standardDed').value || 0);
-  const ded80c = Number(document.getElementById('ded80c').value || 0);
-  const otherDeds = Number(document.getElementById('otherDeds').value || 0);
-  const profTaxMonthly = Number(document.getElementById('profTax').value || 0);
-  const regime = document.getElementById('regime').value;
-  const applyRebate = document.getElementById('applyRebate').checked;
-
-  const slabsOld = parseSlabs(document.getElementById('slabsOld').value);
-  const slabsNew = parseSlabs(document.getElementById('slabsNew').value);
-
-  const taxResultEl = document.getElementById('taxResult');
-  const taxBreakdownEl = document.getElementById('taxBreakdown');
-  const canvas = document.getElementById('taxChart');
-
-  taxResultEl.innerHTML = '';
-  taxBreakdownEl.innerHTML = '';
-  if (gross <= 0) {
-    taxResultEl.innerHTML = 'Please enter a valid gross annual income.';
-    if (canvas) canvas.style.display = 'none';
+let _lastChartData = null;
+function drawChartForTax(taxable, regime) {
+  // Draw a simple bar showing taxable vs tax (visual aid). If taxable is zero, hide chart.
+  const canvas = document.getElementById("growthChart");
+  if (!canvas) return;
+  if (taxable <= 0) {
+    canvas.style.display = "none";
     return;
   }
-  if (!slabsOld || !slabsNew) {
-    taxResultEl.innerHTML = 'Slab JSON is invalid. Please correct the slab arrays.';
-    if (canvas) canvas.style.display = 'none';
-    return;
-  }
-
-  // Taxable income calculation (simple)
-  const totalDeductions = standardDed + ded80c + otherDeds;
-  const taxable = Math.max(0, gross - totalDeductions);
-
-  // choose slabs based on regime
-  const slabs = (regime === 'old') ? slabsOld : slabsNew;
-
-  // compute base tax
-  let taxBeforeRebate = computeTaxFromSlabs(taxable, slabs);
-
-  // example rebate logic: if taxable <= 500000 then rebate up to tax (illustrative)
-  // NOTE: This is a simple, editable rule. Adjust slabs/logic for the fiscal year you need.
-  let rebate = 0;
-  if (applyRebate && taxable <= 500000) {
-    // many fiscal years have a rebate for low incomes; this line applies a simple rebate
-    rebate = Math.min(taxBeforeRebate, 0); // default: no automatic rebate unless you edit this rule
-    // keep rebate 0 by default: user must edit slab JSON or code for specific rebate rules
-  }
-
-  // cess 4% by default
-  const cessRate = 0.04;
-  const taxAfterRebate = Math.max(0, taxBeforeRebate - rebate);
-  const cess = taxAfterRebate * cessRate;
-  const totalTax = taxAfterRebate + cess;
-
-  // annual professional tax
-  const profTaxAnnual = profTaxMonthly * 12;
-
-  // take-home approx
-  const takeHomeAnnual = gross - totalTax - profTaxAnnual;
-  const takeHomeMonthly = takeHomeAnnual / 12;
-
-  taxResultEl.innerHTML = `Taxable Income: ${formatINR(taxable)} • Estimated Tax Payable: <strong>${formatINR(totalTax)}</strong>`;
-  taxBreakdownEl.innerHTML = `Tax before rebate: ${formatINR(taxBeforeRebate)} • Rebate: ${formatINR(rebate)} • Cess (4%): ${formatINR(cess)}<br>
-    Annual professional tax: ${formatINR(profTaxAnnual)} • Approx. take-home (annual): ${formatINR(takeHomeAnnual)} • (monthly ≈ ${formatINR(takeHomeMonthly)})`;
-
-  // Build a simple chart: Tax vs Take-home
-  const labels = ['Total Tax', 'Take-home'];
-  const values = [Math.round(totalTax), Math.round(takeHomeAnnual)];
-
-  drawTaxChart(labels, values);
-}
-
-function drawTaxChart(labels, values) {
-  _lastTaxChart = { labels: labels.slice(), values: values.slice() };
-  const canvas = document.getElementById('taxChart');
-  if (!canvas || !labels || labels.length === 0) return;
-  canvas.style.display = 'block';
-  const ctx = canvas.getContext('2d');
-
+  canvas.style.display = "block";
   const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.offsetWidth;
-  const cssHeight = 260;
+  const cssWidth = canvas.offsetWidth || 600;
+  const cssHeight = 160;
   canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
   canvas.height = Math.floor(cssHeight * dpr);
-  canvas.style.height = cssHeight + 'px';
-
+  canvas.style.height = cssHeight + "px";
+  const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-  const max = Math.max(...values, 1);
-  const padding = 30;
-  const barWidth = (cssWidth - padding * 2) / values.length * 0.6;
-  const gap = ((cssWidth - padding * 2) - (barWidth * values.length)) / (values.length - 1 || 1);
+  // For simplicity, recompute tax using same logic to get a numeric tax value (without rounding)
+  const gross = Number(document.getElementById("gross").value || 0);
+  const deductions = Number(document.getElementById("deductions").value || 0);
+  const age = Number(document.getElementById("age").value || 0);
+  const regime = document.getElementById("regime").value;
+  const taxableIncome = Math.max(0, gross - deductions);
 
-  // axes
-  ctx.beginPath();
-  ctx.strokeStyle = '#ddd';
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, cssHeight - padding);
-  ctx.lineTo(cssWidth - padding, cssHeight - padding);
-  ctx.stroke();
+  function taxFromSlabs(taxable, slabs) {
+    let remaining = taxable;
+    let tax = 0;
+    let lower = 0;
+    for (let i = 0; i < slabs.length; i++) {
+      const slab = slabs[i];
+      const upper = slab.upto;
+      const rate = slab.rate;
+      const portion = Math.max(0, Math.min(remaining, upper - lower));
+      tax += portion * rate;
+      remaining = Math.max(0, remaining - portion);
+      lower = upper;
+      if (remaining <= 0) break;
+    }
+    if (remaining > 0 && slabs.length > 0) {
+      tax += remaining * slabs[slabs.length - 1].rate;
+    }
+    return tax;
+  }
 
-  // bars
-  ctx.fillStyle = '#0b5ed7';
-  values.forEach((v, i) => {
-    const x = padding + i * (barWidth + gap);
-    const h = (v / max) * (cssHeight - padding * 2);
-    const y = cssHeight - padding - h;
-    ctx.fillRect(x, y, barWidth, h);
-    // labels
-    ctx.fillStyle = '#222';
-    ctx.font = '12px Arial';
-    ctx.fillText(labels[i], x, cssHeight - padding + 16);
-    ctx.fillStyle = '#000';
-    ctx.fillText('₹' + v.toLocaleString('en-IN'), x, Math.max(12, y - 8));
-    ctx.fillStyle = '#0b5ed7';
-  });
+  const newRegimeSlabs = [
+    { upto: 400000, rate: 0 },
+    { upto: 800000, rate: 0.05 },
+    { upto: 1200000, rate: 0.10 },
+    { upto: 1600000, rate: 0.15 },
+    { upto: 2000000, rate: 0.20 },
+    { upto: 2400000, rate: 0.25 },
+    { upto: Infinity, rate: 0.30 }
+  ];
+  let oldSlabs = [];
+  if (age >= 80) {
+    oldSlabs = [
+      { upto: 500000, rate: 0 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else if (age >= 60) {
+    oldSlabs = [
+      { upto: 300000, rate: 0 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else {
+    oldSlabs = [
+      { upto: 250000, rate: 0 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  }
+
+  const tax = regime === "new" ? taxFromSlabs(taxableIncome, newRegimeSlabs) : taxFromSlabs(taxableIncome, oldSlabs);
+
+  // draw bars
+  const padding = 20;
+  const barWidth = cssWidth - padding * 2;
+  const maxVal = Math.max(taxableIncome, tax);
+  const scale = maxVal === 0 ? 1 : (cssHeight - 60) / maxVal;
+
+  // Taxable Income bar (background)
+  const txHeight = Math.max(6, taxableIncome * scale);
+  ctx.fillStyle = "#e7f0ff";
+  ctx.fillRect(padding, cssHeight - 30 - txHeight, barWidth, txHeight);
+
+  // Tax bar (foreground)
+  const taxHeight = Math.max(2, tax * scale);
+  ctx.fillStyle = "#0b5ed7";
+  ctx.fillRect(padding, cssHeight - 30 - taxHeight, barWidth * 0.35, taxHeight);
+
+  // labels
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Taxable Income: ₹" + taxableIncome.toLocaleString("en-IN"), padding, cssHeight - 8);
+  ctx.fillText("Estimated Tax: ₹" + Math.round(tax).toLocaleString("en-IN"), padding + barWidth * 0.38, cssHeight - 8);
 }
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      // redraw chart if visible
+      const canvas = document.getElementById("growthChart");
+      if (canvas && canvas.style.display === "block") {
+        // attempt to redraw using current inputs
+        const gross = Number(document.getElementById("gross").value || 0);
+        const deductions = Number(document.getElementById("deductions").value || 0);
+        const taxable = Math.max(0, gross - deductions);
+        if (taxable > 0) drawChartForTax(taxable, document.getElementById("regime").value);
+      }
+    }, 150);
+  });
+})();
 
 (function(){
   const now = new Date();
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
   const lastEl = document.getElementById('last-updated');
-  if (lastEl) lastEl.textContent = monthYear;
+  if(lastEl) lastEl.textContent = monthYear;
   const cy = document.getElementById('copyright-year');
-  if (cy) cy.textContent = now.getFullYear();
+  if(cy) cy.textContent = now.getFullYear();
 })();
-
-window.addEventListener('resize', function(){
-  if (_lastTaxChart) drawTaxChart(_lastTaxChart.labels, _lastTaxChart.values);
-});
 </script>
 
 </body>
