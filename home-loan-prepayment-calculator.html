@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Loan Prepayment Calculator – TalionCalcs</title>
+  <meta name="description" content="Calculate impact of a one-time prepayment on your home loan: reduced tenure or reduced EMI, interest saved, and new schedule.">
+  <link rel="canonical" href="https://talioncalcs.github.io/home-loan-prepayment-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Home Loan Prepayment Calculator – TalionCalcs">
+  <meta property="og:description" content="See how a one-time prepayment affects your home loan — compute new tenure or new EMI and interest saved.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/home-loan-prepayment-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:340px; display:none; border:1px solid #eee; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    .flex-row { display:flex; gap:10px; }
+    .half { flex:1; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Home Loan Prepayment Calculator","item":"https://talioncalcs.github.io/home-loan-prepayment-calculator.html" }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Home Loan Prepayment Calculator
+  </div>
+
+  <h1>Home Loan Prepayment Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Enter your outstanding loan details and a one-time prepayment to see two common lender outcomes: (A) keep EMI the same → reduced tenure, or (B) keep tenure the same → reduced EMI. The tool also shows interest saved.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Prepayment Form</h2>
+
+    <label for="outstanding">Outstanding Principal (₹)</label>
+    <input type="number" id="outstanding" min="0" aria-label="Outstanding principal" placeholder="e.g. 3500000">
+
+    <label for="annualRate">Current Annual Interest Rate (%)</label>
+    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 8.35">
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="remainingYears">Remaining Tenure (Years)</label>
+        <input type="number" id="remainingYears" min="0" step="1" aria-label="Remaining tenure years" placeholder="e.g. 15">
+      </div>
+      <div class="half">
+        <label for="currentEmi">Current Monthly EMI (optional)</label>
+        <input type="number" id="currentEmi" min="0" aria-label="Current EMI" placeholder="Leave empty to compute EMI from principal, rate and tenure">
+      </div>
+    </div>
+
+    <label for="prepayment">One-time Prepayment Amount (₹)</label>
+    <input type="number" id="prepayment" min="0" aria-label="Prepayment amount" placeholder="e.g. 500000">
+
+    <label for="prepayAtMonth">Prepayment at Month (1 = next month)</label>
+    <input type="number" id="prepayAtMonth" min="1" aria-label="Prepayment at month" placeholder="e.g. 24">
+
+    <button type="button" onclick="calculatePrepayment()" aria-label="Calculate Prepayment">Calculate</button>
+
+    <div class="result" id="summary" aria-live="polite"></div>
+    <div class="subresult" id="details" aria-live="polite"></div>
+
+    <canvas id="prepayChart" role="img" aria-label="Outstanding principal chart"></canvas>
+  </div>
+
+  <div class="cmp-table">
+    <h2>What this does</h2>
+    <table>
+      <tr><th>Action</th><th>Outcome</th></tr>
+      <tr><td>Keep EMI same</td><td>Loan is repaid sooner (reduced tenure). Calculator shows months/years left and interest saved.</td></tr>
+      <tr><td>Keep Tenure same</td><td>EMI reduces for the remaining tenure. Calculator shows new EMI and interest saved.</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <h3>Notes</h3>
+    <p class="small">
+      This calculator models standard amortising loans with monthly compounding and monthly EMIs. Actual lender behaviour may differ (prepayment charges, minimum balance rules, interest recalculation dates). Use this as an estimate and confirm with your lender.
+    </p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+/* Home Loan Prepayment Calculator
+   - No default values are pre-filled (placeholders only)
+   - Computes EMI if not provided
+   - Calculates remaining balance at prepayment month, applies prepayment, then:
+       Option A: Keep EMI same -> compute new tenure (months)
+       Option B: Keep remaining tenure same -> compute new EMI
+   - Compares total interest before and after to show interest saved
+*/
+
+function toINR(n) {
+  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
+}
+
+function calcEMI(principal, monthlyRate, months) {
+  if (months <= 0) return 0;
+  if (monthlyRate === 0) return principal / months;
+  const r = monthlyRate;
+  const pow = Math.pow(1 + r, months);
+  return principal * r * pow / (pow - 1);
+}
+
+// Remaining balance after k payments (EMI at end of each month)
+function remainingBalance(principal, monthlyRate, monthsPaid, emi) {
+  if (monthlyRate === 0) {
+    return Math.max(0, principal - emi * monthsPaid);
+  }
+  const r = monthlyRate;
+  const pow = Math.pow(1 + r, monthsPaid);
+  // Balance formula: B = P*(1+r)^k - EMI * [ ((1+r)^k -1) / r ]
+  const B = principal * pow - emi * ((pow - 1) / r);
+  return Math.max(0, B);
+}
+
+// Solve for months needed to amortize principal with given EMI and monthlyRate
+function monthsForEMI(principal, monthlyRate, emi) {
+  if (emi <= 0) return Infinity;
+  if (monthlyRate === 0) {
+    return Math.ceil(principal / emi);
+  }
+  const r = monthlyRate;
+  if (emi <= principal * r) return Infinity; // EMI not enough to cover interest
+  const val = Math.log(emi / (emi - principal * r)) / Math.log(1 + r);
+  return Math.ceil(val);
+}
+
+function calculatePrepayment() {
+  const P = Number(document.getElementById("outstanding").value || 0);
+  const annualRate = Number(document.getElementById("annualRate").value || 0) / 100;
+  const years = Number(document.getElementById("remainingYears").value || 0);
+  const emiInput = Number(document.getElementById("currentEmi").value || 0);
+  const prepay = Number(document.getElementById("prepayment").value || 0);
+  const prepayAt = Number(document.getElementById("prepayAtMonth").value || 0);
+
+  const summaryEl = document.getElementById("summary");
+  const detailsEl = document.getElementById("details");
+  const canvas = document.getElementById("prepayChart");
+
+  // Basic validations
+  if (P <= 0 || annualRate < 0 || years <= 0 || prepay < 0 || prepayAt <= 0) {
+    summaryEl.innerHTML = "Please enter valid values for outstanding principal, rate, remaining tenure and prepayment details.";
+    detailsEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const monthlyRate = annualRate / 12;
+  const r = monthlyRate / 100;
+  const n = Math.max(0, Math.floor(years * 12));
+
+  // Determine current EMI: if supplied use it, otherwise calculate from P, r, n
+  const emi = emiInput > 0 ? emiInput : calcEMI(P, r, n);
+
+  // If prepayAt greater than n, set to n (we can handle prepayment at final month)
+  const t = Math.min(Math.max(1, Math.floor(prepayAt)), n);
+
+  // Remaining balance just before prepayment month: after making t EMI payments?
+  // Prepayment at month t means user makes t EMIs (including the EMI in month t), then prepayment applied
+  const balanceBeforePrepay = remainingBalance(P, r, t, emi);
+
+  // If prepayment >= balance => loan cleared at that time
+  if (prepay >= balanceBeforePrepay) {
+    // Loan paid off at or before prepayment
+    // Total interest originally = EMI*n - P
+    const totalPaidOriginal = emi * n;
+    const interestOriginal = totalPaidOriginal - P;
+
+    // Payments made until prepayment: emi * t
+    const paymentsBefore = emi * t;
+    // Add prepayment to finish off
+    const totalPaidNew = paymentsBefore + balanceBeforePrepay; // prepayment equals remaining
+    const interestNew = totalPaidNew - P;
+    const interestSaved = interestOriginal - interestNew;
+
+    summaryEl.innerHTML = "Prepayment will fully repay the loan at month " + t + ".";
+    detailsEl.innerHTML = "<div class='small'>Original EMI: " + toINR(emi) + " • Original tenure: " + n + " months (" + (n/12).toFixed(2) + " years)</div>"
+      + "<div class='small'>Total interest originally: " + toINR(interestOriginal) + "</div>"
+      + "<div class='small'>Payments made until prepayment: " + toINR(paymentsBefore) + "</div>"
+      + "<div class='small'>Final prepayment used: " + toINR(balanceBeforePrepay) + "</div>"
+      + "<div class='result'>Interest saved: " + toINR(interestSaved) + "</div>";
+
+    // Draw simple chart showing balance hitting zero at t
+    drawChartForFullPrepay(P, r, emi, n, t);
+    return;
+  }
+
+  // New principal after prepayment applied
+  const principalAfterPrepay = balanceBeforePrepay - prepay;
+
+  // Option A: Keep EMI same -> compute new months needed
+  const monthsAfterA = monthsForEMI(principalAfterPrepay, r, emi);
+  const totalMonthsA = t + monthsAfterA;
+
+  // Option B: Keep remaining tenure same -> remainingMonths = n - t
+  const remainingMonths = Math.max(0, n - t);
+  const newEmiB = remainingMonths > 0 ? calcEMI(principalAfterPrepay, r, remainingMonths) : principalAfterPrepay;
+
+  // Totals & interest comparisons
+  const totalPaidOriginal = emi * n;
+  const interestOriginal = totalPaidOriginal - P;
+
+  // Option A totals
+  const paymentsBefore = emi * t;
+  const paymentsAfterA = emi * monthsAfterA;
+  const totalPaidA = paymentsBefore + paymentsAfterA + prepay;
+  const interestA = totalPaidA - P;
+  const interestSavedA = interestOriginal - interestA;
+  const yearsA = Math.floor(totalMonthsA / 12);
+  const monthsA = totalMonthsA % 12;
+
+  // Option B totals
+  const paymentsAfterB = newEmiB * remainingMonths;
+  const totalPaidB = paymentsBefore + paymentsAfterB + prepay;
+  const interestB = totalPaidB - P;
+  const interestSavedB = interestOriginal - interestB;
+
+  // Output summary
+  summaryEl.innerHTML = "Results after a one-time prepayment of " + toINR(prepay) + " at month " + t + ".";
+  let detailsHtml = "";
+  detailsHtml += "<div class='small'><strong>Original:</strong> EMI " + toINR(emi) + " • Tenure " + n + " months (" + (n/12).toFixed(2) + " years) • Total interest " + toINR(interestOriginal) + "</div>";
+  detailsHtml += "<hr style='border:none;border-top:1px solid #eee;margin:10px 0;'>";
+  detailsHtml += "<div class='small'><strong>At prepayment (month " + t + "):</strong> Outstanding before prepayment: " + toINR(balanceBeforePrepay) + "</div>";
+  detailsHtml += "<div class='small'>Principal after prepayment: " + toINR(principalAfterPrepay) + "</div>";
+  detailsHtml += "<hr style='border:none;border-top:1px solid #eee;margin:10px 0;'>";
+  detailsHtml += "<div class='small'><strong>Option A — Keep EMI same</strong></div>";
+  if (monthsAfterA === Infinity) {
+    detailsHtml += "<div class='small'>EMI is too small to amortise the remaining principal (EMI ≤ monthly interest). Increase EMI or consult lender.</div>";
+  } else {
+    detailsHtml += "<div class='small'>New tenure: " + monthsAfterA + " months (total " + totalMonthsA + " months → " + yearsA + " years " + monthsA + " months)</div>";
+    detailsHtml += "<div class='small'>Total interest payable: " + toINR(interestA) + " • Interest saved: " + toINR(interestSavedA) + "</div>";
+  }
+
+  detailsHtml += "<hr style='border:none;border-top:1px solid #eee;margin:10px 0;'>";
+  detailsHtml += "<div class='small'><strong>Option B — Keep remaining tenure same</strong></div>";
+  detailsHtml += "<div class='small'>Remaining months used: " + remainingMonths + " months</div>";
+  detailsHtml += "<div class='small'>New EMI for remaining tenure: " + toINR(newEmiB) + "</div>";
+  detailsHtml += "<div class='small'>Total interest payable: " + toINR(interestB) + " • Interest saved: " + toINR(interestSavedB) + "</div>";
+
+  detailsEl.innerHTML = detailsHtml;
+
+  // Draw chart comparing outstanding balance over time: original, after prepay option A (keep EMI) and option B (keep tenure)
+  drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths);
+}
+
+/* Chart helpers */
+let _lastChartData = null;
+
+function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths) {
+  const canvas = document.getElementById("prepayChart");
+  if (!canvas) return;
+  canvas.style.display = "block";
+  const ctx = canvas.getContext("2d");
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 340;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  // Build data points (months)
+  const monthsOriginal = [];
+  const balOriginal = [];
+  for (let m = 0; m <= n; m++) {
+    monthsOriginal.push(m);
+    balOriginal.push(Math.round(remainingBalance(P, r, m, emi)));
+  }
+
+  // After prepayment Option A (keep EMI): balance until t uses original, then restart amortization with same EMI
+  const monthsA = [];
+  const balA = [];
+  // before prepay
+  for (let m = 0; m <= t; m++) {
+    monthsA.push(m);
+    balA.push(Math.round(remainingBalance(P, r, m, emi)));
+  }
+  // at t we apply prepay -> principalAfterPrepay
+  let principal = principalAfterPrepay;
+  for (let i = 1; i <= monthsAfterA; i++) {
+    const monthIndex = t + i;
+    monthsA.push(monthIndex);
+    // compute next balance after i payments with EMI
+    const bal = remainingBalance(principalAfterPrepay, r, i, emi);
+    balA.push(Math.round(bal));
+  }
+
+  // After prepayment Option B (keep tenure): before t same as original, after t use newEmiB for remainingMonths
+  const monthsB = [];
+  const balB = [];
+  for (let m = 0; m <= t; m++) {
+    monthsB.push(m);
+    balB.push(Math.round(remainingBalance(P, r, m, emi)));
+  }
+  // simulate remaining months with new EMI
+  for (let i = 1; i <= remainingMonths; i++) {
+    const monthIndex = t + i;
+    monthsB.push(monthIndex);
+    const bal = remainingBalance(principalAfterPrepay, r, i, newEmiB);
+    balB.push(Math.round(bal));
+  }
+
+  // Determine overall max months to scale x-axis
+  const maxMonth = Math.max(monthsOriginal[monthsOriginal.length - 1], monthsA[monthsA.length - 1] || 0, monthsB[monthsB.length - 1] || 0);
+  const allBalances = balOriginal.concat(balA, balB);
+  const maxBalance = Math.max(...allBalances);
+
+  const padding = 40;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = maxMonth > 0 ? usableWidth / maxMonth : usableWidth;
+
+  // Axis
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  ctx.moveTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding, cssHeight - padding);
+  ctx.stroke();
+
+  // Helper to map value to canvas coords
+  function xForMonth(m) { return padding + m * stepX; }
+  function yForBalance(b) { return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
+
+  // Draw original (dashed)
+  ctx.beginPath();
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = "#888";
+  ctx.lineWidth = 1.5;
+  balOriginal.forEach((val, i) => {
+    const x = xForMonth(monthsOriginal[i]);
+    const y = yForBalance(val);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Option A (solid blue)
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+  balA.forEach((val, i) => {
+    const x = xForMonth(monthsA[i]);
+    const y = yForBalance(val);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Draw Option B (solid green)
+  ctx.beginPath();
+  ctx.strokeStyle = "#198754";
+  ctx.lineWidth = 2;
+  balB.forEach((val, i) => {
+    const x = xForMonth(monthsB[i]);
+    const y = yForBalance(val);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Points for prepayment moment
+  const px = xForMonth(t);
+  // draw vertical marker
+  ctx.beginPath();
+  ctx.strokeStyle = "#ccc";
+  ctx.lineWidth = 1;
+  ctx.moveTo(px, padding);
+  ctx.lineTo(px, cssHeight - padding);
+  ctx.stroke();
+
+  // Legend
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Original schedule (dashed)", padding, 14);
+  ctx.fillStyle = "#0b5ed7";
+  ctx.fillRect(cssWidth - 240, 6, 12, 8);
+  ctx.fillStyle = "#222";
+  ctx.fillText("Option A — same EMI (reduced tenure)", cssWidth - 224, 14);
+  ctx.fillStyle = "#198754";
+  ctx.fillRect(cssWidth - 240, 26, 12, 8);
+  ctx.fillStyle = "#222";
+  ctx.fillText("Option B — same tenure (reduced EMI)", cssWidth - 224, 34);
+
+  // Y-axis label
+  ctx.fillStyle = "#444";
+  ctx.fillText("Outstanding principal (₹)", 8, padding - 8);
+
+  // Annotate prepayment point values
+  const balAtT = Math.round(remainingBalance(P, r, t, emi));
+  ctx.fillStyle = "#444";
+  ctx.fillText("Prepayment at month " + t + " • Outstanding before prepay: " + toINR(balAtT), px + 6, padding + 12);
+
+  _lastChartData = { P, r, emi, n, t, prepay };
+}
+
+function drawChartForFullPrepay(P, r, emi, n, t) {
+  const canvas = document.getElementById("prepayChart");
+  if (!canvas) return;
+  canvas.style.display = "block";
+  const ctx = canvas.getContext("2d");
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth;
+  const cssHeight = 340;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const monthsOriginal = [];
+  const balOriginal = [];
+  for (let m = 0; m <= n; m++) {
+    monthsOriginal.push(m);
+    balOriginal.push(Math.round(remainingBalance(P, r, m, emi)));
+  }
+
+  const maxMonth = n;
+  const maxBalance = Math.max(...balOriginal);
+
+  const padding = 40;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = maxMonth > 0 ? usableWidth / maxMonth : usableWidth;
+
+  // Axis
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  ctx.moveTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding, cssHeight - padding);
+  ctx.stroke();
+
+  function xForMonth(m) { return padding + m * stepX; }
+  function yForBalance(b) { return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
+
+  // Original dashed
+  ctx.beginPath();
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = "#888";
+  ctx.lineWidth = 1.5;
+  balOriginal.forEach((val, i) => {
+    const x = xForMonth(monthsOriginal[i]);
+    const y = yForBalance(val);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Marker at t
+  const px = xForMonth(t);
+  ctx.beginPath();
+  ctx.strokeStyle = "#ccc";
+  ctx.lineWidth = 1;
+  ctx.moveTo(px, padding);
+  ctx.lineTo(px, cssHeight - padding);
+  ctx.stroke();
+
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Original schedule (dashed)", padding, 14);
+  ctx.fillStyle = "#444";
+  ctx.fillText("Prepayment at month " + t, px + 6, padding + 12);
+
+  _lastChartData = { mode: "full-prepay" };
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (_lastChartData) {
+        // Redraw by re-running last calculation is complex; simply hide chart to avoid distortion.
+        const canvas = document.getElementById("prepayChart");
+        if (canvas) canvas.style.display = "none";
+      }
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
