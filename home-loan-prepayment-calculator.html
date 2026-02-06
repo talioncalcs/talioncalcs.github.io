@@ -32,6 +32,7 @@
     .page { max-width: 760px; margin: auto; padding: 18px; }
     h1 { font-size: 24px; margin-bottom: 8px; }
     h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
     p { font-size: 15px; line-height: 1.6; }
     .breadcrumb { font-size: 13px; margin-bottom: 12px; }
     .breadcrumb a { color: #0b5ed7; text-decoration: none; }
@@ -83,24 +84,29 @@
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"All",
     "url":"https://talioncalcs.github.io/home-loan-prepayment-calculator.html",
-    "description":"Calculate the effect of a one-time prepayment on a home loan: reduced tenure or reduced EMI, and interest saved."
+    "description":"Calculate interest savings and reduced tenure from home loan prepayments."
   }
   </script>
 
   <script type="application/ld+json">
   {
-    "@context":"https://https://schema.org",
+    "@context":"https://schema.org",
     "@type":"FAQPage",
     "mainEntity":[
       {
         "@type":"Question",
-        "name":"How does prepayment reduce interest?",
-        "acceptedAnswer":{"@type":"Answer","text":"A one-time prepayment reduces the outstanding principal. With the same EMI this shortens the remaining tenure; with the same tenure it lowers the EMI. Both reduce total interest paid."}
+        "name":"What is home loan prepayment?",
+        "acceptedAnswer":{"@type":"Answer","text":"Home loan prepayment is paying an extra amount towards your outstanding loan principal before the scheduled tenure ends."}
       },
       {
         "@type":"Question",
-        "name":"Do lenders charge prepayment fees?",
-        "acceptedAnswer":{"@type":"Answer","text":"Some lenders may charge prepayment penalties or have minimum amounts. Check your loan terms; this calculator shows estimates assuming prepayment is accepted without extra charges."}
+        "name":"Does prepayment reduce interest?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes, prepayment reduces the principal outstanding, which lowers total interest paid over the loan tenure."}
+      },
+      {
+        "@type":"Question",
+        "name":"Is prepayment always beneficial?",
+        "acceptedAnswer":{"@type":"Answer","text":"Prepayment is usually beneficial when there are no penalties and the loan interest rate is higher than alternative investment returns."}
       }
     ]
   }
@@ -183,10 +189,34 @@
   <div class="ad-slot" aria-hidden="true">Advertisement</div>
 
   <section class="explanation">
-    <h3>Notes</h3>
-    <p class="small">
-      This calculator models standard amortising loans with monthly compounding and monthly EMIs. Actual lender behaviour may differ (prepayment charges, minimum balance rules, interest recalculation dates). Use this as an estimate and confirm with your lender.
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this tool when you are considering a lump-sum prepayment on your home loan and want to compare the two typical outcomes lenders offer: reduced tenure (same EMI) or reduced EMI (same tenure). It helps estimate interest savings and the new repayment profile.
     </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator computes an EMI (if you don't supply one) using standard amortisation formulas, finds the outstanding balance at the chosen prepayment month, applies the prepayment to reduce principal, then:
+    </p>
+    <ul>
+      <li>Option A — keeps your EMI unchanged and solves for the shorter remaining tenure required to amortise the reduced principal.</li>
+      <li>Option B — keeps the remaining tenure unchanged and recalculates EMI for the lower principal.</li>
+    </ul>
+
+    <h3>Benefits of prepayment</h3>
+    <p>
+      Prepaying reduces outstanding principal and therefore total interest paid. If you have surplus cash and no significant prepayment penalty, you can shorten the loan duration or lower monthly payments.
+    </p>
+
+    <h3>Factors that affect savings</h3>
+    <p>
+      Interest rate, timing of prepayment (earlier gives larger savings), prepayment penalties, and whether your lender recalculates interest monthly or on specific dates. Also compare alternative uses of cash (investments, emergency buffer) before prepaying.
+    </p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Will my lender always let me prepay?</strong> Most lenders allow prepayment but terms vary — check for charges, minimum prepayment amounts, and any processing rules.</p>
+    <p><strong>Should I reduce EMI or tenure?</strong> Reducing tenure typically saves more interest; reducing EMI may help cash flow. Use this calculator to compare both outcomes.</p>
+    <p><strong>Does prepayment affect interest already due?</strong> Prepayment reduces future interest by lowering principal. Interest already accrued remains payable as per lender rules.</p>
   </section>
 
   <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
@@ -202,15 +232,6 @@
 </footer>
 
 <script>
-/* Home Loan Prepayment Calculator (template-fitted)
-   - Uses placeholders only (no defaults shown)
-   - Computes EMI if not provided
-   - Calculates remaining balance at prepayment month, then:
-       Option A: Keep EMI same -> compute new tenure (months)
-       Option B: Keep remaining tenure same -> compute new EMI
-   - Compares total interest before and after to show interest saved
-*/
-
 function toINR(n) {
   return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
 }
@@ -223,7 +244,6 @@ function calcEMI(principal, monthlyRate, months) {
   return principal * r * pow / (pow - 1);
 }
 
-// Remaining balance after k payments (EMI assumed at end of each month)
 function remainingBalance(principal, monthlyRate, monthsPaid, emi) {
   if (monthlyRate === 0) {
     return Math.max(0, principal - emi * monthsPaid);
@@ -234,21 +254,20 @@ function remainingBalance(principal, monthlyRate, monthsPaid, emi) {
   return Math.max(0, B);
 }
 
-// Solve for months needed to amortize principal with given EMI and monthlyRate
 function monthsForEMI(principal, monthlyRate, emi) {
   if (emi <= 0) return Infinity;
   if (monthlyRate === 0) {
     return Math.ceil(principal / emi);
   }
   const r = monthlyRate;
-  if (emi <= principal * r) return Infinity; // EMI not enough to cover interest
+  if (emi <= principal * r) return Infinity;
   const val = Math.log(emi / (emi - principal * r)) / Math.log(1 + r);
   return Math.ceil(val);
 }
 
 function calculatePrepayment() {
   const P = Number(document.getElementById("outstanding").value || 0);
-  const annualRate = Number(document.getElementById("annualRate").value || 0) / 100;
+  const annualRatePercent = Number(document.getElementById("annualRate").value || 0);
   const years = Number(document.getElementById("remainingYears").value || 0);
   const emiInput = Number(document.getElementById("currentEmi").value || 0);
   const prepay = Number(document.getElementById("prepayment").value || 0);
@@ -258,34 +277,25 @@ function calculatePrepayment() {
   const detailsEl = document.getElementById("details");
   const canvas = document.getElementById("prepayChart");
 
-  // Basic validations
-  if (P <= 0 || annualRate < 0 || years <= 0 || prepay < 0 || prepayAt <= 0) {
+  if (P <= 0 || annualRatePercent < 0 || years <= 0 || prepay < 0 || prepayAt <= 0) {
     summaryEl.innerHTML = "Please enter valid values for outstanding principal, rate, remaining tenure and prepayment details.";
     detailsEl.innerHTML = "";
     if (canvas) canvas.style.display = "none";
     return;
   }
 
-  const monthlyRate = (annualRate / 12) / 100; // monthly decimal rate
+  const monthlyRate = annualRatePercent / 12 / 100;
   const n = Math.max(0, Math.floor(years * 12));
-
-  // Determine current EMI: if supplied use it, otherwise calculate from P, r, n
-  const emi = (emiInput > 0) ? emiInput : calcEMI(P, monthlyRate, n);
-
-  // If prepayAt greater than n, set to n (we can handle prepayment at final month)
+  const emi = emiInput > 0 ? emiInput : calcEMI(P, monthlyRate, n);
   const t = Math.min(Math.max(1, Math.floor(prepayAt)), n);
-
-  // Remaining balance just after t payments (we consider EMI paid for month t, then prepayment applied)
   const balanceBeforePrepay = remainingBalance(P, monthlyRate, t, emi);
 
-  // If prepayment >= balance => loan cleared at that time
   if (prepay >= balanceBeforePrepay) {
     const totalPaidOriginal = emi * n;
     const interestOriginal = totalPaidOriginal - P;
-
     const paymentsBefore = emi * t;
-    const finalPrepayUsed = balanceBeforePrepay; // prepayment wipes remaining balance
-    const totalPaidNew = paymentsBefore + finalPrepayUsed;
+    const finalPrepay = balanceBeforePrepay;
+    const totalPaidNew = paymentsBefore + finalPrepay;
     const interestNew = totalPaidNew - P;
     const interestSaved = interestOriginal - interestNew;
 
@@ -293,44 +303,32 @@ function calculatePrepayment() {
     detailsEl.innerHTML = "<div class='small'>Original EMI: " + toINR(emi) + " • Original tenure: " + n + " months (" + (n/12).toFixed(2) + " years)</div>"
       + "<div class='small'>Total interest originally: " + toINR(interestOriginal) + "</div>"
       + "<div class='small'>Payments made until prepayment: " + toINR(paymentsBefore) + "</div>"
-      + "<div class='small'>Final prepayment used: " + toINR(finalPrepayUsed) + "</div>"
+      + "<div class='small'>Final prepayment used: " + toINR(finalPrepay) + "</div>"
       + "<div class='result'>Interest saved: " + toINR(interestSaved) + "</div>";
 
     drawChartForFullPrepay(P, monthlyRate, emi, n, t);
     return;
   }
 
-  // New principal after prepayment applied
   const principalAfterPrepay = balanceBeforePrepay - prepay;
-
-  // Option A: Keep EMI same -> compute new months needed
   const monthsAfterA = monthsForEMI(principalAfterPrepay, monthlyRate, emi);
-  const totalMonthsA = t + monthsAfterA;
-
-  // Option B: Keep remaining tenure same -> remainingMonths = n - t
+  const totalMonthsA = (monthsAfterA === Infinity) ? Infinity : t + monthsAfterA;
   const remainingMonths = Math.max(0, n - t);
-  const newEmiB = (remainingMonths > 0) ? calcEMI(principalAfterPrepay, monthlyRate, remainingMonths) : principalAfterPrepay;
-
-  // Totals & interest comparisons
+  const newEmiB = remainingMonths > 0 ? calcEMI(principalAfterPrepay, monthlyRate, remainingMonths) : principalAfterPrepay;
   const totalPaidOriginal = emi * n;
   const interestOriginal = totalPaidOriginal - P;
-
-  // Option A totals
   const paymentsBefore = emi * t;
-  const paymentsAfterA = emi * monthsAfterA;
+  const paymentsAfterA = (monthsAfterA === Infinity) ? 0 : emi * monthsAfterA;
   const totalPaidA = paymentsBefore + paymentsAfterA + prepay;
   const interestA = totalPaidA - P;
   const interestSavedA = interestOriginal - interestA;
-  const yearsA = Math.floor(totalMonthsA / 12);
-  const monthsA = totalMonthsA % 12;
-
-  // Option B totals
+  const yearsA = (monthsAfterA === Infinity) ? 0 : Math.floor(totalMonthsA / 12);
+  const monthsA = (monthsAfterA === Infinity) ? 0 : totalMonthsA % 12;
   const paymentsAfterB = newEmiB * remainingMonths;
   const totalPaidB = paymentsBefore + paymentsAfterB + prepay;
   const interestB = totalPaidB - P;
   const interestSavedB = interestOriginal - interestB;
 
-  // Output summary
   summaryEl.innerHTML = "Results after a one-time prepayment of " + toINR(prepay) + " at month " + t + ".";
   let detailsHtml = "";
   detailsHtml += "<div class='small'><strong>Original:</strong> EMI " + toINR(emi) + " • Tenure " + n + " months (" + (n/12).toFixed(2) + " years) • Total interest " + toINR(interestOriginal) + "</div>";
@@ -342,7 +340,7 @@ function calculatePrepayment() {
   if (monthsAfterA === Infinity) {
     detailsHtml += "<div class='small'>EMI is too small to amortise the remaining principal (EMI ≤ monthly interest). Increase EMI or consult lender.</div>";
   } else {
-    detailsHtml += "<div class='small'>New tenure: " + monthsAfterA + " months (total " + totalMonthsA + " months → " + yearsA + " years " + monthsA + " months)</div>";
+    detailsHtml += "<div class='small'>New tenure after prepayment: " + monthsAfterA + " months (total " + totalMonthsA + " months → " + yearsA + " years " + monthsA + " months)</div>";
     detailsHtml += "<div class='small'>Total interest payable: " + toINR(interestA) + " • Interest saved: " + toINR(interestSavedA) + "</div>";
   }
 
@@ -354,11 +352,9 @@ function calculatePrepayment() {
 
   detailsEl.innerHTML = detailsHtml;
 
-  // Draw comparison chart
   drawComparisonChart(P, monthlyRate, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths);
 }
 
-/* Chart helpers */
 let _lastChartData = null;
 
 function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths) {
@@ -368,7 +364,7 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   const ctx = canvas.getContext("2d");
 
   const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.offsetWidth;
+  const cssWidth = canvas.offsetWidth || 600;
   const cssHeight = 340;
   canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
   canvas.height = Math.floor(cssHeight * dpr);
@@ -377,7 +373,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-  // Build data points (months)
   const monthsOriginal = [];
   const balOriginal = [];
   for (let m = 0; m <= n; m++) {
@@ -385,22 +380,21 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
     balOriginal.push(Math.round(remainingBalance(P, r, m, emi)));
   }
 
-  // After prepayment Option A (keep EMI): balance until t uses original, then restart amortization with same EMI
   const monthsA = [];
   const balA = [];
   for (let m = 0; m <= t; m++) {
     monthsA.push(m);
     balA.push(Math.round(remainingBalance(P, r, m, emi)));
   }
-  // simulate after prepay with same EMI
-  for (let i = 1; i <= monthsAfterA; i++) {
-    const monthIndex = t + i;
-    monthsA.push(monthIndex);
-    const bal = Math.round(remainingBalance(principalAfterPrepay, r, i, emi));
-    balA.push(bal);
+  if (monthsAfterA !== Infinity) {
+    for (let i = 1; i <= monthsAfterA; i++) {
+      const monthIndex = t + i;
+      monthsA.push(monthIndex);
+      const bal = Math.round(remainingBalance(principalAfterPrepay, r, i, emi));
+      balA.push(Math.max(bal,0));
+    }
   }
 
-  // After prepayment Option B (keep tenure): before t same as original, after t use newEmiB for remainingMonths
   const monthsB = [];
   const balB = [];
   for (let m = 0; m <= t; m++) {
@@ -411,19 +405,18 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
     const monthIndex = t + i;
     monthsB.push(monthIndex);
     const bal = Math.round(remainingBalance(principalAfterPrepay, r, i, newEmiB));
-    balB.push(bal);
+    balB.push(Math.max(bal,0));
   }
 
-  const maxMonth = Math.max(monthsOriginal[monthsOriginal.length - 1], monthsA[monthsA.length - 1] || 0, monthsB[monthsB.length - 1] || 0);
+  const maxMonth = Math.max(n, (monthsA[monthsA.length - 1] || 0), (monthsB[monthsB.length - 1] || 0));
   const allBalances = balOriginal.concat(balA, balB);
-  const maxBalance = Math.max(...allBalances);
+  const maxBalance = Math.max(...allBalances, 1);
 
   const padding = 40;
   const usableWidth = cssWidth - padding * 2;
   const usableHeight = cssHeight - padding * 2;
   const stepX = maxMonth > 0 ? usableWidth / maxMonth : usableWidth;
 
-  // Axis
   ctx.beginPath();
   ctx.strokeStyle = "#ddd";
   ctx.lineWidth = 1;
@@ -436,7 +429,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   function xForMonth(m) { return padding + m * stepX; }
   function yForBalance(b) { return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
 
-  // Draw original (dashed)
   ctx.beginPath();
   ctx.setLineDash([6, 4]);
   ctx.strokeStyle = "#888";
@@ -449,7 +441,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Draw Option A (solid blue)
   ctx.beginPath();
   ctx.strokeStyle = "#0b5ed7";
   ctx.lineWidth = 2;
@@ -460,7 +451,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   });
   ctx.stroke();
 
-  // Draw Option B (solid green)
   ctx.beginPath();
   ctx.strokeStyle = "#198754";
   ctx.lineWidth = 2;
@@ -471,7 +461,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   });
   ctx.stroke();
 
-  // Marker at prepayment
   const px = xForMonth(t);
   ctx.beginPath();
   ctx.strokeStyle = "#ccc";
@@ -480,7 +469,6 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   ctx.lineTo(px, cssHeight - padding);
   ctx.stroke();
 
-  // Legend and labels
   ctx.fillStyle = "#222";
   ctx.font = "12px Arial";
   ctx.fillText("Original schedule (dashed)", padding, 14);
@@ -510,7 +498,7 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   const ctx = canvas.getContext("2d");
 
   const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.offsetWidth;
+  const cssWidth = canvas.offsetWidth || 600;
   const cssHeight = 340;
   canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
   canvas.height = Math.floor(cssHeight * dpr);
@@ -527,7 +515,7 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   }
 
   const maxMonth = n;
-  const maxBalance = Math.max(...balOriginal);
+  const maxBalance = Math.max(...balOriginal,1);
 
   const padding = 40;
   const usableWidth = cssWidth - padding * 2;
@@ -580,7 +568,6 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   window.addEventListener('resize', function(){
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function(){
-      // To avoid distortion on resize hide chart; user can recalc to redraw.
       const canvas = document.getElementById("prepayChart");
       if (canvas) canvas.style.display = "none";
     }, 150);
