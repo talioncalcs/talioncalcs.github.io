@@ -6,7 +6,23 @@
   <meta name="description" content="Free Income Tax Calculator for India — estimate annual tax payable under the Old and New tax regimes. Enter gross income, deductions and age to see taxable income, tax payable and effective rate.">
   <link rel="canonical" href="https://talioncalcs.github.io/income-tax-calculator.html">
   <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Income Tax Calculator – TalionCalcs">
+  <meta property="og:description" content="Estimate your income tax (India) under old and new tax regimes. Supports age-based basic exemption and deductions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/income-tax-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
 
   <style>
     body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
@@ -20,13 +36,13 @@
     p { font-size: 15px; line-height: 1.6; }
     .breadcrumb { font-size: 13px; margin-bottom: 12px; }
     .breadcrumb a { color: #0b5ed7; text-decoration: none; }
-    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; background: #fff; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
     label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
     input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
     button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
     button:hover { background:#084298; }
     .result { margin-top:12px; font-size:16px; font-weight:bold; }
-    .muted { color:#666; font-size:13px; margin-top:6px; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
     canvas { margin-top:20px; width:100%; max-height:260px; display:none; }
     .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
     .note { font-size:13px; color:#555; margin-top:30px; }
@@ -35,16 +51,72 @@
     .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
     .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
     .small { font-size:13px; color:#666; }
-    .hr { border:none;border-top:1px solid #eee;margin:12px 0; }
-    @media (max-width:520px) { .site-header .inner { padding: 0 12px; } .page { padding: 12px; } }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Income Tax Calculator","item":"https://talioncalcs.github.io/income-tax-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Income Tax Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/income-tax-calculator.html",
+    "description":"Estimate income tax payable in India under Old and New regimes based on gross income, deductions and age."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Which regime should I choose?",
+        "acceptedAnswer":{"@type":"Answer","text":"It depends on your deductions and exemptions. Use this calculator to compare the New and Old regimes. The New regime has lower slab rates but fewer deductions; the Old regime lets you claim deductions like 80C which may reduce taxable income."}
+      },
+      {
+        "@type":"Question",
+        "name":"Does this include cess and surcharge?",
+        "acceptedAnswer":{"@type":"Answer","text":"No. This calculator provides a slab-wise estimate and does not include cess (health & education cess) or surcharge. Add those separately for final liability."}
+      },
+      {
+        "@type":"Question",
+        "name":"Are the slab rates final?",
+        "acceptedAnswer":{"@type":"Answer","text":"Slab thresholds and rates change in the annual Union Budget. This tool uses sample slab thresholds for estimation — always check the latest official rates for precise calculations."}
+      }
+    ]
+  }
+  </script>
+
 </head>
 
 <body>
 
 <noscript>
-  <div style="background:#fff3cd;border:1px solid #ffeeba;padding:10px;margin:12px;color:#856404;">
-    JavaScript is required for this calculator to work. Please enable JavaScript.
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
   </div>
 </noscript>
 
@@ -66,33 +138,33 @@
   <h1>Income Tax Calculator – India</h1>
 
   <p style="font-size:14px;color:#555;">
-    Quick estimate of income tax under the Old and New regimes. Enter gross annual income, deductions (if any) and your age, then choose a regime. This is an estimate — it excludes cess, surcharge and special-case incomes.
+    Estimate your annual income tax payable in India under the Old or New tax regimes. Enter your gross annual income, total deductions you claim, select your age group and regime to compute taxable income, tax payable and effective rate. This tool provides a quick estimate and does not include cess, surcharge or special-case incomes.
   </p>
 
   <div class="calc-box" role="region" aria-labelledby="calc-heading">
     <h2 id="calc-heading" style="display:none;">Income Tax Calculator Form</h2>
 
     <label for="gross">Gross Annual Income (₹)</label>
-    <input type="number" id="gross" min="0" aria-label="Gross annual income" placeholder="e.g. 1200000">
+    <input type="number" id="gross" min="0" aria-label="Gross annual income" placeholder="e.g. 1200000" />
 
     <label for="deductions">Total Deductions & Exemptions (₹)</label>
-    <input type="number" id="deductions" min="0" aria-label="Total deductions" placeholder="e.g. 150000">
+    <input type="number" id="deductions" min="0" aria-label="Total deductions" placeholder="e.g. 150000" />
 
     <label for="age">Age (years)</label>
-    <input type="number" id="age" min="0" step="1" aria-label="Age in years" placeholder="e.g. 35">
+    <input type="number" id="age" min="0" step="1" aria-label="Age in years" placeholder="e.g. 35" />
 
     <label for="regime">Tax Regime</label>
     <select id="regime" aria-label="Select tax regime">
-      <option value="new">New Tax Regime</option>
-      <option value="old">Old Tax Regime</option>
+      <option value="new">New Tax Regime (optional slabs)</option>
+      <option value="old">Old Tax Regime (with deductions & exemptions)</option>
     </select>
 
-    <button type="button" id="calcBtn" aria-label="Calculate tax">Calculate</button>
+    <button type="button" onclick="calculateTax()" aria-label="Calculate tax">Calculate</button>
 
     <div class="result" id="result" aria-live="polite"></div>
-    <div class="muted" id="details" aria-live="polite"></div>
+    <div class="subresult" id="summary" aria-live="polite"></div>
 
-    <canvas id="taxChart" role="img" aria-label="Tax progress chart"></canvas>
+    <canvas id="growthChart" role="img" aria-label="Tax progress chart"></canvas>
   </div>
 
   <section aria-labelledby="formula-heading">
@@ -197,32 +269,56 @@
 </footer>
 
 <script>
-/* Income Tax Calculator — working + keeps explanation/FAQ */
-(function(){
+/* Income Tax Calculator
+   - Preserves SEO/Schema blocks and page template
+   - Minimal, working calculation logic for slab-wise tax
+   - No unnecessary extras; explanation and FAQ preserved as requested
+*/
 
-  function toINR(n) { return "₹" + Number(Math.round(n)).toLocaleString("en-IN"); }
+function formatINR(n) {
+  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
+}
 
-  function taxFromSlabs(taxable, slabs) {
-    let remaining = taxable;
-    let tax = 0;
-    let lower = 0;
-    for (let i = 0; i < slabs.length; i++) {
-      const upper = slabs[i].upto;
-      const rate = slabs[i].rate;
-      const portion = Math.max(0, Math.min(remaining, upper - lower));
+function taxFromSlabs(taxable, slabs) {
+  let tax = 0;
+  let lower = 0;
+  for (let i = 0; i < slabs.length; i++) {
+    const upper = slabs[i].upto;
+    const rate = slabs[i].rate;
+    const portion = Math.max(0, Math.min(taxable, upper) - lower);
+    if (portion > 0) {
       tax += portion * rate;
-      remaining = Math.max(0, remaining - portion);
-      lower = upper;
-      if (remaining <= 0) break;
     }
-    if (remaining > 0 && slabs.length > 0) {
-      tax += remaining * slabs[slabs.length - 1].rate;
-    }
-    return tax;
+    lower = upper;
+    if (taxable <= upper) break;
+  }
+  return tax;
+}
+
+function calculateTax() {
+  const gross = Number(document.getElementById("gross").value || 0);
+  const deductions = Number(document.getElementById("deductions").value || 0);
+  const age = Number(document.getElementById("age").value || 0);
+  const regime = document.getElementById("regime").value;
+
+  const resultEl = document.getElementById("result");
+  const summaryEl = document.getElementById("summary");
+  const canvas = document.getElementById("growthChart");
+
+  // Validation: gross must be > 0
+  if (!(gross > 0)) {
+    resultEl.innerHTML = "Please enter a valid Gross Annual Income (greater than 0).";
+    summaryEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    return;
   }
 
-  const NEW_REGIME_SLABS = [
-    { upto: 400000, rate: 0 },
+  // Compute taxable income
+  const taxableIncome = Math.max(0, gross - Math.max(0, deductions));
+
+  // Define slabs
+  const newRegimeSlabs = [
+    { upto: 400000, rate: 0.00 },
     { upto: 800000, rate: 0.05 },
     { upto: 1200000, rate: 0.10 },
     { upto: 1600000, rate: 0.15 },
@@ -231,147 +327,162 @@
     { upto: Infinity, rate: 0.30 }
   ];
 
-  function oldRegimeSlabsForAge(age) {
-    if (age >= 80) {
-      return [
-        { upto: 500000, rate: 0 },
-        { upto: 1000000, rate: 0.20 },
-        { upto: Infinity, rate: 0.30 }
-      ];
-    } else if (age >= 60) {
-      return [
-        { upto: 300000, rate: 0 },
-        { upto: 500000, rate: 0.05 },
-        { upto: 1000000, rate: 0.20 },
-        { upto: Infinity, rate: 0.30 }
-      ];
-    } else {
-      return [
-        { upto: 250000, rate: 0 },
-        { upto: 500000, rate: 0.05 },
-        { upto: 1000000, rate: 0.20 },
-        { upto: Infinity, rate: 0.30 }
-      ];
-    }
+  let oldSlabs;
+  if (age >= 80) {
+    oldSlabs = [
+      { upto: 500000, rate: 0.00 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else if (age >= 60) {
+    oldSlabs = [
+      { upto: 300000, rate: 0.00 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
+  } else {
+    oldSlabs = [
+      { upto: 250000, rate: 0.00 },
+      { upto: 500000, rate: 0.05 },
+      { upto: 1000000, rate: 0.20 },
+      { upto: Infinity, rate: 0.30 }
+    ];
   }
 
-  function calculateTax() {
-    const gross = Number(document.getElementById("gross").value || 0);
-    const deductions = Number(document.getElementById("deductions").value || 0);
-    const age = Number(document.getElementById("age").value || 0);
-    const regime = document.getElementById("regime").value;
+  const tax = regime === "new" ? taxFromSlabs(taxableIncome, newRegimeSlabs) : taxFromSlabs(taxableIncome, oldSlabs);
 
-    const resultEl = document.getElementById("result");
-    const detailsEl = document.getElementById("details");
-    const canvas = document.getElementById("taxChart");
+  const roundedTax = Math.round(tax);
+  const effectiveRate = taxableIncome > 0 ? (roundedTax / taxableIncome) * 100 : 0;
 
-    if (!isFinite(gross) || gross <= 0) {
-      resultEl.innerHTML = "Please enter a valid gross annual income (> 0).";
-      detailsEl.textContent = "";
-      canvas.style.display = "none";
-      return;
-    }
-    if (!isFinite(deductions) || deductions < 0) {
-      resultEl.innerHTML = "Please enter a valid deduction amount (≥ 0).";
-      detailsEl.textContent = "";
-      canvas.style.display = "none";
-      return;
-    }
-    if (!isFinite(age) || age < 0) {
-      resultEl.innerHTML = "Please enter a valid age (≥ 0).";
-      detailsEl.textContent = "";
-      canvas.style.display = "none";
-      return;
-    }
+  // Display results
+  resultEl.innerHTML = "Estimated Tax Payable: " + formatINR(roundedTax);
+  summaryEl.innerHTML = "<div class='small'>Taxable Income: " + formatINR(taxableIncome) + " • Effective Rate: " + effectiveRate.toFixed(2) + "%</div>";
 
-    const taxableIncome = Math.max(0, gross - deductions);
-    const slabs = regime === "new" ? NEW_REGIME_SLABS : oldRegimeSlabsForAge(age);
-    const tax = taxFromSlabs(taxableIncome, slabs);
+  // Draw small chart
+  drawChartForTax(taxableIncome, tax);
+}
 
-    const roundedTax = Math.round(tax);
-    const effectiveRate = taxableIncome > 0 ? (roundedTax / taxableIncome) * 100 : 0;
+function drawChartForTax(taxable, tax) {
+  const canvas = document.getElementById("growthChart");
+  if (!canvas) return;
 
-    resultEl.innerHTML = "Estimated Tax Payable: <strong>" + toINR(roundedTax) + "</strong>";
-    detailsEl.innerHTML = "Taxable Income: <strong>" + toINR(taxableIncome) + "</strong> • Effective Rate: <strong>" + effectiveRate.toFixed(2) + "%</strong>"
-                        + " <span class='muted'>(excludes cess/surcharge/rebates)</span>";
-
-    drawChartForTax(taxableIncome, tax);
+  if (taxable <= 0) {
+    canvas.style.display = "none";
+    return;
   }
 
-  function drawChartForTax(taxable, tax) {
-    const canvas = document.getElementById("taxChart");
-    if (!canvas) return;
-    if (taxable <= 0) { canvas.style.display = "none"; return; }
+  canvas.style.display = "block";
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.offsetWidth || 600;
+  const cssHeight = 160;
+  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-    canvas.style.display = "block";
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    const cssWidth = canvas.offsetWidth || 600;
-    const cssHeight = 140;
-    canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
-    canvas.height = Math.floor(cssHeight * dpr);
-    canvas.style.height = cssHeight + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, cssWidth, cssHeight);
+  const padding = 20;
+  const maxVal = Math.max(taxable, tax);
+  const usableHeight = cssHeight - 60;
+  const scale = maxVal === 0 ? 0 : usableHeight / maxVal;
 
-    const padding = 18;
-    const barMaxWidth = cssWidth - padding * 2;
-    const maxVal = Math.max(taxable, tax, 1);
-    const scale = (cssHeight - 70) / maxVal;
+  // Taxable Income bar (light background)
+  const txHeight = Math.max(6, taxable * scale);
+  ctx.fillStyle = "#e7f0ff";
+  ctx.fillRect(padding, cssHeight - 30 - txHeight, cssWidth - padding * 2, txHeight);
 
-    const txH = Math.max(6, taxable * scale);
-    ctx.fillStyle = "#e7f0ff";
-    ctx.fillRect(padding, cssHeight - 40 - txH, barMaxWidth, txH);
+  // Tax bar (overlay at left portion)
+  const taxHeight = Math.max(2, tax * scale);
+  ctx.fillStyle = "#0b5ed7";
+  ctx.fillRect(padding, cssHeight - 30 - taxHeight, (cssWidth - padding * 2) * 0.35, taxHeight);
 
-    const taxH = Math.max(2, tax * scale);
-    const taxBarWidth = Math.floor(barMaxWidth * 0.40);
-    ctx.fillStyle = "#0b5ed7";
-    ctx.fillRect(padding, cssHeight - 40 - taxH, taxBarWidth, taxH);
+  // labels
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Taxable Income: " + formatINR(taxable), padding, cssHeight - 8);
+  ctx.fillText("Estimated Tax: " + formatINR(Math.round(tax)), padding + (cssWidth - padding * 2) * 0.38, cssHeight - 8);
+}
 
-    ctx.fillStyle = "#222";
-    ctx.font = "12px Arial";
-    ctx.fillText("Taxable Income: " + taxable.toLocaleString("en-IN"), padding, cssHeight - 12);
-    ctx.fillText("Estimated Tax: " + Math.round(tax).toLocaleString("en-IN"), padding + taxBarWidth + 12, cssHeight - 12);
-  }
-
-  document.getElementById("calcBtn").addEventListener("click", calculateTax);
-
-  ["gross","deductions","age","regime"].forEach(id=>{
-    const el = document.getElementById(id);
-    el && el.addEventListener("keydown", function(e){
-      if (e.key === "Enter") { e.preventDefault(); calculateTax(); }
-    });
-  });
-
-  (function setDate() {
-    const now = new Date();
-    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
-    const lastEl = document.getElementById('last-updated');
-    if (lastEl) lastEl.textContent = monthYear;
-    const cy = document.getElementById('copyright-year');
-    if (cy) cy.textContent = now.getFullYear();
-  })();
-
+(function(){
   let resizeTimer = null;
   window.addEventListener('resize', function(){
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function(){
-      const canvas = document.getElementById("taxChart");
+      // redraw chart if visible
+      const canvas = document.getElementById("growthChart");
       if (canvas && canvas.style.display === "block") {
         const gross = Number(document.getElementById("gross").value || 0);
         const deductions = Number(document.getElementById("deductions").value || 0);
         const taxable = Math.max(0, gross - deductions);
-        const age = Number(document.getElementById("age").value || 0);
-        const regime = document.getElementById("regime").value;
-        const slabs = regime === "new" ? NEW_REGIME_SLABS : oldRegimeSlabsForAge(age);
-        const tax = taxFromSlabs(taxable, slabs);
-        drawChartForTax(taxable, tax);
+        if (taxable > 0) {
+          // call draw with the same logic (recompute tax for display)
+          // compute tax quickly (reuse logic inline to avoid duplication)
+          const age = Number(document.getElementById("age").value || 0);
+          const regime = document.getElementById("regime").value;
+          // prepare slabs
+          const newRegimeSlabs = [
+            { upto: 400000, rate: 0.00 },
+            { upto: 800000, rate: 0.05 },
+            { upto: 1200000, rate: 0.10 },
+            { upto: 1600000, rate: 0.15 },
+            { upto: 2000000, rate: 0.20 },
+            { upto: 2400000, rate: 0.25 },
+            { upto: Infinity, rate: 0.30 }
+          ];
+          let oldSlabs;
+          if (age >= 80) {
+            oldSlabs = [
+              { upto: 500000, rate: 0.00 },
+              { upto: 1000000, rate: 0.20 },
+              { upto: Infinity, rate: 0.30 }
+            ];
+          } else if (age >= 60) {
+            oldSlabs = [
+              { upto: 300000, rate: 0.00 },
+              { upto: 500000, rate: 0.05 },
+              { upto: 1000000, rate: 0.20 },
+              { upto: Infinity, rate: 0.30 }
+            ];
+          } else {
+            oldSlabs = [
+              { upto: 250000, rate: 0.00 },
+              { upto: 500000, rate: 0.05 },
+              { upto: 1000000, rate: 0.20 },
+              { upto: Infinity, rate: 0.30 }
+            ];
+          }
+          function quickTaxFromSlabs(taxable, slabs) {
+            let tax = 0;
+            let lower = 0;
+            for (let i = 0; i < slabs.length; i++) {
+              const upper = slabs[i].upto;
+              const rate = slabs[i].rate;
+              const portion = Math.max(0, Math.min(taxable, upper) - lower);
+              if (portion > 0) tax += portion * rate;
+              lower = upper;
+              if (taxable <= upper) break;
+            }
+            return tax;
+          }
+          const tax = regime === "new" ? quickTaxFromSlabs(taxable, newRegimeSlabs) : quickTaxFromSlabs(taxable, oldSlabs);
+          drawChartForTax(taxable, tax);
+        }
       }
     }, 150);
   });
+})();
 
-})(); // end IIFE
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
 </script>
 
 </body>
