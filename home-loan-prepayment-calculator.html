@@ -276,6 +276,11 @@ function monthsForEMI(principal, monthlyRate, emi) {
   return Math.ceil(val);
 }
 
+function getCanvasCssWidth(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  return rect.width || canvas.clientWidth || 600;
+}
+
 function calculatePrepayment() {
   const P = Number(document.getElementById("outstanding").value || 0);
   const annualRatePercent = Number(document.getElementById("annualRate").value || 0);
@@ -317,6 +322,7 @@ function calculatePrepayment() {
       + "<div class='small'>Final prepayment used: " + toINR(finalPrepay) + "</div>"
       + "<div class='result'>Interest saved: " + toINR(interestSaved) + "</div>";
 
+    window._lastChartData = { mode: "full-prepay", P, monthlyRate, emi, n, t, prepay };
     drawChartForFullPrepay(P, monthlyRate, emi, n, t);
     return;
   }
@@ -363,24 +369,27 @@ function calculatePrepayment() {
 
   detailsEl.innerHTML = detailsHtml;
 
+  window._lastChartData = {
+    mode: "comparison",
+    P, r: monthlyRate, emi, n, t, prepay,
+    principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths
+  };
+
   drawComparisonChart(P, monthlyRate, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths);
 }
-
-let _lastChartData = null;
 
 function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths) {
   const canvas = document.getElementById("prepayChart");
   if (!canvas) return;
   canvas.style.display = "block";
   const ctx = canvas.getContext("2d");
-
   const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.offsetWidth || 600;
+  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
   const cssHeight = 340;
-  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.style.width = cssWidth + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
   canvas.height = Math.floor(cssHeight * dpr);
   canvas.style.height = cssHeight + "px";
-
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
@@ -421,7 +430,7 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
 
   const maxMonth = Math.max(n, (monthsA[monthsA.length - 1] || 0), (monthsB[monthsB.length - 1] || 0));
   const allBalances = balOriginal.concat(balA, balB);
-  const maxBalance = Math.max(...allBalances, 1);
+  const maxBalance = allBalances.length ? Math.max(...allBalances) : 1;
 
   const padding = 40;
   const usableWidth = cssWidth - padding * 2;
@@ -499,7 +508,7 @@ function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, mont
   ctx.fillStyle = "#444";
   ctx.fillText("Prepayment at month " + t + " • Outstanding before prepay: " + toINR(balAtT), px + 6, padding + 12);
 
-  _lastChartData = { P, r, emi, n, t, prepay };
+  window._lastChartData = { mode: "comparison", P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths };
 }
 
 function drawChartForFullPrepay(P, r, emi, n, t) {
@@ -507,14 +516,13 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   if (!canvas) return;
   canvas.style.display = "block";
   const ctx = canvas.getContext("2d");
-
   const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.offsetWidth || 600;
+  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
   const cssHeight = 340;
-  canvas.width = Math.max(300, Math.floor(cssWidth * dpr));
+  canvas.style.width = cssWidth + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
   canvas.height = Math.floor(cssHeight * dpr);
   canvas.style.height = cssHeight + "px";
-
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
@@ -526,7 +534,7 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   }
 
   const maxMonth = n;
-  const maxBalance = Math.max(...balOriginal,1);
+  const maxBalance = balOriginal.length ? Math.max(...balOriginal) : 1;
 
   const padding = 40;
   const usableWidth = cssWidth - padding * 2;
@@ -571,7 +579,7 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   ctx.fillStyle = "#444";
   ctx.fillText("Prepayment at month " + t, px + 6, padding + 12);
 
-  _lastChartData = { mode: "full-prepay" };
+  window._lastChartData = { mode: "full-prepay", P, r, emi, n, t, prepay: 0 };
 }
 
 (function(){
@@ -579,8 +587,16 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   window.addEventListener('resize', function(){
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function(){
-      const canvas = document.getElementById("prepayChart");
-      if (canvas) canvas.style.display = "none";
+      const state = window._lastChartData;
+      if (!state) return;
+      if (state.mode === "full-prepay") {
+        drawChartForFullPrepay(state.P, state.r, state.emi, state.n, state.t);
+      } else if (state.mode === "comparison") {
+        drawComparisonChart(
+          state.P, state.r, state.emi, state.n, state.t, state.prepay,
+          state.principalAfterPrepay, state.monthsAfterA, state.newEmiB, state.remainingMonths
+        );
+      }
     }, 150);
   });
 })();
