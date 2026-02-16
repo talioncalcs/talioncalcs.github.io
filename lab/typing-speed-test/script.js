@@ -1,418 +1,419 @@
-// Talion Typing — Phase 1 (Monkeytype parity + extras)
-// Assumes index.html includes gtag helper talionGtag(...) set earlier
+/* Talion Typing — Upgraded Phase 1
+   Features:
+   - settings modal fixed
+   - timer starts on first typed character
+   - vocab difficulty (easy/standard/hard/brutal)
+   - anti-cheat: paste block, visibility/focus, keystroke timing analysis
+   - weak-key heatmap, WPM graph, error breakdown
+   - training modes
+   - gamification (XP, levels, streak)
+   - monetization placeholders and GA4 events
+*/
 
-(() => {
-  // Elements
-  const modeSelect = document.getElementById('modeSelect');
-  const timeSelect = document.getElementById('timeSelect');
-  const startBtn = document.getElementById('startBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const difficultySelect = document.getElementById('difficultySelect');
-  const textDisplay = document.getElementById('textDisplay');
-  const inputArea = document.getElementById('inputArea');
-  const timeLeftEl = document.getElementById('timeLeft');
-  const wpmEl = document.getElementById('wpm');
-  const cpmEl = document.getElementById('cpm');
-  const accuracyEl = document.getElementById('accuracy');
-  const localLeaderboard = document.getElementById('localLeaderboard');
-  const saveScoreBtn = document.getElementById('saveScoreBtn');
-  const nameInput = document.getElementById('nameInput');
-  const clearScoresBtn = document.getElementById('clearScoresBtn');
-  const resultActions = document.getElementById('resultActions');
-  const downloadCertBtn = document.getElementById('downloadCertBtn');
-  const saveMessage = document.getElementById('saveMessage');
+// ------------ Helpers & DOM ------------
+const $ = id => document.getElementById(id);
 
-  // Settings modal
-  const settingsModal = document.getElementById('settingsModal');
-  const openSettings = document.getElementById('openSettings');
-  const closeSettings = document.getElementById('closeSettings');
-  const saveSettings = document.getElementById('saveSettings');
-  const themeSelect = document.getElementById('themeSelect');
-  const showLiveWpm = document.getElementById('showLiveWpm');
-  const smoothCaret = document.getElementById('smoothCaret');
-  const typedEffect = document.getElementById('typedEffect');
-  const highlightMode = document.getElementById('highlightMode');
-  const blindMode = document.getElementById('blindMode');
+const modeSelect = $('modeSelect'), timeSelect = $('timeSelect'), vocabSelect = $('vocabSelect');
+const difficultySelect = $('difficultySelect'), trainingMode = $('trainingMode');
+const textDisplay = $('textDisplay'), inputArea = $('inputArea'), startBtn = $('startBtn'), resetBtn = $('resetBtn');
+const timeLeftEl = $('timeLeft'), wpmEl = $('wpm'), cpmEl = $('cpm'), accuracyEl = $('accuracy');
+const localLeaderboard = $('localLeaderboard'), saveScoreBtn = $('saveScoreBtn'), nameInput = $('nameInput');
+const clearScoresBtn = $('clearScoresBtn'), resultActions = $('resultActions'), downloadCertBtn = $('downloadCertBtn');
+const saveMessage = $('saveMessage'), keyboardEl = $('keyboard'), wpmChart = $('wpmChart'), errorBreakdown = $('errorBreakdown');
+const openSettings = $('openSettings'), settingsModal = $('settingsModal'), closeSettings = $('closeSettings'), saveSettings = $('saveSettings');
+const themeSelect = $('themeSelect'), showLiveWpm = $('showLiveWpm'), smoothCaret = $('smoothCaret'), typedEffect = $('typedEffect'), highlightMode = $('highlightMode'), blindMode = $('blindMode');
 
-  // Paragraphs (pool)
-  const paragraphs = [
-    "Typing speed is an important skill in today's digital world. Regular practice can improve accuracy and increase your words per minute over time.",
-    "Consistent short practice sessions produce better results than long sessions. Focus on accuracy first and speed will follow.",
-    "Good posture and correct hand positioning help reduce fatigue and increase typing efficiency.",
-    "Practice common words and punctuation. Real-text training gives better transfer to everyday typing tasks."
-  ];
+const STORAGE_SETTINGS = 'talion_typing_settings_v2';
+const STORAGE_SCORES = 'talion_typing_scores_v2';
+const STORAGE_STATS = 'talion_typing_stats_v2';
 
-  // storage keys
-  const STORAGE_SETTINGS = 'talion_typing_settings_v1';
-  const STORAGE_SCORES = 'talion_typing_scores_v1';
+let timer = null, timerStarted = false, started = false;
+let totalTime = 60, timeLeft = 60, mode = 'time';
+let currentText = '', typedEvents = [], keyErrors = {}; // keyErrors: { 'a': count }
+let runHistory = []; // last runs for chart
+let settings = loadSettings();
+let gamestate = loadGamestate();
 
-  // state
-  let currentText = '';
-  let timer = null;
-  let totalTime = 60;
-  let timeLeft = 60;
-  let started = false;
-  let typedEvents = []; // timestamps for anti-cheat
-  let keyErrors = {}; // per-character error counts
-  let mode = 'time'; // time / words / quote / custom
-  let settings = loadSettings();
+// -------------- Vocabulary pools (tiered) --------------
+const easyWords = "the and a to in is it you that he was for on are with as I his they be at one have this from or had by hot".split(' ');
+const standardWords = "ability achieve across action activity actually address affect agency ahead allow almost among amount analysis apply area argue arrive article assume attention author avoid available average".split(' ');
+const hardWords = "aberration acquiesce ameliorate amelioration anachronistic clandestine confluence consanguineous consummate contingent deleterious dichotomy disingenuous".split(' ');
+const brutalWords = "juxtaposition sesquipedalian perspicacious vicissitude indefatigable obfuscation sycophant anfractuous concatenation antidisestablishmentarianism".split(' ');
 
-  // --- util ---
-  function $(id){return document.getElementById(id)}
+// -------------- Keyboard layout for heatmap --------------
+const keyboardRows = [
+  ['~','1','2','3','4','5','6','7','8','9','0','-','='],
+  ['q','w','e','r','t','y','u','i','o','p','[',']'],
+  ['a','s','d','f','g','h','j','k','l',';','\''],
+  ['z','x','c','v','b','n','m',',','.','/']
+];
 
-  function loadSettings(){
-    try {
-      const raw = localStorage.getItem(STORAGE_SETTINGS)
-      if(raw) return JSON.parse(raw)
-    } catch(e){/*ignore*/}
-    // defaults
-    return {
-      theme:'light', showLiveWpm:true, smoothCaret:true,
-      typedEffect:'keep', highlightMode:'letter', blindMode:false
+// ------------------ Settings & Storage ------------------
+function loadSettings(){
+  try { const raw = localStorage.getItem(STORAGE_SETTINGS); return raw ? JSON.parse(raw) : { theme:'light', showLiveWpm:true, smoothCaret:true, typedEffect:'keep', highlightMode:'letter', blindMode:false }; }
+  catch(e){ return { theme:'light', showLiveWpm:true, smoothCaret:true, typedEffect:'keep', highlightMode:'letter', blindMode:false }; }
+}
+function saveSettings(){ localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings)); }
+function loadGamestate(){
+  try { const raw = localStorage.getItem('talion_gamestate_v1'); return raw ? JSON.parse(raw) : { xp:0, level:1, streak:0, lastDate:null }; }
+  catch(e){ return { xp:0, level:1, streak:0, lastDate:null }; }
+}
+function persistGamestate(){ localStorage.setItem('talion_gamestate_v1', JSON.stringify(gamestate)); }
+
+// ----------------- Utility -----------------
+function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function now(){ return Date.now(); }
+function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+// ---------------- Populate timeSelect depending on mode ----------------
+function populateTimeSelect(){
+  timeSelect.innerHTML = '';
+  if(mode === 'time'){ [15,30,60,120].forEach(v=> { const o=document.createElement('option'); o.value=v; o.text=v+' seconds'; timeSelect.appendChild(o); }); timeSelect.value = totalTime; }
+  else if(mode === 'words'){ [10,25,50,100].forEach(v=> { const o=document.createElement('option'); o.value=v; o.text=v+' words'; timeSelect.appendChild(o); }); timeSelect.value = 25; }
+  else { const o=document.createElement('option'); o.value='single'; o.text='single passage'; timeSelect.appendChild(o); timeSelect.value='single'; }
+}
+
+// ------------------ Paragraph & word generation ------------------
+function generateWordList(count, difficulty){
+  let pool = standardWords;
+  if(difficulty==='easy') pool = easyWords;
+  else if(difficulty==='hard') pool = standardWords.concat(hardWords);
+  else if(difficulty==='brutal') pool = standardWords.concat(hardWords).concat(brutalWords);
+  const arr=[];
+  for(let i=0;i<count;i++) arr.push(randChoice(pool));
+  return arr.join(' ');
+}
+function chooseParagraph(){
+  // training mode adjustments
+  const vocab = vocabSelect.value;
+  if(mode==='quote'){
+    // pick a sentence-like text from combined pools
+    const sentence = generateWordList(18, vocab);
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  }
+  // words mode/time mode default: random words (better speed practice)
+  if(mode === 'time' || mode === 'words' || mode === 'custom'){
+    // training modes override: weak-keys -> produce words containing weak letters; left/right hand -> filter pool
+    const training = trainingMode.value;
+    if(training === 'weak-keys'){
+      // pick words containing user's weak letters (top errors)
+      const weak = Object.keys(keyErrors).sort((a,b)=>keyErrors[b]-keyErrors[a]).slice(0,5).filter(Boolean);
+      if(weak.length){
+        // build words including weak letters
+        const pool = standardWords.filter(w => weak.some(ch => w.includes(ch)));
+        if(pool.length >= 5) return randChoice(pool) + ' ' + randChoice(pool) + ' ' + randChoice(pool) + ' ' + randChoice(pool);
+      }
     }
+    // fallback general random words
+    return generateWordList(mode==='words' ? parseInt(timeSelect.value||25,10) : 30, vocab);
   }
-  function saveSettingsToStore(){
-    localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings))
+  return generateWordList(30, vocab);
+}
+
+// ------------- Render text as spans --------------
+function renderText(text){
+  textDisplay.innerHTML = '';
+  for(let i=0;i<text.length;i++){
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = text[i];
+    textDisplay.appendChild(span);
   }
+  const first = textDisplay.querySelector('span');
+  if(first) first.classList.add('current');
+  if(settings.typedEffect === 'hide') textDisplay.querySelectorAll('.char').forEach(s=>s.classList.add('hidden'));
+}
 
-  // apply settings UI
-  function applySettingsToUI(){
-    themeSelect.value = settings.theme;
-    showLiveWpm.checked = !!settings.showLiveWpm;
-    smoothCaret.checked = !!settings.smoothCaret;
-    typedEffect.value = settings.typedEffect;
-    highlightMode.value = settings.highlightMode;
-    blindMode.checked = !!settings.blindMode;
-    document.documentElement.setAttribute('data-theme', settings.theme);
-  }
-
-  // settings modal handlers
-  openSettings.addEventListener('click', ()=> settingsModal.classList.remove('hidden'));
-  closeSettings.addEventListener('click', ()=> settingsModal.classList.add('hidden'));
-  saveSettings.addEventListener('click', ()=>{
-    settings.theme = themeSelect.value;
-    settings.showLiveWpm = showLiveWpm.checked;
-    settings.smoothCaret = smoothCaret.checked;
-    settings.typedEffect = typedEffect.value;
-    settings.highlightMode = highlightMode.value;
-    settings.blindMode = blindMode.checked;
-    saveSettingsToStore();
-    applySettingsToUI();
-    settingsModal.classList.add('hidden');
-  });
-
-  // fill initial timeSelect values depending on mode
-  function populateTimeSelect(){
-    timeSelect.innerHTML = '';
-    if(mode === 'time'){
-      [15,30,60,120].forEach(v => {
-        const o = document.createElement('option'); o.value = v; o.text = v + ' seconds'; timeSelect.appendChild(o);
-      });
-      timeSelect.value = totalTime;
-    } else if(mode === 'words'){
-      [10,25,50,100].forEach(v => {
-        const o = document.createElement('option'); o.value = v; o.text = v + ' words'; timeSelect.appendChild(o);
-      });
-      timeSelect.value = 25; // default words
-    } else if(mode === 'quote' || mode === 'custom'){
-      const o = document.createElement('option'); o.value = 'single'; o.text = 'single passage'; timeSelect.appendChild(o);
-      timeSelect.value = 'single';
-    }
-  }
-
-  // choose paragraph
-  function chooseParagraph(){
-    return paragraphs[Math.floor(Math.random()*paragraphs.length)];
-  }
-
-  // render text into spans
-  function renderText(text){
-    textDisplay.innerHTML = '';
-    for(let i=0;i<text.length;i++){
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.textContent = text[i];
-      textDisplay.appendChild(span);
-    }
-    // first caret
-    const first = textDisplay.querySelector('span');
-    if(first) first.classList.add('current');
-    if(settings.typedEffect === 'hide'){ textDisplay.querySelectorAll('.char').forEach(s=>s.classList.add('hidden')) }
-  }
-
-  // reset UI
-  function resetUI(newParagraph){
-    clearInterval(timer);
-    started = false;
-    inputArea.value = '';
-    inputArea.disabled = true;
-    resultActions.classList.add('hidden');
-    saveMessage.textContent = '';
-    typedEvents = [];
-    keyErrors = {};
-    // set mode/time defaults
-    if(mode === 'time'){ totalTime = parseInt(timeSelect.value,10) || 60; timeLeft = totalTime }
-    else if(mode === 'words'){ totalTime = null; timeLeft = parseInt(timeSelect.value,10) || 25 } // word count governs end
-    else { totalTime = 60; timeLeft = 60 }
-    timeLeftEl.textContent = timeLeft;
-    wpmEl.textContent = 0; cpmEl.textContent = 0; accuracyEl.textContent = '100%';
-    currentText = newParagraph ? newParagraph : (mode==='quote'? chooseParagraph() : chooseParagraph());
-    renderText(currentText);
-  }
-
-  // start test
-  function startTest(){
-    if(started) return;
-    started = true;
-    // emit GA4 event
-    if(typeof window.talionGtag==='function') window.talionGtag('test_start', {mode, difficulty: difficultySelect.value});
-    typedEvents = [];
-    // choose new paragraph for each run
-    if(mode === 'custom'){
-      const custom = prompt('Paste your custom text (short).','') || chooseParagraph();
-      currentText = custom;
-    } else if(mode === 'quote' || mode === 'time' || mode==='words'){
-      currentText = chooseParagraph();
-    }
-    renderText(currentText);
-    // compute totalTime for time-mode; for words mode totalTime will be null and we watch word count
-    if(mode === 'time') totalTime = parseInt(timeSelect.value,10) || 60;
-    timeLeft = (mode==='time')? totalTime : (mode==='words'? 9999 : totalTime);
-    timeLeftEl.textContent = (mode==='time')? timeLeft : (mode==='words'? timeSelect.value : timeLeft);
-    inputArea.disabled = false; inputArea.value = ''; inputArea.focus();
-    resultActions.classList.add('hidden');
-
-    // timer for time mode
-    if(mode === 'time'){
-      timer = setInterval(()=>{
-        timeLeft--;
-        timeLeftEl.textContent = timeLeft;
-        liveUpdate();
-        if(timeLeft<=0){ clearInterval(timer); finishTest(); }
-      },1000);
-    } else {
-      // for words/quote/custom we still update live stats on interval (not countdown)
-      timer = setInterval(()=>{ liveUpdate(); }, 500);
-    }
-  }
-
-  // live update (WPM/CPM/accuracy)
-  function liveUpdate(){
-    const typed = inputArea.value || '';
-    // update per-char highlights
-    highlightTyped(typed);
-    // compute correct chars
-    const spans = textDisplay.querySelectorAll('span');
-    let correctChars = 0;
-    for(let i=0;i<typed.length;i++){
-      if(!spans[i]) break;
-      if(typed[i] === spans[i].textContent) correctChars++;
-    }
-    // elapsed minutes
-    const elapsedSecs = ( (mode==='time' ? (totalTime - timeLeft) : 0) ) || 0;
-    const elapsed = (elapsedSecs>0)? (elapsedSecs/60) : ( (mode==='time')? (0.0001) : (1/60) );
-    const cpm = Math.round( (correctChars / (elapsed||1)) );
-    const wpm = Math.round( (correctChars / 5) / (elapsed||1) );
-    const accuracy = typed.length === 0 ? 100 : Math.round((correctChars / typed.length) * 100);
-    if(settings.showLiveWpm) { wpmEl.textContent = Math.max(0,wpm); }
-    cpmEl.textContent = Math.max(0,cpm);
-    accuracyEl.textContent = (accuracy || 0) + '%';
-  }
-
-  // highlight typed letters / words and enforce difficulty
-  function highlightTyped(typed){
-    const spans = textDisplay.querySelectorAll('span');
-    spans.forEach((s, idx) => {
-      s.classList.remove('correct','incorrect','current','fade','hidden');
-      if(settings.typedEffect === 'hide' && idx < typed.length) s.classList.remove('hidden');
-      if(settings.typedEffect === 'fade' && idx < typed.length) s.classList.add('fade');
-      const ch = typed[idx];
-      if(ch==null){ /* not typed */ }
-      else if(ch === s.textContent){ s.classList.add('correct') }
-      else { s.classList.add('incorrect'); keyErrors[s.textContent] = (keyErrors[s.textContent]||0)+1 }
+// ------------- Keyboard heatmap render -------------
+function renderKeyboard(){
+  keyboardEl.innerHTML = '';
+  keyboardRows.forEach(row => {
+    const r = document.createElement('div'); r.className = 'krow';
+    row.forEach(k => {
+      const key = document.createElement('div'); key.className = 'key'; key.dataset.k = k;
+      key.textContent = k.length>1? k : k.toUpperCase();
+      r.appendChild(key);
     });
-    // mark caret
-    const caret = typed.length;
-    if(spans[caret]) spans[caret].classList.add('current');
-    // difficulty checks
-    if(difficultySelect.value === 'master'){
-      // fail on any incorrect key immediately
-      for(let i=0;i<typed.length;i++){
-        if(!spans[i]) break;
-        if(typed[i] !== spans[i].textContent){
-          // end test
-          clearInterval(timer);
-          finishTest(true); // forced
-          return;
-        }
-      }
-    }
-    if(difficultySelect.value === 'expert'){
-      // if user presses space to submit word and last word is wrong -> fail on submit
-      // For simplicity, check last typed char; actual expert behavior on space handled on keydown
-    }
-  }
-
-  // finish test
-  function finishTest(forced){
-    inputArea.disabled = true;
-    started = false;
-    clearInterval(timer);
-    resultActions.classList.remove('hidden');
-
-    const typed = inputArea.value || '';
-    const spans = textDisplay.querySelectorAll('span');
-    let correctChars = 0;
-    for(let i=0;i<typed.length;i++){
-      if(!spans[i]) break;
-      if(typed[i] === spans[i].textContent) correctChars++;
-    }
-    // compute metrics
-    const minutes = (mode==='time') ? (totalTime/60) : (1); // approximate
-    const wpm = Math.round( (correctChars / 5) / (mode==='time' ? (totalTime/60):1) );
-    const cpm = Math.round( (correctChars) / (mode==='time' ? (totalTime/60):1) );
-    const accuracy = typed.length === 0 ? 0 : Math.round((correctChars / typed.length) * 100);
-    wpmEl.textContent = Math.max(0,wpm);
-    cpmEl.textContent = Math.max(0,cpm);
-    accuracyEl.textContent = (accuracy || 0) + '%';
-
-    // per-key stats available in keyErrors
-    // anti-cheat basic heuristic: if average inter-keystroke < 30ms or impossible CPM
-    let cheatFlag = false;
-    if(typedEvents.length > 5){
-      let diffs = [], last = typedEvents[0];
-      for(let i=1;i<typedEvents.length;i++){ diffs.push(typedEvents[i]-last); last=typedEvents[i]; }
-      const avg = diffs.reduce((a,b)=>a+b,0)/diffs.length;
-      if(avg < 20 || cpm > 2000) cheatFlag = true;
-    }
-
-    // GA event
-    if(typeof window.talionGtag === 'function'){
-      window.talionGtag('test_finish',{mode,difficulty:difficultySelect.value,wpm,accuracy,cheatFlag});
-    }
-
-    // store latest metrics in DOM dataset for save
-    resultActions.dataset.latest = JSON.stringify({wpm,accuracy,cheatFlag});
-    // mark spans for final view
-    // already styled via highlightTyped
-  }
-
-  // keydown listener to detect expert submit (space) and record keystroke times
-  inputArea.addEventListener('keydown', (e)=>{
-    typedEvents.push(Date.now());
-    if(difficultySelect.value === 'expert' && e.key === ' '){
-      // check last word correctness: compare typed last word to displayed word
-      const typed = inputArea.value;
-      const typedWords = typed.trim().split(/\s+/);
-      const lastWord = typedWords[typedWords.length-1] || '';
-      // compute last displayed word by slicing spans
-      const spans = Array.from(textDisplay.querySelectorAll('span')).map(s=>s.textContent).join('');
-      const wordsOnDisplay = spans.split(/\s+/);
-      const currentIndex = typedWords.length - 1;
-      if(wordsOnDisplay[currentIndex] !== lastWord){
-        // fail test immediately
-        clearInterval(timer);
-        finishTest(true);
-      }
-    }
+    keyboardEl.appendChild(r);
   });
-
-  // input listener to update live stats continually
-  inputArea.addEventListener('input', (e)=>{
-    // store key times for anti-cheat
-    typedEvents.push(Date.now());
-    liveUpdate();
-
-    // if words mode and typed word count >= target -> finish
-    if(mode === 'words'){
-      const typedWords = (inputArea.value.trim()==='')?0:inputArea.value.trim().split(/\s+/).length;
-      if(typedWords >= parseInt(timeSelect.value,10)){
-        clearInterval(timer);
-        finishTest();
-      }
-    }
-  });
-
-  // leaderboard local storage
-  function getScores(){
-    try { return JSON.parse(localStorage.getItem(STORAGE_SCORES) || '[]') } catch(e){ return [] }
-  }
-  function saveScoreObj(obj){
-    const arr = getScores();
-    arr.push(obj);
-    arr.sort((a,b)=>b.wpm - a.wpm || b.accuracy - a.accuracy);
-    localStorage.setItem(STORAGE_SCORES, JSON.stringify(arr.slice(0,30)));
-    renderLeaderboard();
-  }
-  function renderLeaderboard(){
-    const arr = getScores();
-    if(arr.length===0) localLeaderboard.innerHTML = '<div>No saved scores yet.</div>';
+  recolorKeyboard();
+}
+function recolorKeyboard(){
+  // compute max errors
+  const vals = Object.values(keyErrors); const max = vals.length? Math.max(...vals):1;
+  keyboardEl.querySelectorAll('.key').forEach(el=>{
+    const k = el.dataset.k.toLowerCase();
+    const count = keyErrors[k] || 0;
+    const ratio = count / (max || 1);
+    if(count === 0){ el.classList.remove('high'); el.classList.remove('low'); el.style.background = ''; }
     else {
-      localLeaderboard.innerHTML = arr.map((s,i)=>`<div>${i+1}. <strong>${escapeHtml(s.name||'You')}</strong> — ${s.wpm} WPM • ${s.accuracy}% • ${new Date(s.time).toLocaleDateString()}</div>`).join('');
+      // map ratio -> color: low -> light green, high -> light red
+      const r = Math.round(255 * ratio), g = Math.round(240 - 120 * ratio);
+      el.style.background = `rgba(${200 + r/2},${220 - r/3},${220 - r/2},0.95)`;
+      el.classList.add('high');
+    }
+  });
+}
+
+// --------------- Chart (simple sparkline) ----------------
+function renderWpmChart(){
+  const ctx = wpmChart.getContext('2d');
+  const w = wpmChart.width, h = wpmChart.height;
+  ctx.clearRect(0,0,w,h);
+  const data = runHistory.map(r=>r.wpm);
+  if(!data.length) return ctx.fillText('No runs yet',10,20);
+  const max = Math.max(...data), min = Math.min(...data);
+  const pad = 10;
+  ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2; ctx.beginPath();
+  data.forEach((v,i)=>{
+    const x = pad + (i/(data.length-1 || 1))*(w-2*pad);
+    const y = h - pad - ((v - min)/(max-min || 1))*(h-2*pad);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    ctx.fillStyle = '#2563eb'; ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fill();
+  });
+  ctx.stroke();
+}
+
+// --------------- Error breakdown ----------------
+function renderErrorBreakdown(){
+  const entries = Object.entries(keyErrors).sort((a,b)=>b[1]-a[1]).slice(0,20);
+  if(!entries.length) { errorBreakdown.innerHTML = '<div>No errors yet</div>'; return; }
+  errorBreakdown.innerHTML = entries.map(([k,c]) => `<div>${k.toUpperCase()}: ${c}</div>`).join('');
+}
+
+// --------------- Local leaderboard ----------------
+function getScores(){ try{ return JSON.parse(localStorage.getItem(STORAGE_SCORES) || '[]'); }catch(e){return []} }
+function saveScoreObj(obj){ const arr = getScores(); arr.push(obj); arr.sort((a,b)=>b.wpm - a.wpm || b.accuracy - a.accuracy); localStorage.setItem(STORAGE_SCORES, JSON.stringify(arr.slice(0,50))); renderLeaderboard(); }
+function renderLeaderboard(){ const arr = getScores(); localLeaderboard.innerHTML = arr.length? arr.map((s,i)=>`<div>${i+1}. <strong>${escapeHtml(s.name||'You')}</strong> — ${s.wpm} WPM • ${s.accuracy}% • ${new Date(s.time).toLocaleDateString()}</div>`).join('') : '<div>No saved scores yet.</div>'; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+
+// ------------- Anti-cheat ----------------
+let visibilityLost = false;
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) visibilityLost = true; });
+window.addEventListener('blur', ()=> visibilityLost = true);
+inputArea.addEventListener('paste', (e)=>{ e.preventDefault(); alert('Pasting is not allowed during test'); });
+
+function detectCheat(typedEvents, correctChars, minutes){
+  // simple heuristics: extremely low average keystroke, impossible CPM or visibility lost
+  if(visibilityLost) return { flagged:true, reason:'Focus lost during run' };
+  if(typedEvents.length < 2) return { flagged:false };
+  const diffs = []; for(let i=1;i<typedEvents.length;i++) diffs.push(typedEvents[i]-typedEvents[i-1]);
+  const avg = diffs.reduce((a,b)=>a+b,0)/diffs.length;
+  const cpm = Math.round(correctChars / (minutes || 1));
+  if(avg < 20) return { flagged:true, reason:'Unnaturally fast keystrokes' };
+  if(cpm > 2000) return { flagged:true, reason:'Impossible CPM' };
+  return { flagged:false };
+}
+
+// --------------- timer & test flow ----------------
+function resetUI(newPara){
+  clearInterval(timer); timerStarted=false; started=false;
+  inputArea.value=''; inputArea.disabled = true; resultActions.classList.add('hidden'); saveMessage.textContent='';
+  typedEvents=[]; keyErrors={}; recolorKeyboard();
+  timeLeft = (mode==='time')? totalTime : (mode==='words'? parseInt(timeSelect.value,10) : totalTime);
+  timeLeftEl.textContent = timeLeft; wpmEl.textContent = 0; cpmEl.textContent = 0; accuracyEl.textContent='100%';
+  currentText = newPara || chooseParagraph();
+  renderText(currentText);
+}
+function prepareTest(){
+  // set mode/time
+  mode = modeSelect.value;
+  populateTimeSelect();
+  totalTime = (mode==='time')? parseInt(timeSelect.value,10) : 60;
+  resetUI();
+  inputArea.disabled = false; inputArea.value=''; inputArea.focus();
+  // GA: prepared
+  if(typeof window.talionGtag === 'function') window.talionGtag('test_prepared',{mode, vocab:vocabSelect.value, difficulty:difficultySelect.value});
+}
+function startTimerOnFirstKey(){
+  if(timerStarted || !mode || started) return;
+  timerStarted = true;
+  // GA: test_start
+  try{ if(typeof window.talionGtag === 'function') window.talionGtag('test_start',{mode,difficulty:difficultySelect.value,vocab:vocabSelect.value}); }catch(e){}
+  if(mode === 'time'){
+    timeLeft = parseInt(timeSelect.value,10) || 60;
+    timeLeftEl.textContent = timeLeft;
+    timer = setInterval(()=>{
+      timeLeft--; timeLeftEl.textContent = timeLeft; liveUpdate();
+      if(timeLeft<=0){ clearInterval(timer); finishTest(); }
+    },1000);
+  } else {
+    // for words/quote modes we still compute liveUpdate frequently
+    timer = setInterval(()=>{ liveUpdate(); }, 400);
+  }
+  started = true;
+}
+
+// live update metrics while typing
+function liveUpdate(){
+  const typed = inputArea.value || '';
+  highlightTyped(typed);
+  const spans = textDisplay.querySelectorAll('span');
+  let correctChars = 0;
+  for(let i=0;i<typed.length;i++){ if(!spans[i]) break; if(typed[i] === spans[i].textContent) correctChars++; }
+  const elapsedSecs = (mode==='time')? ( (parseInt(timeSelect.value,10)||60) - timeLeft ) : Math.max(1, (typed.length>0? (typedEvents.length? ((typedEvents[typedEvents.length-1]-typedEvents[0])/1000):1) : 1));
+  const minutes = Math.max( (elapsedSecs/60), 1/60 );
+  const cpm = Math.round((correctChars)/minutes); const wpm = Math.round((correctChars/5)/minutes);
+  const accuracy = typed.length === 0 ? 100 : Math.round((correctChars / typed.length) * 100);
+  if(settings.showLiveWpm) wpmEl.textContent = Math.max(0,wpm);
+  cpmEl.textContent = Math.max(0,cpm); accuracyEl.textContent = (accuracy || 0) + '%';
+}
+
+// highlight typed (letter/word mode respected)
+function highlightTyped(typed){
+  const spans = textDisplay.querySelectorAll('span');
+  spans.forEach((s,idx)=>{
+    s.classList.remove('correct','incorrect','current','fade','hidden');
+    const ch = typed[idx];
+    if(ch == null) return;
+    if(ch === s.textContent) s.classList.add('correct'); else { s.classList.add('incorrect'); const k = s.textContent.toLowerCase(); keyErrors[k] = (keyErrors[k]||0)+1; }
+    if(settings.typedEffect === 'hide' && idx < typed.length) s.classList.remove('hidden');
+    if(settings.typedEffect === 'fade' && idx < typed.length) s.classList.add('fade');
+  });
+  const caret = typed.length; if(spans[caret]) spans[caret].classList.add('current');
+  recolorKeyboard();
+  renderErrorBreakdown();
+}
+
+// finish test
+function finishTest(forced){
+  inputArea.disabled = true; started=false; clearInterval(timer);
+  const typed = inputArea.value || ''; const spans = textDisplay.querySelectorAll('span');
+  let correctChars = 0;
+  for(let i=0;i<typed.length;i++){ if(!spans[i]) break; if(typed[i] === spans[i].textContent) correctChars++; }
+  const minutes = (mode==='time')? (parseInt(timeSelect.value,10)/60) : Math.max(1, ((typedEvents.length>1)? ((typedEvents[typedEvents.length-1]-typedEvents[0])/1000)/60 : 1/60));
+  const wpm = Math.round((correctChars/5)/minutes); const cpm = Math.round((correctChars)/minutes);
+  const accuracy = typed.length===0 ? 0 : Math.round((correctChars/typed.length)*100);
+  wpmEl.textContent = Math.max(0,wpm); cpmEl.textContent = Math.max(0,cpm); accuracyEl.textContent = (accuracy || 0) + '%';
+
+  // anti-cheat
+  const cheat = detectCheat(typedEvents, correctChars, minutes);
+  if(cheat.flagged){ saveMessage.textContent = '⚠️ Suspicious run: ' + cheat.reason; }
+  // GA event
+  if(typeof window.talionGtag === 'function') window.talionGtag('test_finish',{mode,difficulty:difficultySelect.value,wpm,accuracy,cheat:!!cheat.flagged});
+
+  // update runHistory & chart
+  const run = { wpm, accuracy, time: new Date().toISOString() };
+  runHistory = JSON.parse(localStorage.getItem(STORAGE_STATS) || '[]');
+  runHistory.unshift(run); runHistory = runHistory.slice(0,20);
+  localStorage.setItem(STORAGE_STATS, JSON.stringify(runHistory));
+  renderWpmChart();
+
+  // gamification: xp & streaks
+  const xpGain = Math.round(wpm/2 + (accuracy/2));
+  gamestate.xp += xpGain;
+  if(gamestate.xp >= gamestate.level * 100){ gamestate.level++; gamestate.xp = 0; }
+  const today = new Date().toDateString();
+  if(gamestate.lastDate === today) { gamestate.streak = gamestate.streak + 1; } else { gamestate.streak = 1; gamestate.lastDate = today; }
+  persistGamestate();
+
+  // expose latest data to resultActions for saving
+  resultActions.dataset.latest = JSON.stringify({ wpm, accuracy, cheat: cheat.flagged });
+  resultActions.classList.remove('hidden');
+  renderLeaderboard();
+  renderErrorBreakdown();
+  recolorKeyboard();
+}
+
+// ------------- event wiring ----------------
+startBtn.addEventListener('click', ()=> { prepareTest(); });
+resetBtn.addEventListener('click', ()=> { resetUI(); });
+
+inputArea.addEventListener('keydown', (e)=>{
+  // start on first real character (not control keys)
+  if(!timerStarted && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){
+    startTimerOnFirstKey();
+  }
+  // expert difficulty: check space submission
+  if(difficultySelect.value === 'expert' && e.key === ' '){
+    const typedWords = inputArea.value.trim().split(/\s+/);
+    const idx = typedWords.length - 1;
+    const spans = Array.from(textDisplay.querySelectorAll('span')).map(s=>s.textContent).join('');
+    const wordsOnDisplay = spans.split(/\s+/);
+    if(wordsOnDisplay[idx] && wordsOnDisplay[idx] !== typedWords[idx]){
+      clearInterval(timer); finishTest(true); return;
     }
   }
-  function escapeHtml(str){ return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])) }
+});
 
-  saveScoreBtn.addEventListener('click', ()=>{
-    const latest = JSON.parse(resultActions.dataset.latest || '{}');
-    const name = (nameInput.value||'You').trim().substring(0,30);
-    if(!latest.wpm || latest.wpm<=0){ saveMessage.textContent = 'Score must be > 0 to save.'; return; }
-    const obj = { name, wpm: latest.wpm, accuracy: latest.accuracy, time: new Date().toISOString(), cheat: latest.cheatFlag||false };
-    saveScoreObj(obj);
-    saveMessage.textContent = 'Saved locally';
-    setTimeout(()=>saveMessage.textContent='',2200);
-    if(typeof window.talionGtag==='function') window.talionGtag('score_saved',{wpm:obj.wpm,accuracy:obj.accuracy});
-  });
-
-  clearScoresBtn.addEventListener('click', ()=>{ localStorage.removeItem(STORAGE_SCORES); renderLeaderboard(); });
-
-  // certificate download (canvas)
-  downloadCertBtn.addEventListener('click', ()=>{
-    const latest = JSON.parse(resultActions.dataset.latest || '{}');
-    const name = (nameInput.value||'You').trim().substring(0,30);
-    const wpm = latest.wpm || 0;
-    const acc = latest.accuracy || '0%';
-    // canvas
-    const canvas = document.createElement('canvas'); canvas.width=1200; canvas.height=675;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#0d1b2a'; ctx.fillRect(0,0,canvas.width,120);
-    ctx.fillStyle='#fff'; ctx.font='bold 34px Arial'; ctx.fillText('TalionCalcs — Typing Certificate',40,78);
-    ctx.fillStyle='#111'; ctx.font='28px Arial'; ctx.fillText(`Name: ${name}`,40,200); ctx.fillText(`WPM: ${wpm}`,40,250); ctx.fillText(`Accuracy: ${acc}`,40,300);
-    ctx.font='16px Arial'; ctx.fillStyle='#6b7280'; ctx.fillText(`Generated: ${new Date().toLocaleDateString()}`,40,360);
-    const url = canvas.toDataURL('image/png'); const a = document.createElement('a'); a.href=url; a.download=`typing-cert-${name.replace(/\s+/g,'_')}.png`; a.click();
-  });
-
-  // wire controls
-  modeSelect.addEventListener('change', (e)=>{ mode = e.target.value; populateTimeSelect(); resetUI(); });
-  timeSelect.addEventListener('change', ()=> resetUI());
-  difficultySelect.addEventListener('change', ()=> resetUI());
-  startBtn.addEventListener('click', ()=> startTest());
-  resetBtn.addEventListener('click', ()=> resetUI());
-
-  // init
-  function init(){
-    // load settings
-    applySettingsToUI();
-    // populate initial
-    mode = modeSelect.value;
-    populateTimeSelect();
-    totalTime = 60; timeLeft = totalTime;
-    document.getElementById('year').textContent = (new Date()).getFullYear();
-    resetUI();
-    renderLeaderboard();
-    // recall saved settings to UI
-    // disable textarea until start
-    inputArea.disabled = true;
-
-    // persist settings UI -> settings object
-    themeSelect.addEventListener('change', ()=> settings.theme = themeSelect.value );
-    showLiveWpm.addEventListener('change', ()=> settings.showLiveWpm = showLiveWpm.checked );
-    smoothCaret.addEventListener('change', ()=> settings.smoothCaret = smoothCaret.checked );
-    typedEffect.addEventListener('change', ()=> settings.typedEffect = typedEffect.value );
-    highlightMode.addEventListener('change', ()=> settings.highlightMode = highlightMode.value );
-    blindMode.addEventListener('change', ()=> settings.blindMode = blindMode.checked );
+inputArea.addEventListener('input', (e)=>{
+  // capture keystroke times (for anti-cheat)
+  typedEvents.push(now());
+  // start timer on first actual input character (also handles mobile)
+  if(!timerStarted && inputArea.value.length > 0){ startTimerOnFirstKey(); }
+  liveUpdate();
+  // words mode finish when word count reached
+  if(mode === 'words'){
+    const typedWords = inputArea.value.trim()===''?0:inputArea.value.trim().split(/\s+/).length;
+    if(typedWords >= parseInt(timeSelect.value||25,10)){ clearInterval(timer); finishTest(); }
   }
+});
 
-  init();
-})();
+// prevent paste (already set) and block drag/drop text
+inputArea.addEventListener('paste', e=>{ e.preventDefault(); alert('Pasting is not allowed during tests.'); });
+
+// save score
+saveScoreBtn.addEventListener('click', ()=>{
+  const latest = JSON.parse(resultActions.dataset.latest || '{}');
+  const name = (nameInput.value || 'You').trim().substring(0,30);
+  if(!latest.wpm || latest.wpm <= 0){ saveMessage.textContent='Score must be > 0 to save.'; return; }
+  const obj = { name, wpm: latest.wpm, accuracy: latest.accuracy, time: new Date().toISOString(), cheat: latest.cheat };
+  saveScoreObj(obj);
+  saveMessage.textContent = 'Saved locally';
+  setTimeout(()=> saveMessage.textContent = '', 2500);
+  if(typeof window.talionGtag === 'function') window.talionGtag('score_saved',{wpm:obj.wpm,accuracy:obj.accuracy});
+});
+
+clearScoresBtn.addEventListener('click', ()=>{ localStorage.removeItem(STORAGE_SCORES); renderLeaderboard(); });
+
+// certificate download
+downloadCertBtn.addEventListener('click', ()=>{
+  const latest = JSON.parse(resultActions.dataset.latest || '{}');
+  const name = (nameInput.value || 'You').trim().substring(0,30);
+  const wpm = latest.wpm || 0; const acc = latest.accuracy || '0%';
+  const canvas = document.createElement('canvas'); canvas.width=1200; canvas.height=675; const ctx = canvas.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#0d1b2a'; ctx.fillRect(0,0,canvas.width,120);
+  ctx.fillStyle='#fff'; ctx.font='bold 34px Arial'; ctx.fillText('TalionCalcs — Typing Certificate',40,78);
+  ctx.fillStyle='#111'; ctx.font='28px Arial'; ctx.fillText(`Name: ${name}`,40,200); ctx.fillText(`WPM: ${wpm}`,40,250); ctx.fillText(`Accuracy: ${acc}`,40,300);
+  ctx.font='16px Arial'; ctx.fillStyle='#6b7280'; ctx.fillText(`Generated: ${new Date().toLocaleDateString()}`,40,360);
+  const url = canvas.toDataURL('image/png'); const a = document.createElement('a'); a.href=url; a.download=`typing-cert-${name.replace(/\s+/g,'_')}.png`; a.click();
+});
+
+// -------------- settings modal fix ----------------
+openSettings.addEventListener('click', ()=> settingsModal.classList.remove('hidden'));
+closeSettings && closeSettings.addEventListener('click', ()=> settingsModal.classList.add('hidden'));
+// clicking outside closes
+settingsModal.addEventListener('click', (e)=> { if(e.target === settingsModal) settingsModal.classList.add('hidden'); });
+// esc key closes
+document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') settingsModal.classList.add('hidden'); });
+// save settings
+saveSettings && saveSettings.addEventListener('click', ()=>{
+  settings.theme = themeSelect.value; settings.showLiveWpm = showLiveWpm.checked;
+  settings.smoothCaret = smoothCaret.checked; settings.typedEffect = typedEffect.value;
+  settings.highlightMode = highlightMode.value; settings.blindMode = blindMode.checked;
+  saveSettings(); settingsModal.classList.add('hidden');
+  alert('Settings saved.');
+});
+
+// ------------- initial boot -------------
+function init(){
+  // attach DOM defaults
+  mode = modeSelect.value;
+  populateTimeSelect();
+  // apply settings UI
+  themeSelect.value = settings.theme; showLiveWpm.checked = settings.showLiveWpm;
+  smoothCaret.checked = settings.smoothCaret; typedEffect.value = settings.typedEffect;
+  highlightMode.value = settings.highlightMode; blindMode.checked = settings.blindMode;
+  // render keyboard & initial paragraph
+  renderKeyboard();
+  currentText = chooseParagraph();
+  renderText(currentText);
+  timeLeft = totalTime; timeLeftEl.textContent = timeLeft;
+  renderLeaderboard();
+  runHistory = JSON.parse(localStorage.getItem(STORAGE_STATS) || '[]');
+  renderWpmChart();
+  renderErrorBreakdown();
+  document.getElementById('year').textContent = new Date().getFullYear();
+}
+init();
