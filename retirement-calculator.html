@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retirement Calculator – How Much You Need to Retire | TalionCalcs</title>
+  <meta name="description" content="Retirement calculator to estimate the corpus you'll need and whether your current savings + monthly contributions will reach it. Accounts for inflation, returns and retirement years.">
+  <link rel="canonical" href="https://talioncalcs.github.io/retirement-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Retirement Calculator – TalionCalcs">
+  <meta property="og:description" content="Estimate retirement corpus required and projected savings at retirement. Compare target vs projected and monthly contribution needed.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/retirement-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:340px; display:none; border:1px solid #eee; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    .flex-row { display:flex; gap:10px; }
+    .half { flex:1; }
+    ul.simple { padding-left: 18px; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Retirement Calculator","item":"https://talioncalcs.github.io/retirement-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Retirement Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/retirement-calculator.html",
+    "description":"Estimate retirement corpus required and project if current savings + monthly SIP reach it, accounting for inflation and returns."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How does this calculator estimate retirement corpus?",
+        "acceptedAnswer":{"@type":"Answer","text":"It inflates your desired retirement-year expenses for inflation, then computes the corpus needed to fund those expenses over the retirement years using a real-return annuity formula."}
+      },
+      {
+        "@type":"Question",
+        "name":"Does it consider inflation and returns?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes — you can enter expected annual return and inflation; the calculator uses them to project savings growth and required corpus."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can I see how my savings grow year-by-year?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes — the calculator plots projected accumulated savings each year until retirement."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Retirement Calculator
+  </div>
+
+  <h1>Retirement Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate the retirement corpus you will need, project your savings at retirement based on current savings and monthly contributions, and compare the two to see a shortfall or surplus. Adjust expected returns and inflation to model multiple scenarios.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Retirement Form</h2>
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="currentAge">Current Age (years)</label>
+        <input type="number" id="currentAge" min="0" step="1" placeholder="e.g. 35" aria-label="Current age">
+      </div>
+      <div class="half">
+        <label for="retireAge">Retirement Age (years)</label>
+        <input type="number" id="retireAge" min="0" step="1" placeholder="e.g. 60" aria-label="Retirement age">
+      </div>
+    </div>
+
+    <label for="currentSavings">Current Savings / Corpus (₹)</label>
+    <input type="number" id="currentSavings" min="0" placeholder="e.g. 2000000" aria-label="Current savings">
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="monthlyContribution">Monthly Contribution (₹)</label>
+        <input type="number" id="monthlyContribution" min="0" placeholder="e.g. 20000" aria-label="Monthly contribution">
+      </div>
+      <div class="half">
+        <label for="annualReturn">Expected Annual Return (%)</label>
+        <input type="number" id="annualReturn" min="0" step="0.01" placeholder="e.g. 8" aria-label="Expected annual return">
+      </div>
+    </div>
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="inflation">Expected Annual Inflation (%)</label>
+        <input type="number" id="inflation" min="0" step="0.01" placeholder="e.g. 5" aria-label="Inflation">
+      </div>
+      <div class="half">
+        <label for="yearsInRetirement">Years in Retirement (estimate)</label>
+        <input type="number" id="yearsInRetirement" min="1" step="1" placeholder="e.g. 25" aria-label="Years in retirement">
+      </div>
+    </div>
+
+    <label for="desiredAnnualExpense">Desired Annual Expense at Retirement (₹) — today</label>
+    <input type="number" id="desiredAnnualExpense" min="0" placeholder="e.g. 600000" aria-label="Desired annual expense today">
+
+    <button type="button" onclick="calculateRetirement()" aria-label="Calculate retirement">Calculate</button>
+
+    <div class="result" id="summary" aria-live="polite"></div>
+    <div class="subresult" id="details" aria-live="polite"></div>
+
+    <canvas id="retireChart" role="img" aria-label="Projected savings chart"></canvas>
+  </div>
+
+  <div class="cmp-table">
+    <h2>What this does</h2>
+    <table>
+      <tr><th>Action</th><th>Outcome</th></tr>
+      <tr><td>Project savings</td><td>Shows projected accumulated savings each year until retirement.</td></tr>
+      <tr><td>Estimate required corpus</td><td>Inflates desired expense to retirement year and computes corpus required to fund it for the chosen retirement years using a real-return annuity.</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this calculator when planning retirement goals — to check whether your current savings and monthly contributions are sufficient, or to compute how much more you need to save.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator projects your current savings forward using the expected annual return (compounded monthly) and monthly contributions. It inflates your desired annual retirement expense to retirement year using inflation. The required corpus to fund that expense over the retirement years is calculated using the real-return annuity formula (adjusting returns for inflation). Results show projected corpus, required corpus, shortfall/surplus, and the monthly contribution required to meet the target if different.
+    </p>
+
+    <h3>Assumptions & notes</h3>
+    <ul class="simple">
+      <li>Contributions are assumed to be made at the end of each month.</li>
+      <li>Returns are compounded monthly for projection; inflation is applied yearly to expense.</li>
+      <li>This is an estimate — taxes, different asset returns, lump-sum expenses, and changing returns/inflation over time are not modelled in detail.</li>
+    </ul>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Can I change return & inflation assumptions?</strong> Yes — adjust expected annual return and inflation fields and re-run the calculation to test scenarios.</p>
+    <p><strong>How is required corpus computed?</strong> The desired annual expense at retirement (inflated) is treated as a level withdrawal each year. Using a real return (adjusting for inflation), the calculator computes the present value (at retirement) of those withdrawals over the retirement years.</p>
+    <p><strong>What if real return is zero or negative?</strong> If the real return is close to zero, the calculator uses a simpler sum (expense × years) to avoid division by near-zero; negative real returns increase required corpus significantly and should be interpreted carefully.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul class="simple">
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>
+    <li><a href="lumpsum-calculator.html">Lumpsum Calculator</a></li>
+    <li><a href="retirement-income-planner.html">Retirement Income Planner</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator is for educational purposes only and does not constitute financial, tax or investment advice. Assumptions made here may not reflect your exact situation. Consult a qualified adviser for personalised planning.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function toINR(n) {
+  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
+}
+
+function getCanvasSize(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(300, Math.floor(rect.width || canvas.clientWidth || 600));
+  const cssHeight = 340;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.style.width = cssWidth + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+  return { cssWidth, cssHeight, dpr };
+}
+
+function fvLumpAndAnnuity(lump, monthly, monthlyRate, months) {
+  if (months <= 0) return { fvLump: lump, fvAnnuity: 0, fvTotal: lump };
+  const fvLump = lump * Math.pow(1 + monthlyRate, months);
+  let fvAnnuity = 0;
+  if (monthlyRate === 0) fvAnnuity = monthly * months;
+  else fvAnnuity = monthly * ( (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate );
+  return { fvLump, fvAnnuity, fvTotal: fvLump + fvAnnuity };
+}
+
+function requiredCorpusForWithdrawals(annualWithdrawal, realReturn, years) {
+  if (years <= 0) return 0;
+  if (Math.abs(realReturn) < 1e-8) return annualWithdrawal * years;
+  return annualWithdrawal * (1 - Math.pow(1 + realReturn, -years)) / realReturn;
+}
+
+function calcMonthlyToHitTarget(targetFV, currentSavings, monthlyRate, months) {
+  const fvLump = currentSavings * Math.pow(1 + monthlyRate, months);
+  if (months <= 0) return Infinity;
+  const numerator = targetFV - fvLump;
+  if (Math.abs(monthlyRate) < 1e-12) return numerator / months;
+  const denom = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+  return numerator / denom;
+}
+
+function calculateRetirement() {
+  const currentAge = Number(document.getElementById("currentAge").value || 0);
+  const retireAge = Number(document.getElementById("retireAge").value || 0);
+  const currentSavings = Number(document.getElementById("currentSavings").value || 0);
+  const monthlyContribution = Number(document.getElementById("monthlyContribution").value || 0);
+  const annualReturn = Number(document.getElementById("annualReturn").value || 0) / 100;
+  const inflation = Number(document.getElementById("inflation").value || 0) / 100;
+  const yearsInRetirement = Number(document.getElementById("yearsInRetirement").value || 0);
+  const desiredAnnualExpense = Number(document.getElementById("desiredAnnualExpense").value || 0);
+
+  const summaryEl = document.getElementById("summary");
+  const detailsEl = document.getElementById("details");
+  const canvas = document.getElementById("retireChart");
+
+  if (retireAge <= currentAge || currentAge < 0 || retireAge <= 0 || annualReturn < 0 || inflation < 0 || yearsInRetirement <= 0 || desiredAnnualExpense < 0) {
+    summaryEl.innerHTML = "Please enter valid values. Retirement age should be greater than current age and other fields non-negative.";
+    detailsEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    window._lastChartData = null;
+    return;
+  }
+
+  const yearsToRetire = retireAge - currentAge;
+  const months = yearsToRetire * 12;
+  const monthlyRate = annualReturn / 12;
+
+  const fv = fvLumpAndAnnuity(currentSavings, monthlyContribution, monthlyRate, months);
+  const projectedCorpus = fv.fvTotal;
+
+  const expenseAtRetirement = desiredAnnualExpense * Math.pow(1 + inflation, yearsToRetire);
+  const realReturn = (1 + annualReturn) / (1 + inflation) - 1;
+  const requiredCorpus = requiredCorpusForWithdrawals(expenseAtRetirement, realReturn, yearsInRetirement);
+
+  const shortfall = requiredCorpus - projectedCorpus;
+  const shortfallText = shortfall > 0 ? ("Shortfall: " + toINR(shortfall)) : ("Surplus: " + toINR(Math.abs(shortfall)));
+
+  let requiredMonthlyToHitTarget = calcMonthlyToHitTarget(requiredCorpus, currentSavings, monthlyRate, months);
+  if (!isFinite(requiredMonthlyToHitTarget) || requiredMonthlyToHitTarget < 0) requiredMonthlyToHitTarget = 0;
+
+  summaryEl.innerHTML = "Projected corpus at retirement: " + toINR(projectedCorpus) + " • Required corpus: " + toINR(requiredCorpus) + " • " + shortfallText;
+
+  let details = "";
+  details += "<div class='small'>Current age: " + currentAge + " • Retirement age: " + retireAge + " • Years to retire: " + yearsToRetire + "</div>";
+  details += "<div class='small'>Projected annual expense at retirement (inflated): " + toINR(expenseAtRetirement) + "</div>";
+  details += "<div class='small'>Assumed annual return: " + (annualReturn*100).toFixed(2) + "% • Inflation: " + (inflation*100).toFixed(2) + "% • Real return: " + (realReturn*100).toFixed(2) + "%</div>";
+  details += "<div class='small'>If you want to meet required corpus exactly, monthly contribution needed: " + toINR(requiredMonthlyToHitTarget) + "</div>";
+  if (shortfall > 0) details += "<div class='small'>You need to increase monthly saving by at least: " + toINR(Math.max(0, requiredMonthlyToHitTarget - monthlyContribution)) + " (approx)</div>";
+  detailsEl.innerHTML = details;
+
+  window._lastChartData = {
+    mode: "retirement",
+    currentSavings, monthlyContribution, monthlyRate, months, yearsToRetire,
+    projectedSeries: buildYearlySeries(currentSavings, monthlyContribution, monthlyRate, yearsToRetire)
+  };
+
+  drawRetirementChart(window._lastChartData);
+}
+
+function buildYearlySeries(currentSavings, monthlyContribution, monthlyRate, yearsToRetire) {
+  const series = [];
+  let balance = currentSavings;
+  const monthsTotal = yearsToRetire * 12;
+  for (let y = 0; y <= yearsToRetire; y++) {
+    if (y === 0) series.push(Math.round(balance));
+    else {
+      for (let m = 0; m < 12; m++) {
+        balance = balance * (1 + monthlyRate) + monthlyContribution;
+      }
+      series.push(Math.round(balance));
+    }
+  }
+  return series;
+}
+
+function drawRetirementChart(state) {
+  const canvas = document.getElementById("retireChart");
+  if (!canvas || !state) return;
+  canvas.style.display = "block";
+  const { cssWidth, cssHeight, dpr } = getCanvasSize(canvas);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const years = state.projectedSeries.length - 1;
+  const data = state.projectedSeries;
+  const padding = 40;
+  const usableWidth = cssWidth - padding * 2;
+  const usableHeight = cssHeight - padding * 2;
+  const stepX = years > 0 ? usableWidth / years : usableWidth;
+
+  const maxVal = Math.max(...data, 1);
+
+  function xFor(i) { return padding + i * stepX; }
+  function yFor(v) { return cssHeight - padding - (v / maxVal) * usableHeight; }
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 1;
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, cssHeight - padding);
+  ctx.moveTo(padding, cssHeight - padding);
+  ctx.lineTo(cssWidth - padding, cssHeight - padding);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#0b5ed7";
+  ctx.lineWidth = 2;
+  data.forEach((val, i) => {
+    const x = xFor(i);
+    const y = yFor(val);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  ctx.fillStyle = "#0b5ed7";
+  data.forEach((val, i) => {
+    const x = xFor(i);
+    const y = yFor(val);
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Projected savings (yearly)", padding, 14);
+  ctx.fillStyle = "#444";
+  ctx.fillText("Years to retire: " + years, cssWidth - 160, 14);
+
+  ctx.fillStyle = "#444";
+  ctx.fillText("Amount (₹)", 8, padding - 8);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      const state = window._lastChartData;
+      if (!state) return;
+      if (state.mode === "retirement") drawRetirementChart(state);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
