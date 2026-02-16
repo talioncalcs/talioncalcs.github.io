@@ -1,78 +1,134 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 20px;
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --accent:#1b263b;
+  --accent-2:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
 }
 
-.container {
-  max-width: 800px;
-  margin: auto;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+*{box-sizing:border-box}
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#111827;
+  margin:0;
+  padding:0;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-.lab-label {
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 5px;
+.site-header{
+  background:var(--accent);
+  color:#fff;
+  padding:18px 20px;
+  text-align:center;
+}
+.site-brand{font-weight:700;font-size:20px}
+.site-sub{font-size:13px;opacity:0.9;margin-top:4px}
+
+.container{
+  max-width:920px;
+  margin:28px auto;
+  padding:0 18px;
 }
 
-h1 {
-  margin-top: 0;
+.lab-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.page-title{margin:6px 0 8px;font-size:24px}
+.lead{color:var(--muted);margin-bottom:18px}
+
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(2,6,23,0.06);
+  margin-bottom:18px;
 }
 
-.test-box {
-  margin-top: 20px;
+.controls-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:12px;
 }
 
-.timer {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 15px;
+select, input[type="text"]{
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid #e6e9ef;
+  font-size:14px;
 }
 
-.text-display {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  line-height: 1.6;
+.name-input{min-width:160px}
+
+.btn{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
 }
 
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  resize: none;
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid #e6e9ef}
+.btn.small{padding:6px 8px;font-size:13px}
+
+.text-display{
+  background:#f8fafc;
+  border-radius:8px;
+  padding:18px;
+  min-height:84px;
+  font-size:17px;
+  line-height:1.7;
+  margin-bottom:12px;
+  overflow-wrap:break-word;
+  white-space:pre-wrap;
 }
 
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
+.char{padding:0 0;padding-left:0}
+.char.correct{color:var(--success)}
+.char.incorrect{color:var(--danger);text-decoration:underline}
+.char.current{background:rgba(37,99,235,0.08);border-radius:4px}
+
+textarea{
+  width:100%;
+  min-height:120px;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #e6e9ef;
+  font-size:16px;
+  resize:none;
 }
 
-button:hover {
-  opacity: 0.9;
+.stats-row{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+  justify-content:space-between;
 }
 
-.result-box {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f1f3f5;
-  border-radius: 8px;
-}
+.stat{flex:1;min-width:110px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-value{font-size:20px;font-weight:700;color:var(--accent-2)}
 
-.hidden {
-  display: none;
+.result-actions{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.save-message{color:var(--muted);font-size:13px}
+
+.leaderboard-list{padding-top:8px}
+.leaderboard-list div{padding:8px;border-radius:8px;background:#fbfdff;margin-bottom:8px;border:1px solid #eef2ff;font-weight:600}
+
+.sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+.site-footer{text-align:center;color:#6b7280;padding:18px 0;font-size:13px;margin-top:20px}
+.hidden{display:none}
+
+/* responsive */
+@media(max-width:720px){
+  .controls-row{gap:6px}
+  .page-title{font-size:20px}
+  .stat-value{font-size:18px}
 }
