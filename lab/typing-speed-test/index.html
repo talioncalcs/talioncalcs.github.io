@@ -2,63 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Typing Speed Test — Talion Labs (Monkeytype-level)</title>
-  <meta name="description" content="Typing Speed Test (time / words / quotes / custom). Smooth caret, tape mode, expert/master difficulty, live WPM/CPM/accuracy, local leaderboard, certificate download."/>
+  <title>Typing Speed Test — Talion Labs (TalionCalcs)</title>
+  <meta name="description" content="Advanced typing speed test: time/words/quote/custom, difficulty levels, weak-key heatmap, training modes, local leaderboard, certificates, analytics." />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- favicon & apple icon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+
+  <!-- canonical -->
   <link rel="canonical" href="https://talioncalcs.github.io/labs/typing-speed-test/">
 
-  <!-- GA4 (your ID) -->
+  <!-- OG -->
+  <meta property="og:title" content="Typing Speed Test — Talion Labs">
+  <meta property="og:description" content="Measure and improve your typing with detailed analytics, certificates and training modes.">
+  <meta property="og:image" content="https://talioncalcs.github.io/labs/typing-speed-test/assets/logo.png">
+  <meta property="og:type" content="website">
+
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
-    // helper wrappers below are used in script.js
-    window.talionGtag = (name, params)=> {
-      try { gtag('event', name, params || {}); } catch(e){/*ignore*/ }
+    window.talionGtag = (event, params) => {
+      try { gtag('event', event, params || {}); } catch(e) {}
     };
   </script>
 
-  <!-- Minimal inline styles loaded separately for clarity -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header">
-    <div class="site-brand">TalionCalcs</div>
-    <div class="site-sub">Talion Labs — Productivity & Performance Tools</div>
-    <button id="openSettings" class="settings-btn" title="Settings">⚙︎</button>
+    <div class="header-left">
+      <img src="assets/logo.png" alt="TalionCalcs logo" class="site-logo">
+      <div>
+        <div class="site-brand">TalionCalcs</div>
+        <div class="site-sub">Talion Labs — Productivity & Performance Tools</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="openSettings" class="settings-btn" title="Settings">⚙︎</button>
+    </div>
   </header>
 
   <main class="container" id="main">
     <div class="lab-label">Talion Labs</div>
-    <h1 class="page-title">Typing Speed Test — Free WPM Calculator</h1>
-    <p class="lead">Modes: Time / Words / Quotes / Custom — Difficulty: Normal, Expert, Master. Customize appearance and behavior in Settings.</p>
+    <h1 class="page-title">Typing Speed Test — Advanced WPM & Training</h1>
+    <p class="lead">Modes: Time / Words / Quote / Custom · Difficulty: Normal / Expert / Master · Word difficulty and training modes available.</p>
+
+    <!-- Monetization placeholder (top) -->
+    <div class="ad-slot card" id="adTop">AD SLOT (place AdSense unit here)</div>
 
     <div class="card">
       <div class="controls-row">
         <label for="modeSelect">Mode</label>
-        <select id="modeSelect" aria-label="Test mode">
+        <select id="modeSelect" aria-label="Mode">
           <option value="time">Time</option>
           <option value="words">Words</option>
           <option value="quote">Quote</option>
           <option value="custom">Custom</option>
         </select>
 
-        <select id="timeSelect" aria-label="Time or words">
-          <!-- updated dynamically by JS -->
+        <select id="timeSelect" aria-label="Time or words"></select>
+
+        <label for="vocabSelect">Word Difficulty</label>
+        <select id="vocabSelect">
+          <option value="standard">Standard</option>
+          <option value="easy">Easy</option>
+          <option value="hard">Hard</option>
+          <option value="brutal">Brutal</option>
         </select>
 
-        <label for="difficultySelect">Difficulty</label>
+        <label for="difficultySelect">Strictness</label>
         <select id="difficultySelect">
           <option value="normal">Normal</option>
-          <option value="expert">Expert (fail wrong word)</option>
-          <option value="master">Master (fail on any wrong key)</option>
+          <option value="expert">Expert</option>
+          <option value="master">Master</option>
+        </select>
+
+        <label for="trainingMode">Training</label>
+        <select id="trainingMode">
+          <option value="none">None</option>
+          <option value="weak-keys">Weak-Key Focus</option>
+          <option value="left-hand">Left-hand Practice</option>
+          <option value="right-hand">Right-hand Practice</option>
+          <option value="punctuation">Punctuation Only</option>
+          <option value="endurance">Endurance (long text)</option>
         </select>
 
         <input id="nameInput" type="text" placeholder="Name (optional)" class="name-input" maxlength="30" />
-        <button id="startBtn" class="btn">Start</button>
-        <button id="resetBtn" class="btn ghost">Reset</button>
       </div>
 
       <div id="textDisplay" class="text-display" aria-live="polite"></div>
@@ -72,33 +106,57 @@
         <div class="stat"><div class="stat-label">Accuracy</div><div id="accuracy" class="stat-value">100%</div></div>
       </div>
 
+      <div class="controls-row small">
+        <button id="startBtn" class="btn">Prepare</button>
+        <button id="resetBtn" class="btn ghost">Reset</button>
+        <div class="tiny-note">Timer starts on first typed character.</div>
+      </div>
+
       <div id="resultActions" class="result-actions hidden">
         <button id="saveScoreBtn" class="btn">Save score</button>
         <button id="downloadCertBtn" class="btn">Download certificate</button>
         <div id="saveMessage" class="save-message" aria-live="polite"></div>
       </div>
+
     </div>
 
-    <section class="card small">
-      <h2>Local Leaderboard</h2>
-      <div id="localLeaderboard" class="leaderboard-list"></div>
-      <button id="clearScoresBtn" class="btn ghost small">Clear Saved Scores</button>
+    <!-- bottom cards -->
+    <div class="row">
+      <section class="card small">
+        <h2>Your Best Scores</h2>
+        <div id="localLeaderboard" class="leaderboard-list"></div>
+        <div class="controls-row small">
+          <button id="clearScoresBtn" class="btn ghost small">Clear Saved Scores</button>
+        </div>
+      </section>
+
+      <section class="card small">
+        <h2>Performance</h2>
+        <canvas id="wpmChart" width="400" height="140"></canvas>
+        <div id="errorBreakdown" class="error-breakdown"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Weak-Key Heatmap</h2>
+      <div id="keyboard" class="keyboard"></div>
+      <small class="muted">Red = many errors, green = few errors</small>
     </section>
 
     <section class="card seo">
       <h2>About this test</h2>
-      <p>WPM calculation uses correctly typed characters (correct char count ÷ 5) scaled to the test duration. The difficulty options change failure behavior to give competitive practice modes. Settings persist in your browser.</p>
-      <h3>FAQ</h3>
-      <p><strong>Q:</strong> Is this as accurate as other tools?<br><strong>A:</strong> We compute WPM using correct characters and provide live CPM/WPM/accuracy. Results are comparable across tools that use the "5 char per word" standard.</p>
+      <p>WPM is calculated from correctly typed characters (correct chars ÷ 5). Use training modes for targeted improvement. Results and settings persist locally.</p>
     </section>
 
+    <!-- Monetization placeholder (bottom) -->
+    <div class="ad-slot card" id="adBottom">AD SLOT (place AdSense unit here)</div>
   </main>
 
   <footer class="site-footer">© <span id="year"></span> TalionCalcs — Talion Labs</footer>
 
-  <!-- settings modal -->
+  <!-- Settings modal -->
   <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <div class="modal-card">
+    <div class="modal-card" role="document">
       <h3 id="settingsTitle">Settings</h3>
       <div class="setting-row"><label>Theme</label>
         <select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option></select>
@@ -106,12 +164,12 @@
       <div class="setting-row"><label>Show live WPM</label><input type="checkbox" id="showLiveWpm"/></div>
       <div class="setting-row"><label>Smooth caret</label><input type="checkbox" id="smoothCaret"/></div>
       <div class="setting-row"><label>Typed effect</label>
-        <select id="typedEffect"><option value="keep">Keep</option><option value="hide">Hide</option><option value="fade">Fade</option></select>
+        <select id="typedEffect"><option value="keep">Keep</option><option value="fade">Fade</option><option value="hide">Hide</option></select>
       </div>
-      <div class="setting-row"><label>Highlight mode</label>
+      <div class="setting-row"><label>Highlight Mode</label>
         <select id="highlightMode"><option value="letter">Letter</option><option value="word">Word</option></select>
       </div>
-      <div class="setting-row"><label>Blind mode</label><input type="checkbox" id="blindMode"/></div>
+      <div class="setting-row"><label>Blind mode (hide text)</label><input type="checkbox" id="blindMode"/></div>
       <div class="setting-actions"><button id="saveSettings" class="btn">Save</button> <button id="closeSettings" class="btn ghost">Close</button></div>
     </div>
   </div>
