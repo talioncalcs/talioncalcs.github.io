@@ -148,27 +148,27 @@
     <h2 id="calc-heading" style="display:none;">Prepayment Form</h2>
 
     <label for="outstanding">Outstanding Principal (₹)</label>
-    <input type="number" id="outstanding" min="0" aria-label="Outstanding principal" placeholder="e.g. 3500000">
+    <input type="number" id="outstanding" min="0" aria-label="Outstanding principal" placeholder="e.g. 3500000" value="">
 
     <label for="annualRate">Current Annual Interest Rate (%)</label>
-    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 8.35">
+    <input type="number" id="annualRate" min="0" step="0.01" aria-label="Annual interest rate" placeholder="e.g. 8.35" value="">
 
     <div class="flex-row">
       <div class="half">
         <label for="remainingYears">Remaining Tenure (Years)</label>
-        <input type="number" id="remainingYears" min="0" step="1" aria-label="Remaining tenure years" placeholder="e.g. 15">
+        <input type="number" id="remainingYears" min="0" step="1" aria-label="Remaining tenure years" placeholder="e.g. 15" value="">
       </div>
       <div class="half">
         <label for="currentEmi">Current Monthly EMI (optional)</label>
-        <input type="number" id="currentEmi" min="0" aria-label="Current EMI" placeholder="Leave empty to compute EMI from principal, rate and tenure">
+        <input type="number" id="currentEmi" min="0" aria-label="Current EMI" placeholder="Leave empty to compute EMI from principal, rate and tenure" value="">
       </div>
     </div>
 
     <label for="prepayment">One-time Prepayment Amount (₹)</label>
-    <input type="number" id="prepayment" min="0" aria-label="Prepayment amount" placeholder="e.g. 500000">
+    <input type="number" id="prepayment" min="0" aria-label="Prepayment amount" placeholder="e.g. 500000" value="">
 
     <label for="prepayAtMonth">Prepayment at Month (1 = next month)</label>
-    <input type="number" id="prepayAtMonth" min="1" aria-label="Prepayment at month" placeholder="e.g. 24">
+    <input type="number" id="prepayAtMonth" min="1" aria-label="Prepayment at month" placeholder="e.g. 24" value="">
 
     <button type="button" onclick="calculatePrepayment()" aria-label="Calculate Prepayment">Calculate</button>
 
@@ -243,11 +243,9 @@
 </footer>
 
 <script>
-function toINR(n) {
-  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
-}
+function toINR(n){ return "₹" + Number(Math.round(n)).toLocaleString("en-IN"); }
 
-function calcEMI(principal, monthlyRate, months) {
+function calcEMI(principal, monthlyRate, months){
   if (months <= 0) return 0;
   if (monthlyRate === 0) return principal / months;
   const r = monthlyRate;
@@ -255,33 +253,43 @@ function calcEMI(principal, monthlyRate, months) {
   return principal * r * pow / (pow - 1);
 }
 
-function remainingBalance(principal, monthlyRate, monthsPaid, emi) {
-  if (monthlyRate === 0) {
-    return Math.max(0, principal - emi * monthsPaid);
-  }
+function remainingBalance(principal, monthlyRate, monthsPaid, emi){
+  if (monthlyRate === 0) return Math.max(0, principal - emi * monthsPaid);
   const r = monthlyRate;
   const pow = Math.pow(1 + r, monthsPaid);
   const B = principal * pow - emi * ((pow - 1) / r);
   return Math.max(0, B);
 }
 
-function monthsForEMI(principal, monthlyRate, emi) {
+function monthsForEMI(principal, monthlyRate, emi){
   if (emi <= 0) return Infinity;
-  if (monthlyRate === 0) {
-    return Math.ceil(principal / emi);
-  }
+  if (monthlyRate === 0) return Math.ceil(principal / emi);
   const r = monthlyRate;
   if (emi <= principal * r) return Infinity;
   const val = Math.log(emi / (emi - principal * r)) / Math.log(1 + r);
   return Math.ceil(val);
 }
 
-function getCanvasCssWidth(canvas) {
+function getCanvasCssWidth(canvas){
   const rect = canvas.getBoundingClientRect();
-  return rect.width || canvas.clientWidth || 600;
+  return rect && rect.width ? rect.width : canvas.clientWidth || 600;
 }
 
-function calculatePrepayment() {
+function prepareCanvas(canvas, cssHeight){
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
+  canvas.style.display = "block";
+  canvas.style.width = cssWidth + "px";
+  canvas.style.height = cssHeight + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
+  canvas.height = Math.floor(cssHeight * dpr);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+  return { ctx, cssWidth, cssHeight, dpr };
+}
+
+function calculatePrepayment(){
   const P = Number(document.getElementById("outstanding").value || 0);
   const annualRatePercent = Number(document.getElementById("annualRate").value || 0);
   const years = Number(document.getElementById("remainingYears").value || 0);
@@ -293,10 +301,11 @@ function calculatePrepayment() {
   const detailsEl = document.getElementById("details");
   const canvas = document.getElementById("prepayChart");
 
-  if (P <= 0 || annualRatePercent < 0 || years <= 0 || prepay < 0 || prepayAt <= 0) {
+  if (P <= 0 || annualRatePercent < 0 || years <= 0 || prepay < 0 || prepayAt <= 0){
     summaryEl.innerHTML = "Please enter valid values for outstanding principal, rate, remaining tenure and prepayment details.";
     detailsEl.innerHTML = "";
     if (canvas) canvas.style.display = "none";
+    window._lastChartData = null;
     return;
   }
 
@@ -306,7 +315,7 @@ function calculatePrepayment() {
   const t = Math.min(Math.max(1, Math.floor(prepayAt)), n);
   const balanceBeforePrepay = remainingBalance(P, monthlyRate, t, emi);
 
-  if (prepay >= balanceBeforePrepay) {
+  if (prepay >= balanceBeforePrepay){
     const totalPaidOriginal = emi * n;
     const interestOriginal = totalPaidOriginal - P;
     const paymentsBefore = emi * t;
@@ -322,7 +331,7 @@ function calculatePrepayment() {
       + "<div class='small'>Final prepayment used: " + toINR(finalPrepay) + "</div>"
       + "<div class='result'>Interest saved: " + toINR(interestSaved) + "</div>";
 
-    window._lastChartData = { mode: "full-prepay", P, monthlyRate, emi, n, t, prepay };
+    window._lastChartData = { mode: "full-prepay", P, r: monthlyRate, emi, n, t };
     drawChartForFullPrepay(P, monthlyRate, emi, n, t);
     return;
   }
@@ -378,157 +387,17 @@ function calculatePrepayment() {
   drawComparisonChart(P, monthlyRate, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths);
 }
 
-function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths) {
+function drawComparisonChart(P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths){
   const canvas = document.getElementById("prepayChart");
   if (!canvas) return;
-  canvas.style.display = "block";
-  const ctx = canvas.getContext("2d");
-  const dpr = window.devicePixelRatio || 1;
-  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
   const cssHeight = 340;
-  canvas.style.width = cssWidth + "px";
-  canvas.width = Math.floor(cssWidth * dpr);
-  canvas.height = Math.floor(cssHeight * dpr);
-  canvas.style.height = cssHeight + "px";
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, cssWidth, cssHeight);
+  const prepared = prepareCanvas(canvas, cssHeight);
+  const ctx = prepared.ctx;
+  const cssWidth = prepared.cssWidth;
 
   const monthsOriginal = [];
   const balOriginal = [];
-  for (let m = 0; m <= n; m++) {
-    monthsOriginal.push(m);
-    balOriginal.push(Math.round(remainingBalance(P, r, m, emi)));
-  }
-
-  const monthsA = [];
-  const balA = [];
-  for (let m = 0; m <= t; m++) {
-    monthsA.push(m);
-    balA.push(Math.round(remainingBalance(P, r, m, emi)));
-  }
-  if (monthsAfterA !== Infinity) {
-    for (let i = 1; i <= monthsAfterA; i++) {
-      const monthIndex = t + i;
-      monthsA.push(monthIndex);
-      const bal = Math.round(remainingBalance(principalAfterPrepay, r, i, emi));
-      balA.push(Math.max(bal,0));
-    }
-  }
-
-  const monthsB = [];
-  const balB = [];
-  for (let m = 0; m <= t; m++) {
-    monthsB.push(m);
-    balB.push(Math.round(remainingBalance(P, r, m, emi)));
-  }
-  for (let i = 1; i <= remainingMonths; i++) {
-    const monthIndex = t + i;
-    monthsB.push(monthIndex);
-    const bal = Math.round(remainingBalance(principalAfterPrepay, r, i, newEmiB));
-    balB.push(Math.max(bal,0));
-  }
-
-  const maxMonth = Math.max(n, (monthsA[monthsA.length - 1] || 0), (monthsB[monthsB.length - 1] || 0));
-  const allBalances = balOriginal.concat(balA, balB);
-  const maxBalance = allBalances.length ? Math.max(...allBalances) : 1;
-
-  const padding = 40;
-  const usableWidth = cssWidth - padding * 2;
-  const usableHeight = cssHeight - padding * 2;
-  const stepX = maxMonth > 0 ? usableWidth / maxMonth : usableWidth;
-
-  ctx.beginPath();
-  ctx.strokeStyle = "#ddd";
-  ctx.lineWidth = 1;
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, cssHeight - padding);
-  ctx.moveTo(padding, cssHeight - padding);
-  ctx.lineTo(cssWidth - padding, cssHeight - padding);
-  ctx.stroke();
-
-  function xForMonth(m) { return padding + m * stepX; }
-  function yForBalance(b) { return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
-
-  ctx.beginPath();
-  ctx.setLineDash([6, 4]);
-  ctx.strokeStyle = "#888";
-  ctx.lineWidth = 1.5;
-  balOriginal.forEach((val, i) => {
-    const x = xForMonth(monthsOriginal[i]);
-    const y = yForBalance(val);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.beginPath();
-  ctx.strokeStyle = "#0b5ed7";
-  ctx.lineWidth = 2;
-  balA.forEach((val, i) => {
-    const x = xForMonth(monthsA[i]);
-    const y = yForBalance(val);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.strokeStyle = "#198754";
-  ctx.lineWidth = 2;
-  balB.forEach((val, i) => {
-    const x = xForMonth(monthsB[i]);
-    const y = yForBalance(val);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-
-  const px = xForMonth(t);
-  ctx.beginPath();
-  ctx.strokeStyle = "#ccc";
-  ctx.lineWidth = 1;
-  ctx.moveTo(px, padding);
-  ctx.lineTo(px, cssHeight - padding);
-  ctx.stroke();
-
-  ctx.fillStyle = "#222";
-  ctx.font = "12px Arial";
-  ctx.fillText("Original schedule (dashed)", padding, 14);
-  ctx.fillStyle = "#0b5ed7";
-  ctx.fillRect(cssWidth - 260, 6, 12, 8);
-  ctx.fillStyle = "#222";
-  ctx.fillText("Option A — same EMI (reduced tenure)", cssWidth - 244, 14);
-  ctx.fillStyle = "#198754";
-  ctx.fillRect(cssWidth - 260, 26, 12, 8);
-  ctx.fillStyle = "#222";
-  ctx.fillText("Option B — same tenure (reduced EMI)", cssWidth - 244, 34);
-
-  ctx.fillStyle = "#444";
-  ctx.fillText("Outstanding principal (₹)", 8, padding - 8);
-
-  const balAtT = Math.round(remainingBalance(P, r, t, emi));
-  ctx.fillStyle = "#444";
-  ctx.fillText("Prepayment at month " + t + " • Outstanding before prepay: " + toINR(balAtT), px + 6, padding + 12);
-
-  window._lastChartData = { mode: "comparison", P, r, emi, n, t, prepay, principalAfterPrepay, monthsAfterA, newEmiB, remainingMonths };
-}
-
-function drawChartForFullPrepay(P, r, emi, n, t) {
-  const canvas = document.getElementById("prepayChart");
-  if (!canvas) return;
-  canvas.style.display = "block";
-  const ctx = canvas.getContext("2d");
-  const dpr = window.devicePixelRatio || 1;
-  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
-  const cssHeight = 340;
-  canvas.style.width = cssWidth + "px";
-  canvas.width = Math.floor(cssWidth * dpr);
-  canvas.height = Math.floor(cssHeight * dpr);
-  canvas.style.height = cssHeight + "px";
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, cssWidth, cssHeight);
-
-  const monthsOriginal = [];
-  const balOriginal = [];
-  for (let m = 0; m <= n; m++) {
+  for (let m = 0; m <= n; m++){
     monthsOriginal.push(m);
     balOriginal.push(Math.round(remainingBalance(P, r, m, emi)));
   }
@@ -550,11 +419,11 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   ctx.lineTo(cssWidth - padding, cssHeight - padding);
   ctx.stroke();
 
-  function xForMonth(m) { return padding + m * stepX; }
-  function yForBalance(b) { return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
+  function xForMonth(m){ return padding + m * stepX; }
+  function yForBalance(b){ return cssHeight - padding - (b / (maxBalance || 1)) * usableHeight; }
 
   ctx.beginPath();
-  ctx.setLineDash([6, 4]);
+  ctx.setLineDash([6,4]);
   ctx.strokeStyle = "#888";
   ctx.lineWidth = 1.5;
   balOriginal.forEach((val, i) => {
@@ -578,8 +447,6 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
   ctx.fillText("Original schedule (dashed)", padding, 14);
   ctx.fillStyle = "#444";
   ctx.fillText("Prepayment at month " + t, px + 6, padding + 12);
-
-  window._lastChartData = { mode: "full-prepay", P, r, emi, n, t, prepay: 0 };
 }
 
 (function(){
@@ -589,9 +456,9 @@ function drawChartForFullPrepay(P, r, emi, n, t) {
     resizeTimer = setTimeout(function(){
       const state = window._lastChartData;
       if (!state) return;
-      if (state.mode === "full-prepay") {
+      if (state.mode === "full-prepay"){
         drawChartForFullPrepay(state.P, state.r, state.emi, state.n, state.t);
-      } else if (state.mode === "comparison") {
+      } else if (state.mode === "comparison"){
         drawComparisonChart(
           state.P, state.r, state.emi, state.n, state.t, state.prepay,
           state.principalAfterPrepay, state.monthsAfterA, state.newEmiB, state.remainingMonths
