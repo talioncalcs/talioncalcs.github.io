@@ -1,34 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Typing Speed Test – Free 60 Second WPM Calculator | Talion Labs</title>
-  <meta name="description" content="Free online typing speed test to measure your words per minute (WPM) and accuracy. Take the 60 second typing test and improve your speed.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <title>Typing Speed Test (WPM Calculator) – Free & Instant | TalionCalcs</title>
+  <meta name="description" content="Free online Typing Speed Test tool to measure Words Per Minute (WPM), accuracy, and typing performance. Clean interface, real-time results, mobile-friendly." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- canonical (adjust if you use different path) -->
+  <link rel="canonical" href="https://talioncalcs.github.io/labs/typing-speed-test/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Typing Speed Test – Free WPM Calculator | TalionCalcs">
+  <meta property="og:description" content="Measure your typing speed, accuracy, and WPM instantly. Free online typing test tool.">
+  <meta property="og:type" content="website">
+
+  <!-- GA4 (as provided) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <!-- Breadcrumb & FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/"},
+          {"@type":"ListItem","position":2,"name":"Tools","item":"https://talioncalcs.github.io/tools/"},
+          {"@type":"ListItem","position":3,"name":"Typing Speed Test","item":"https://talioncalcs.github.io/labs/typing-speed-test/"}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How is WPM (words per minute) calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "WPM is calculated here using correct characters. Correct characters ÷ 5 gives the number of correct words; divide by minutes to get WPM."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I save my scores?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes — use the Save Score button to store your personal top scores in your browser (localStorage)."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <p class="lab-label">Talion Labs</p>
-    <h1>Typing Speed Test</h1>
-    <p class="description">Measure your typing speed with our free 60-second WPM calculator.</p>
+  <header class="site-header">
+    <div class="site-brand">TalionCalcs</div>
+    <div class="site-sub">Talion Labs — Productivity & Performance Tools</div>
+  </header>
 
-    <div class="test-box">
-      <div class="timer">60</div>
-      <div id="text-display" class="text-display"></div>
-      <textarea id="input-area" placeholder="Start typing here..." disabled></textarea>
-      <button id="start-btn">Start Test</button>
+  <main class="container">
+    <div class="lab-label">Talion Labs</div>
+    <h1 class="page-title">Typing Speed Test — Free WPM Calculator</h1>
+    <p class="lead">Measure your Words Per Minute (WPM), accuracy, and typing performance. Mobile-friendly, instant results.</p>
+
+    <div class="card">
+      <div class="controls-row">
+        <label for="timeSelect">Duration</label>
+        <select id="timeSelect" aria-label="Select test duration">
+          <option value="30">30 seconds</option>
+          <option value="60" selected>60 seconds</option>
+          <option value="120">120 seconds</option>
+        </select>
+
+        <button id="startBtn" class="btn">Start</button>
+        <button id="resetBtn" class="btn ghost">Reset</button>
+
+        <label for="nameInput" class="sr-only">Name for leaderboard</label>
+        <input id="nameInput" type="text" placeholder="Your name (optional)" class="name-input" maxlength="30" />
+      </div>
+
+      <div id="textDisplay" class="text-display" aria-live="polite"></div>
+
+      <textarea id="inputArea" placeholder="Start typing here..." disabled aria-label="Typing input area"></textarea>
+
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-label">Time</div>
+          <div id="timeLeft" class="stat-value">60</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">WPM</div>
+          <div id="wpm" class="stat-value">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">CPM</div>
+          <div id="cpm" class="stat-value">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Accuracy</div>
+          <div id="accuracy" class="stat-value">100%</div>
+        </div>
+      </div>
+
+      <div id="resultActions" class="result-actions hidden">
+        <button id="saveScoreBtn" class="btn">Save score</button>
+        <button id="downloadCertBtn" class="btn">Download certificate</button>
+        <div id="saveMessage" class="save-message" aria-live="polite"></div>
+      </div>
+
     </div>
 
-    <div id="result-box" class="result-box hidden">
-      <h2>Your Results</h2>
-      <p>WPM: <span id="wpm"></span></p>
-      <p>Accuracy: <span id="accuracy"></span>%</p>
-      <button onclick="location.reload()">Restart</button>
-    </div>
-  </div>
+    <section class="leaderboard card">
+      <h2>Your Best Scores</h2>
+      <div id="localLeaderboard" class="leaderboard-list">
+        <!-- filled by script -->
+      </div>
+      <button id="clearScoresBtn" class="btn ghost small">Clear Saved Scores</button>
+    </section>
 
-  <script src="script.js"></script>
+    <section class="seo card">
+      <h2>What is Typing Speed?</h2>
+      <p>Typing speed is measured in words per minute (WPM). This tool calculates WPM based on the number of correctly typed characters during the test. Correct characters are divided by five (standard word length) and then scaled per minute.</p>
+
+      <h3>How WPM is calculated here</h3>
+      <p>WPM = (Correct characters ÷ 5) ÷ Minutes. For example, 250 correct characters in 1 minute = (250 ÷ 5) ÷ 1 = 50 WPM.</p>
+
+      <h3>Tips to improve typing speed</h3>
+      <ul>
+        <li>Practice daily for short focused sessions.</li>
+        <li>Start slow to build accuracy, then increase speed.</li>
+        <li>Use proper finger placement and posture.</li>
+      </ul>
+
+      <h3>FAQ</h3>
+      <h4>Is 60 WPM good?</h4>
+      <p>Yes — 60 WPM is generally considered above average for most adults.</p>
+      <h4>Can I share my score?</h4>
+      <p>Currently you can download a certificate with your name and score. A global leaderboard will be added when backend is implemented.</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    © <span id="year"></span> TalionCalcs — Productivity Tools by Talion Labs
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
