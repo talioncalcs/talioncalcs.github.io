@@ -2,93 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Typing Speed Test (WPM Calculator) – Free & Instant | TalionCalcs</title>
-  <meta name="description" content="Free online Typing Speed Test tool to measure Words Per Minute (WPM), accuracy, and typing performance. Clean interface, real-time results, mobile-friendly." />
+  <title>Typing Speed Test — Talion Labs (Monkeytype-level)</title>
+  <meta name="description" content="Typing Speed Test (time / words / quotes / custom). Smooth caret, tape mode, expert/master difficulty, live WPM/CPM/accuracy, local leaderboard, certificate download."/>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <!-- canonical (adjust if you use different path) -->
   <link rel="canonical" href="https://talioncalcs.github.io/labs/typing-speed-test/">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Typing Speed Test – Free WPM Calculator | TalionCalcs">
-  <meta property="og:description" content="Measure your typing speed, accuracy, and WPM instantly. Free online typing test tool.">
-  <meta property="og:type" content="website">
-
-  <!-- GA4 (as provided) -->
+  <!-- GA4 (your ID) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+    // helper wrappers below are used in script.js
+    window.talionGtag = (name, params)=> {
+      try { gtag('event', name, params || {}); } catch(e){/*ignore*/ }
+    };
   </script>
 
-  <!-- Breadcrumb & FAQ Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/"},
-          {"@type":"ListItem","position":2,"name":"Tools","item":"https://talioncalcs.github.io/tools/"},
-          {"@type":"ListItem","position":3,"name":"Typing Speed Test","item":"https://talioncalcs.github.io/labs/typing-speed-test/"}
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How is WPM (words per minute) calculated?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "WPM is calculated here using correct characters. Correct characters ÷ 5 gives the number of correct words; divide by minutes to get WPM."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I save my scores?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes — use the Save Score button to store your personal top scores in your browser (localStorage)."
-            }
-          }
-        ]
-      }
-    ]
-  }
-  </script>
-
+  <!-- Minimal inline styles loaded separately for clarity -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header class="site-header">
     <div class="site-brand">TalionCalcs</div>
     <div class="site-sub">Talion Labs — Productivity & Performance Tools</div>
+    <button id="openSettings" class="settings-btn" title="Settings">⚙︎</button>
   </header>
 
-  <main class="container">
+  <main class="container" id="main">
     <div class="lab-label">Talion Labs</div>
     <h1 class="page-title">Typing Speed Test — Free WPM Calculator</h1>
-    <p class="lead">Measure your Words Per Minute (WPM), accuracy, and typing performance. Mobile-friendly, instant results.</p>
+    <p class="lead">Modes: Time / Words / Quotes / Custom — Difficulty: Normal, Expert, Master. Customize appearance and behavior in Settings.</p>
 
     <div class="card">
       <div class="controls-row">
-        <label for="timeSelect">Duration</label>
-        <select id="timeSelect" aria-label="Select test duration">
-          <option value="30">30 seconds</option>
-          <option value="60" selected>60 seconds</option>
-          <option value="120">120 seconds</option>
+        <label for="modeSelect">Mode</label>
+        <select id="modeSelect" aria-label="Test mode">
+          <option value="time">Time</option>
+          <option value="words">Words</option>
+          <option value="quote">Quote</option>
+          <option value="custom">Custom</option>
         </select>
 
+        <select id="timeSelect" aria-label="Time or words">
+          <!-- updated dynamically by JS -->
+        </select>
+
+        <label for="difficultySelect">Difficulty</label>
+        <select id="difficultySelect">
+          <option value="normal">Normal</option>
+          <option value="expert">Expert (fail wrong word)</option>
+          <option value="master">Master (fail on any wrong key)</option>
+        </select>
+
+        <input id="nameInput" type="text" placeholder="Name (optional)" class="name-input" maxlength="30" />
         <button id="startBtn" class="btn">Start</button>
         <button id="resetBtn" class="btn ghost">Reset</button>
-
-        <label for="nameInput" class="sr-only">Name for leaderboard</label>
-        <input id="nameInput" type="text" placeholder="Your name (optional)" class="name-input" maxlength="30" />
       </div>
 
       <div id="textDisplay" class="text-display" aria-live="polite"></div>
@@ -96,22 +66,10 @@
       <textarea id="inputArea" placeholder="Start typing here..." disabled aria-label="Typing input area"></textarea>
 
       <div class="stats-row">
-        <div class="stat">
-          <div class="stat-label">Time</div>
-          <div id="timeLeft" class="stat-value">60</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">WPM</div>
-          <div id="wpm" class="stat-value">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">CPM</div>
-          <div id="cpm" class="stat-value">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Accuracy</div>
-          <div id="accuracy" class="stat-value">100%</div>
-        </div>
+        <div class="stat"><div class="stat-label">Time</div><div id="timeLeft" class="stat-value">60</div></div>
+        <div class="stat"><div class="stat-label">WPM</div><div id="wpm" class="stat-value">0</div></div>
+        <div class="stat"><div class="stat-label">CPM</div><div id="cpm" class="stat-value">0</div></div>
+        <div class="stat"><div class="stat-label">Accuracy</div><div id="accuracy" class="stat-value">100%</div></div>
       </div>
 
       <div id="resultActions" class="result-actions hidden">
@@ -119,43 +77,44 @@
         <button id="downloadCertBtn" class="btn">Download certificate</button>
         <div id="saveMessage" class="save-message" aria-live="polite"></div>
       </div>
-
     </div>
 
-    <section class="leaderboard card">
-      <h2>Your Best Scores</h2>
-      <div id="localLeaderboard" class="leaderboard-list">
-        <!-- filled by script -->
-      </div>
+    <section class="card small">
+      <h2>Local Leaderboard</h2>
+      <div id="localLeaderboard" class="leaderboard-list"></div>
       <button id="clearScoresBtn" class="btn ghost small">Clear Saved Scores</button>
     </section>
 
-    <section class="seo card">
-      <h2>What is Typing Speed?</h2>
-      <p>Typing speed is measured in words per minute (WPM). This tool calculates WPM based on the number of correctly typed characters during the test. Correct characters are divided by five (standard word length) and then scaled per minute.</p>
-
-      <h3>How WPM is calculated here</h3>
-      <p>WPM = (Correct characters ÷ 5) ÷ Minutes. For example, 250 correct characters in 1 minute = (250 ÷ 5) ÷ 1 = 50 WPM.</p>
-
-      <h3>Tips to improve typing speed</h3>
-      <ul>
-        <li>Practice daily for short focused sessions.</li>
-        <li>Start slow to build accuracy, then increase speed.</li>
-        <li>Use proper finger placement and posture.</li>
-      </ul>
-
+    <section class="card seo">
+      <h2>About this test</h2>
+      <p>WPM calculation uses correctly typed characters (correct char count ÷ 5) scaled to the test duration. The difficulty options change failure behavior to give competitive practice modes. Settings persist in your browser.</p>
       <h3>FAQ</h3>
-      <h4>Is 60 WPM good?</h4>
-      <p>Yes — 60 WPM is generally considered above average for most adults.</p>
-      <h4>Can I share my score?</h4>
-      <p>Currently you can download a certificate with your name and score. A global leaderboard will be added when backend is implemented.</p>
+      <p><strong>Q:</strong> Is this as accurate as other tools?<br><strong>A:</strong> We compute WPM using correct characters and provide live CPM/WPM/accuracy. Results are comparable across tools that use the "5 char per word" standard.</p>
     </section>
 
   </main>
 
-  <footer class="site-footer">
-    © <span id="year"></span> TalionCalcs — Productivity Tools by Talion Labs
-  </footer>
+  <footer class="site-footer">© <span id="year"></span> TalionCalcs — Talion Labs</footer>
+
+  <!-- settings modal -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-card">
+      <h3 id="settingsTitle">Settings</h3>
+      <div class="setting-row"><label>Theme</label>
+        <select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option></select>
+      </div>
+      <div class="setting-row"><label>Show live WPM</label><input type="checkbox" id="showLiveWpm"/></div>
+      <div class="setting-row"><label>Smooth caret</label><input type="checkbox" id="smoothCaret"/></div>
+      <div class="setting-row"><label>Typed effect</label>
+        <select id="typedEffect"><option value="keep">Keep</option><option value="hide">Hide</option><option value="fade">Fade</option></select>
+      </div>
+      <div class="setting-row"><label>Highlight mode</label>
+        <select id="highlightMode"><option value="letter">Letter</option><option value="word">Word</option></select>
+      </div>
+      <div class="setting-row"><label>Blind mode</label><input type="checkbox" id="blindMode"/></div>
+      <div class="setting-actions"><button id="saveSettings" class="btn">Save</button> <button id="closeSettings" class="btn ghost">Close</button></div>
+    </div>
+  </div>
 
   <script src="script.js" defer></script>
 </body>
