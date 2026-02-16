@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EMI vs SIP Calculator – TalionCalcs</title>
+  <meta name="description" content="Compare EMI (loan) outflow vs SIP (monthly investment) outcome. Enter loan/EMI details and a SIP plan to see totals, interest paid, SIP maturity and a side-by-side chart.">
+  <link rel="canonical" href="https://talioncalcs.github.io/emi-vs-sip-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="EMI vs SIP Calculator – TalionCalcs">
+  <meta property="og:description" content="Quickly compare how much you pay on a loan (EMI) vs what a monthly SIP could grow to for the same duration.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/emi-vs-sip-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:360px; display:none; border:1px solid #eee; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    .flex-row { display:flex; gap:10px; }
+    .half { flex:1; }
+    ul.simple { padding-left: 18px; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"TalionCalcs","url":"https://talioncalcs.github.io/"}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/"},{"@type":"ListItem","position":2,"name":"EMI vs SIP Calculator","item":"https://talioncalcs.github.io/emi-vs-sip-calculator.html"}]}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"EMI vs SIP Calculator","applicationCategory":"FinanceApplication","operatingSystem":"All","url":"https://talioncalcs.github.io/emi-vs-sip-calculator.html","description":"Compare loan EMI outflows to SIP investment outcomes for the same duration."}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does EMI vs SIP comparison show?","acceptedAnswer":{"@type":"Answer","text":"It compares how much you pay towards an EMI (total payments and interest) with what a regular monthly SIP would grow to for the same period at an assumed return rate."}},{"@type":"Question","name":"Which assumptions matter most?","acceptedAnswer":{"@type":"Answer","text":"Loan interest rate, expected SIP annual return, and whether SIP contributions are monthly at period end. Small changes to these materially affect results."}}]}
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › EMI vs SIP Calculator
+  </div>
+
+  <h1>EMI vs SIP Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Compare the cost of a loan (EMI) with the growth of a monthly SIP for the same duration. Enter loan principal, rate and tenure to compute EMI and total interest. Enter a monthly SIP amount and expected annual return to compute SIP maturity. Useful for planning — e.g., should you prepay a loan or invest the amount instead?
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">EMI vs SIP Form</h2>
+
+    <h3>Loan / EMI</h3>
+    <label for="loanPrincipal">Loan Principal (₹)</label>
+    <input type="number" id="loanPrincipal" min="0" aria-label="Loan principal" placeholder="e.g. 1500000">
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="loanRate">Annual Interest Rate (%)</label>
+        <input type="number" id="loanRate" min="0" step="0.01" aria-label="Loan annual rate" placeholder="e.g. 8.5">
+      </div>
+      <div class="half">
+        <label for="loanTenure">Tenure (Years)</label>
+        <input type="number" id="loanTenure" min="0" step="1" aria-label="Loan tenure years" placeholder="e.g. 10">
+      </div>
+    </div>
+
+    <h3>SIP / Investment</h3>
+    <label for="sipMonthly">Monthly SIP Amount (₹)</label>
+    <input type="number" id="sipMonthly" min="0" aria-label="Monthly SIP" placeholder="e.g. 10000">
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="sipReturn">Expected Annual Return (%)</label>
+        <input type="number" id="sipReturn" min="0" step="0.01" aria-label="Expected SIP annual return" placeholder="e.g. 12">
+      </div>
+      <div class="half">
+        <label for="sipYears">SIP Duration (Years)</label>
+        <input type="number" id="sipYears" min="0" step="1" aria-label="SIP duration years" placeholder="e.g. 10">
+      </div>
+    </div>
+
+    <button type="button" onclick="calculateCompare()" aria-label="Compare EMI and SIP">Compare EMI vs SIP</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="subresult" id="details" aria-live="polite"></div>
+
+    <canvas id="compareChart" role="img" aria-label="EMI vs SIP chart"></canvas>
+  </div>
+
+  <div class="cmp-table">
+    <h2>What this does</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>EMI</td><td>Monthly payment for the loan based on principal, rate and tenure</td></tr>
+      <tr><td>Total paid</td><td>EMI × number of months — shows how much cash leaves as loan payments</td></tr>
+      <tr><td>SIP maturity</td><td>Future value of monthly SIP contributions at expected return over chosen duration</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <h3>When to use this calculator</h3>
+    <p>Use this tool to compare a loan's cash outflow (EMI and interest) with the potential growth of a monthly SIP. It's useful when deciding whether to prepay a loan or invest spare cash instead.</p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>The calculator computes EMI using standard amortisation formula. For the SIP, it assumes monthly contributions at the end of each month (ordinary annuity) and uses monthly compounding based on the expected annual return.</p>
+
+    <h3>Limitations</h3>
+    <p>This is a simple comparative tool. It does not include taxes on SIP gains, loan prepayment penalties, charges, or the effect of changing interest rates. Use it as an estimate and confirm with financial advice for decisions.</p>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Should I invest instead of prepay?</strong> That depends on loan interest, expected SIP returns, your risk tolerance, and penalties. This calculator helps quantify the difference.</p>
+    <p><strong>Does SIP assume returns are guaranteed?</strong> No — expected return is an assumption. Actual returns vary and can be lower or higher.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul class="simple">
+    <li><a href="home-loan-calculator.html">Home Loan Calculator</a></li>
+    <li><a href="emi-calculator.html">EMI Calculator</a></li>
+    <li><a href="sip-calculator.html">SIP Calculator</a></li>
+    <li><a href="investment-return-calculator.html">Investment Return Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator provides estimates only and does not constitute financial advice. Confirm exact figures and tax implications with a qualified adviser before acting.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function formatINR(n) {
+  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
+}
+
+function calcEMI(principal, monthlyRate, months) {
+  if (months <= 0) return 0;
+  if (monthlyRate === 0) return principal / months;
+  const r = monthlyRate;
+  const pow = Math.pow(1 + r, months);
+  return principal * r * pow / (pow - 1);
+}
+
+function calcSIPFutureValue(monthly, annualReturnPercent, years) {
+  const n = Math.max(0, Math.floor(years * 12));
+  if (n === 0) return 0;
+  const monthlyRate = annualReturnPercent / 12 / 100;
+  if (monthlyRate === 0) return monthly * n;
+  const pow = Math.pow(1 + monthlyRate, n);
+  // Ordinary annuity (payments at end of period)
+  return monthly * ((pow - 1) / monthlyRate);
+}
+
+function getCanvasCssWidth(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  return rect.width || canvas.clientWidth || 600;
+}
+
+function calculateCompare() {
+  const loanPrincipal = Number(document.getElementById("loanPrincipal").value || 0);
+  const loanRate = Number(document.getElementById("loanRate").value || 0);
+  const loanYears = Number(document.getElementById("loanTenure").value || 0);
+  const sipMonthly = Number(document.getElementById("sipMonthly").value || 0);
+  const sipReturn = Number(document.getElementById("sipReturn").value || 0);
+  const sipYears = Number(document.getElementById("sipYears").value || 0);
+
+  const resultEl = document.getElementById("result");
+  const detailsEl = document.getElementById("details");
+  const canvas = document.getElementById("compareChart");
+
+  if (loanPrincipal < 0 || loanRate < 0 || loanYears < 0 || sipMonthly < 0 || sipReturn < 0 || sipYears < 0) {
+    resultEl.innerHTML = "Please enter valid non-negative values.";
+    detailsEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  // EMI calculations
+  const loanMonths = Math.max(0, Math.floor(loanYears * 12));
+  const monthlyLoanRate = loanRate / 12 / 100;
+  const emi = (loanMonths > 0) ? calcEMI(loanPrincipal, monthlyLoanRate, loanMonths) : 0;
+  const totalPaidLoan = emi * loanMonths;
+  const totalInterestLoan = totalPaidLoan - loanPrincipal;
+
+  // SIP calculations
+  const sipMonths = Math.max(0, Math.floor(sipYears * 12));
+  const sipMaturity = calcSIPFutureValue(sipMonthly, sipReturn, sipYears);
+  const sipInvested = sipMonthly * sipMonths;
+  const sipGain = sipMaturity - sipInvested;
+
+  // Display
+  resultEl.innerHTML = "EMI: " + formatINR(emi) + " • SIP maturity: " + formatINR(sipMaturity);
+  let html = "";
+  html += "<div class='small'><strong>Loan (EMI)</strong> — Tenure: " + loanMonths + " months (" + (loanMonths/12).toFixed(2) + " years)</div>";
+  html += "<div class='small'>Monthly EMI: " + formatINR(emi) + " • Total paid: " + formatINR(totalPaidLoan) + " • Interest paid: " + formatINR(totalInterestLoan) + "</div>";
+  html += "<hr style='border:none;border-top:1px solid #eee;margin:10px 0;'>";
+  html += "<div class='small'><strong>SIP (monthly)</strong> — Duration: " + sipMonths + " months (" + (sipMonths/12).toFixed(2) + " years)</div>";
+  html += "<div class='small'>Monthly SIP: " + formatINR(sipMonthly) + " • Invested: " + formatINR(sipInvested) + " • Maturity: " + formatINR(sipMaturity) + " • Gain: " + formatINR(sipGain) + "</div>";
+
+  // High level comparison note
+  if (sipMaturity > totalPaidLoan) {
+    html += "<div class='result' style='margin-top:8px;'>SIP maturity is higher than total loan outflow by " + formatINR(sipMaturity - totalPaidLoan) + " (compare risk & taxes).</div>";
+  } else if (sipMaturity < totalPaidLoan) {
+    html += "<div class='result' style='margin-top:8px;'>Total loan outflow is higher than SIP maturity by " + formatINR(totalPaidLoan - sipMaturity) + ".</div>";
+  } else {
+    html += "<div class='result' style='margin-top:8px;'>SIP maturity and total loan outflow are approximately equal.</div>";
+  }
+
+  detailsEl.innerHTML = html;
+
+  // Draw chart: two grouped bars — loan total paid vs SIP maturity; also show invested amounts as lighter bars behind
+  drawCompareChart({
+    loan: { invested: loanPrincipal, totalPaid: totalPaidLoan },
+    sip: { invested: sipInvested, maturity: sipMaturity }
+  });
+}
+
+function drawCompareChart(data) {
+  const canvas = document.getElementById("compareChart");
+  if (!canvas) return;
+  canvas.style.display = "block";
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
+  const cssHeight = 300;
+  canvas.style.width = cssWidth + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const padding = 40;
+  const barWidth = 60;
+  const gap = 40;
+  const left = padding;
+  const maxVal = Math.max(
+    data.loan.totalPaid || 1,
+    data.sip.maturity || 1,
+    data.loan.invested || 1,
+    data.sip.invested || 1
+  );
+
+  function yFor(v) {
+    const usable = cssHeight - padding * 2;
+    return cssHeight - padding - (v / maxVal) * usable;
+  }
+
+  // Loan bars (x1)
+  const xLoan = left;
+  // SIP bars (x2)
+  const xSip = left + barWidth + gap + 20;
+
+  // Background grid lines
+  ctx.beginPath();
+  ctx.strokeStyle = "#eee";
+  ctx.lineWidth = 1;
+  const gridCount = 4;
+  for (let i = 0; i <= gridCount; i++) {
+    const y = padding + i * ((cssHeight - padding * 2) / gridCount);
+    ctx.moveTo(padding, y);
+    ctx.lineTo(cssWidth - padding, y);
+  }
+  ctx.stroke();
+
+  // Loan invested (light)
+  ctx.fillStyle = "#e7f0ff";
+  const loanInvestTop = yFor(data.loan.invested);
+  ctx.fillRect(xLoan, loanInvestTop, barWidth, cssHeight - padding - loanInvestTop);
+
+  // Loan total paid (solid)
+  ctx.fillStyle = "#0b5ed7";
+  const loanTotalTop = yFor(data.loan.totalPaid);
+  ctx.fillRect(xLoan + 6, loanTotalTop, barWidth - 12, cssHeight - padding - loanTotalTop);
+
+  // SIP invested (light)
+  ctx.fillStyle = "#ffece0";
+  const sipInvestTop = yFor(data.sip.invested);
+  ctx.fillRect(xSip, sipInvestTop, barWidth, cssHeight - padding - sipInvestTop);
+
+  // SIP maturity (solid)
+  ctx.fillStyle = "#198754";
+  const sipMatTop = yFor(data.sip.maturity);
+  ctx.fillRect(xSip + 6, sipMatTop, barWidth - 12, cssHeight - padding - sipMatTop);
+
+  // Labels
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Loan (total paid)", xLoan, cssHeight - padding + 18);
+  ctx.fillText("SIP (maturity)", xSip, cssHeight - padding + 18);
+
+  // Values
+  ctx.fillStyle = "#0b5ed7";
+  ctx.fillText(formatINR(Math.round(data.loan.totalPaid)), xLoan + 6, loanTotalTop - 6);
+  ctx.fillStyle = "#198754";
+  ctx.fillText(formatINR(Math.round(data.sip.maturity)), xSip + 6, sipMatTop - 6);
+
+  // Y-axis label
+  ctx.fillStyle = "#444";
+  ctx.fillText("Amount (₹)", 8, padding - 8);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      const canvas = document.getElementById("compareChart");
+      if (canvas && canvas.style.display === "block") {
+        // try to recalc by re-running last visible values
+        const loanPrincipal = Number(document.getElementById("loanPrincipal").value || 0);
+        const loanRate = Number(document.getElementById("loanRate").value || 0);
+        const loanYears = Number(document.getElementById("loanTenure").value || 0);
+        const sipMonthly = Number(document.getElementById("sipMonthly").value || 0);
+        const sipReturn = Number(document.getElementById("sipReturn").value || 0);
+        const sipYears = Number(document.getElementById("sipYears").value || 0);
+
+        const loanMonths = Math.max(0, Math.floor(loanYears * 12));
+        const monthlyLoanRate = loanRate / 12 / 100;
+        const emi = (loanMonths > 0) ? calcEMI(loanPrincipal, monthlyLoanRate, loanMonths) : 0;
+        const totalPaidLoan = emi * loanMonths;
+
+        const sipMonths = Math.max(0, Math.floor(sipYears * 12));
+        const sipMaturity = calcSIPFutureValue(sipMonthly, sipReturn, sipYears);
+        const sipInvested = sipMonthly * sipMonths;
+
+        drawCompareChart({
+          loan: { invested: loanPrincipal, totalPaid: totalPaidLoan },
+          sip: { invested: sipInvested, maturity: sipMaturity }
+        });
+      }
+    }, 180);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
