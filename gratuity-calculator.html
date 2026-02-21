@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gratuity Calculator – TalionCalcs</title>
+  <meta name="description" content="Calculate the estimated gratuity payable on retirement or exit in India. Enter last drawn basic+DA and service period (dates or years) to compute gratuity using the standard 15/26 formula.">
+  <link rel="canonical" href="https://talioncalcs.github.io/gratuity-calculator.html">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <meta property="og:title" content="Gratuity Calculator – TalionCalcs">
+  <meta property="og:description" content="Estimate gratuity (India) using last drawn basic+DA and completed years of service. Provides quick comparison and an explanation of the formula used.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talioncalcs.github.io/gratuity-calculator.html">
+  <meta property="og:image" content="https://talioncalcs.github.io/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RD09TDVTT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RD09TDVTT8', { 'anonymize_ip': true });
+  </script>
+
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #222; }
+    .site-header { background: #f8f9fa; border-bottom: 1px solid #ddd; padding: 12px 0; }
+    .site-header .inner { max-width: 760px; margin: auto; padding: 0 18px; display: flex; justify-content: space-between; align-items: center; }
+    .site-header a { text-decoration: none; color: #0b5ed7; font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:8px; }
+    .page { max-width: 760px; margin: auto; padding: 18px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 30px; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    p { font-size: 15px; line-height: 1.6; }
+    .breadcrumb { font-size: 13px; margin-bottom: 12px; }
+    .breadcrumb a { color: #0b5ed7; text-decoration: none; }
+    .calc-box { border: 1px solid #ddd; padding: 16px; margin-top: 15px; }
+    label { display:block; font-weight:bold; margin-top:12px; font-size:14px; }
+    input, select { width:100%; padding:8px; margin-top:5px; font-size:15px; box-sizing:border-box; }
+    button { width:100%; margin-top:15px; padding:10px; font-size:15px; background:#0b5ed7; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+    button:hover { background:#084298; }
+    .result { margin-top:12px; font-size:16px; font-weight:bold; }
+    .subresult { margin-top:6px; font-size:14px; color:#444; }
+    canvas { margin-top:20px; width:100%; max-height:260px; display:none; border:1px solid #eee; }
+    .ad-slot { margin:30px 0; padding:12px; border:1px dashed #ccc; text-align:center; font-size:13px; color:#666; }
+    .note { font-size:13px; color:#555; margin-top:30px; }
+    footer { margin-top:50px; padding-top:15px; border-top:1px solid #ddd; font-size:13px; text-align:center; }
+    footer a { color:#0b5ed7; text-decoration:none; margin:0 8px; }
+    .cmp-table table { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+    .cmp-table th, .cmp-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+    .small { font-size:13px; color:#666; }
+    .flex-row { display:flex; gap:10px; }
+    .half { flex:1; }
+    ul.simple { padding-left: 18px; }
+    noscript .nojs { display:block; background:#fff3cd; border:1px solid #ffeeba; padding:10px; margin-bottom:12px; color:#856404; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TalionCalcs",
+    "url":"https://talioncalcs.github.io/"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      { "@type":"ListItem","position":1,"name":"Home","item":"https://talioncalcs.github.io/" },
+      { "@type":"ListItem","position":2,"name":"Gratuity Calculator","item":"https://talioncalcs.github.io/gratuity-calculator.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"Gratuity Calculator",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "url":"https://talioncalcs.github.io/gratuity-calculator.html",
+    "description":"Estimate gratuity payable using last drawn basic + DA and completed years of service (15/26 formula)."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"How is gratuity calculated?",
+        "acceptedAnswer":{"@type":"Answer","text":"Gratuity is commonly calculated as (Last drawn basic + DA) × 15/26 × completed years of service. This calculator uses that standard formula."}
+      },
+      {
+        "@type":"Question",
+        "name":"Which years of service count?",
+        "acceptedAnswer":{"@type":"Answer","text":"Most employers count completed years of continuous service (fractional years are typically not counted). This tool uses completed whole years between joining and exit if dates are supplied."}
+      },
+      {
+        "@type":"Question",
+        "name":"Is gratuity taxable?",
+        "acceptedAnswer":{"@type":"Answer","text":"Tax rules may allow exemptions up to specific limits and vary over time. This tool gives an estimate only; consult a tax professional for tax treatment in your case."}
+      }
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+<noscript>
+  <div class="nojs">
+    JavaScript is required for this calculator to work. Please enable JavaScript or use a browser that supports it.
+  </div>
+</noscript>
+
+<div class="site-header">
+  <div class="inner">
+    <a href="index.html" aria-label="TalionCalcs home">
+      <img src="assets/logo.png" alt="TalionCalcs Logo" height="28" style="max-width:140px;">
+    </a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<main class="page" id="main-content">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Gratuity Calculator
+  </div>
+
+  <h1>Gratuity Calculator</h1>
+
+  <p style="font-size:14px;color:#555;">
+    Estimate the gratuity payable on exit or retirement. Provide last drawn monthly basic + dearness allowance and either the service period (dates) or completed years to compute gratuity using the widely used 15/26 formula.
+  </p>
+
+  <div class="calc-box" role="region" aria-labelledby="calc-heading">
+    <h2 id="calc-heading" style="display:none;">Gratuity Form</h2>
+
+    <label for="lastSalary">Last drawn Basic + Dearness Allowance (monthly) (₹)</label>
+    <input type="number" id="lastSalary" min="0" aria-label="Last drawn basic plus da" placeholder="e.g. 45000">
+
+    <div class="flex-row">
+      <div class="half">
+        <label for="joinDate">Date of Joining</label>
+        <input type="date" id="joinDate" aria-label="Date of joining">
+      </div>
+      <div class="half">
+        <label for="leaveDate">Date of Leaving / Retirement</label>
+        <input type="date" id="leaveDate" aria-label="Date of leaving">
+      </div>
+    </div>
+
+    <label for="yearsService">Or enter completed years of service (whole years)</label>
+    <input type="number" id="yearsService" min="0" step="1" aria-label="Completed years of service" placeholder="e.g. 12">
+
+    <label for="cap">Optional Gratuity Cap (₹) — leave blank to ignore</label>
+    <input type="number" id="cap" min="0" aria-label="Optional gratuity cap" placeholder="e.g. 2000000">
+
+    <button type="button" onclick="calculateGratuity()" aria-label="Calculate gratuity">Calculate</button>
+
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="subresult" id="details" aria-live="polite"></div>
+
+    <canvas id="gratuityChart" role="img" aria-label="Gratuity chart"></canvas>
+  </div>
+
+  <div class="cmp-table">
+    <h2>Snapshot</h2>
+    <table>
+      <tr><th>Metric</th><th>What it Shows</th></tr>
+      <tr><td>Gratuity (estimate)</td><td>Estimated lump-sum gratuity using provided inputs and 15/26 multiplier.</td></tr>
+      <tr><td>Completed years</td><td>Number of whole years used in the calculation (dates take precedence if both supplied).</td></tr>
+    </table>
+  </div>
+
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <section class="explanation">
+    <h3>When to use this calculator</h3>
+    <p>
+      Use this tool when you want a quick estimate of gratuity payable on exit or retirement based on your last drawn basic+DA and length of service.
+    </p>
+
+    <h3>How it works (plain explanation)</h3>
+    <p>
+      The calculator uses completed whole years of service. If both joining and leaving dates are provided, the tool computes completed years between those dates. Otherwise it uses the manual years entry. Gratuity is computed as:
+    </p>
+    <p style="font-family:monospace;background:#f8f9fa;padding:10px;border:1px solid #ddd;">
+      <strong>Gratuity = (Last drawn basic + DA) × (15 / 26) × Completed years of service</strong>
+    </p>
+
+    <h3>Notes & limitations</h3>
+    <ul class="simple">
+      <li>This is an estimate. Employer-specific rules, contract terms, and statutory caps or changes are not modelled except an optional cap field.</li>
+      <li>Most schemes use completed whole years — fractional years are not counted by this calculator when using dates.</li>
+      <li>Tax treatment and statutory caps may change; consult your HR or tax adviser for precise entitlement and taxability.</li>
+    </ul>
+
+    <h3>Frequently asked questions</h3>
+    <p><strong>Why 15/26?</strong> 15 days' salary for each completed year, with salary expressed on a monthly basis and 26 working days considered for each month yields the 15/26 factor.</p>
+    <p><strong>If I have odd months, are they counted?</strong> This calculator counts only completed whole years. Employers sometimes have rules for rounding — check your policy.</p>
+  </section>
+
+  <p class="note"><strong>Last updated:</strong> <span id="last-updated" aria-hidden="true"></span></p>
+
+  <h2>Related Calculators</h2>
+  <ul class="simple">
+    <li><a href="salary-in-hand-calculator.html">Salary In-Hand Calculator</a></li>
+    <li><a href="retirement-calculator.html">Retirement Calculator</a></li>
+    <li><a href="income-tax-calculator.html">Income Tax Calculator</a></li>
+  </ul>
+
+  <p class="note"><strong>Disclaimer:</strong> This calculator provides an estimate only. Employer policies, legal caps, and tax treatment vary — always confirm with HR and a qualified adviser for final figures.</p>
+
+</main>
+
+<footer>
+  <a href="/privacy.html">Privacy</a> |
+  <a href="/disclaimer.html">Disclaimer</a> |
+  <a href="/terms.html">Terms</a> |
+  <a href="/contact.html">Contact</a><br>
+  © <span id="copyright-year" aria-hidden="true"></span> TalionCalcs
+</footer>
+
+<script>
+function toINR(n) {
+  return "₹" + Number(Math.round(n)).toLocaleString("en-IN");
+}
+
+function completedYearsFromDates(joinISO, leaveISO) {
+  if (!joinISO || !leaveISO) return 0;
+  const join = new Date(joinISO);
+  const leave = new Date(leaveISO);
+  if (isNaN(join) || isNaN(leave) || leave <= join) return 0;
+  let years = leave.getFullYear() - join.getFullYear();
+  const leaveMonthDay = (leave.getMonth() + 1) * 100 + leave.getDate();
+  const joinMonthDay = (join.getMonth() + 1) * 100 + join.getDate();
+  if (leaveMonthDay < joinMonthDay) years--;
+  return Math.max(0, years);
+}
+
+function calculateGratuity() {
+  const lastSalary = Number(document.getElementById("lastSalary").value || 0);
+  const joinDate = document.getElementById("joinDate").value;
+  const leaveDate = document.getElementById("leaveDate").value;
+  const manualYears = Number(document.getElementById("yearsService").value || 0);
+  const capInput = Number(document.getElementById("cap").value || 0);
+
+  const resultEl = document.getElementById("result");
+  const detailsEl = document.getElementById("details");
+  const canvas = document.getElementById("gratuityChart");
+
+  if (lastSalary <= 0) {
+    resultEl.innerHTML = "Please enter a valid last drawn basic + DA (monthly).";
+    detailsEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  let years = 0;
+  if (joinDate && leaveDate) years = completedYearsFromDates(joinDate, leaveDate);
+  if (years === 0 && manualYears > 0) years = Math.floor(manualYears);
+  if (years <= 0) {
+    resultEl.innerHTML = "Please provide completed years of service (either via dates or manual years).";
+    detailsEl.innerHTML = "";
+    if (canvas) canvas.style.display = "none";
+    return;
+  }
+
+  const factor = 15 / 26;
+  let gratuity = lastSalary * factor * years;
+  gratuity = Math.round(gratuity);
+
+  let capped = false;
+  if (capInput > 0 && gratuity > capInput) {
+    gratuity = Math.round(capInput);
+    capped = true;
+  }
+
+  resultEl.innerHTML = "Estimated Gratuity: " + toINR(gratuity);
+  let details = "";
+  details += "<div class='small'>Last drawn Basic+DA (monthly): " + toINR(lastSalary) + "</div>";
+  details += "<div class='small'>Completed years used: " + years + "</div>";
+  details += "<div class='small'>Formula: (Last salary × 15/26 × years)</div>";
+  if (capped) details += "<div class='small'>Applied cap: " + toINR(capInput) + " • Amount capped.</div>";
+  detailsEl.innerHTML = details;
+
+  window._lastChartData = { gratuity, lastSalary, years };
+
+  drawGratuityChart(gratuity, lastSalary, years);
+}
+
+function getCanvasCssWidth(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  return rect.width || canvas.clientWidth || 600;
+}
+
+function drawGratuityChart(gratuity, lastSalary, years) {
+  const canvas = document.getElementById("gratuityChart");
+  if (!canvas) return;
+  canvas.style.display = "block";
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = Math.max(300, Math.floor(getCanvasCssWidth(canvas)));
+  const cssHeight = 260;
+  canvas.style.width = cssWidth + "px";
+  canvas.width = Math.floor(cssWidth * dpr);
+  canvas.height = Math.floor(cssHeight * dpr);
+  canvas.style.height = cssHeight + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const padding = 30;
+  const barWidth = 120;
+  const maxVal = Math.max(gratuity, lastSalary * years, 1);
+  const usableHeight = cssHeight - padding * 2;
+  const x1 = padding;
+  const x2 = padding + barWidth + 40;
+
+  function yFor(value) { return cssHeight - padding - (value / maxVal) * usableHeight; }
+
+  ctx.fillStyle = "#f1f5fb";
+  ctx.fillRect(x1 - 10, padding, barWidth + 20, usableHeight);
+
+  ctx.fillStyle = "#eaf7ee";
+  ctx.fillRect(x2 - 10, padding, barWidth + 20, usableHeight);
+
+  ctx.fillStyle = "#0b5ed7";
+  const yGr = yFor(gratuity);
+  ctx.fillRect(x1, yGr, barWidth, cssHeight - padding - yGr);
+
+  ctx.fillStyle = "#198754";
+  const yComp = yFor(lastSalary * years);
+  ctx.fillRect(x2, yComp, barWidth, cssHeight - padding - yComp);
+
+  ctx.fillStyle = "#222";
+  ctx.font = "12px Arial";
+  ctx.fillText("Estimated Gratuity", x1, padding - 6);
+  ctx.fillText("LastSalary × years", x2, padding - 6);
+  ctx.fillText(toINR(gratuity), x1, yGr - 6);
+  ctx.fillText(toINR(Math.round(lastSalary * years)), x2, yComp - 6);
+  ctx.fillStyle = "#444";
+  ctx.fillText("Years used: " + (window._lastChartData ? window._lastChartData.years : ""), 8, cssHeight - 8);
+}
+
+(function(){
+  let resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      const state = window._lastChartData;
+      if (!state) return;
+      drawGratuityChart(state.gratuity, state.lastSalary, state.years);
+    }, 150);
+  });
+})();
+
+(function(){
+  const now = new Date();
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthYear = monthNames[now.getMonth()] + " " + now.getFullYear();
+  const lastEl = document.getElementById('last-updated');
+  if(lastEl) lastEl.textContent = monthYear;
+  const cy = document.getElementById('copyright-year');
+  if(cy) cy.textContent = now.getFullYear();
+})();
+</script>
+
+</body>
+</html>
